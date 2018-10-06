@@ -1,0 +1,72 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{A23848F4-C864-4B5D-AF85-E689A3D99A32}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Sample\RestDW\SimpleORM_RestDW.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="D:\Projetos\Componentes\RestDataWare\trunk\CORE\Demos\SimpleServer\Server\RestDWServerProject.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Sample\Firedac\SimpleORMFiredac.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="SimpleORM.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="SimpleORM_RestDW">
+        <MSBuild Projects="Sample\RestDW\SimpleORM_RestDW.dproj"/>
+    </Target>
+    <Target Name="SimpleORM_RestDW:Clean">
+        <MSBuild Projects="Sample\RestDW\SimpleORM_RestDW.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORM_RestDW:Make">
+        <MSBuild Projects="Sample\RestDW\SimpleORM_RestDW.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="RestDWServerProject">
+        <MSBuild Projects="D:\Projetos\Componentes\RestDataWare\trunk\CORE\Demos\SimpleServer\Server\RestDWServerProject.dproj"/>
+    </Target>
+    <Target Name="RestDWServerProject:Clean">
+        <MSBuild Projects="D:\Projetos\Componentes\RestDataWare\trunk\CORE\Demos\SimpleServer\Server\RestDWServerProject.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="RestDWServerProject:Make">
+        <MSBuild Projects="D:\Projetos\Componentes\RestDataWare\trunk\CORE\Demos\SimpleServer\Server\RestDWServerProject.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SimpleORMFiredac">
+        <MSBuild Projects="Sample\Firedac\SimpleORMFiredac.dproj"/>
+    </Target>
+    <Target Name="SimpleORMFiredac:Clean">
+        <MSBuild Projects="Sample\Firedac\SimpleORMFiredac.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMFiredac:Make">
+        <MSBuild Projects="Sample\Firedac\SimpleORMFiredac.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SimpleORM">
+        <MSBuild Projects="SimpleORM.dproj"/>
+    </Target>
+    <Target Name="SimpleORM:Clean">
+        <MSBuild Projects="SimpleORM.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORM:Make">
+        <MSBuild Projects="SimpleORM.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="SimpleORM_RestDW;RestDWServerProject;SimpleORMFiredac;SimpleORM"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="SimpleORM_RestDW:Clean;RestDWServerProject:Clean;SimpleORMFiredac:Clean;SimpleORM:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="SimpleORM_RestDW:Make;RestDWServerProject:Make;SimpleORMFiredac:Make;SimpleORM:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
