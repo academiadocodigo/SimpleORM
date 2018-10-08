@@ -11,6 +11,7 @@ object Form9: TForm9
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Button3: TButton
@@ -110,11 +111,6 @@ object Form9: TForm9
     Left = 568
     Top = 8
   end
-  object FDQuery1: TFDQuery
-    Connection = FDConnection1
-    Left = 504
-    Top = 8
-  end
   object FDConnection1: TFDConnection
     Params.Strings = (
       'Database=D:\Bancos\Firebird\PDVUPDATES.FDB'
@@ -122,7 +118,7 @@ object Form9: TForm9
       'Password=masterkey'
       'DriverID=FB')
     LoginPrompt = False
-    Left = 432
+    Left = 520
     Top = 8
   end
 end

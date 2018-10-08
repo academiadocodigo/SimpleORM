@@ -26,7 +26,7 @@ Type
       function Delete(aValue : T) : iSimpleDAO<T>;
       function Find : TList<T>; overload;
       function Find( aId : Integer) : T; overload;
-      function Find ( aWhere : String ) : TList<T>; overload;
+      function Find (aWhere : String) : TList<T>; overload;
   end;
 
 implementation
@@ -65,12 +65,12 @@ begin
   inherited;
 end;
 
-function TSimpleDAO<T>.Find: TList<T>;
+function TSimpleDAO<T>.Find : TList<T>;
 var
   aSQL : String;
 begin
   Result := TList<T>.Create;
-  TSimpleSQL<T>.New(nil).Select(aSQL);
+  TSimpleSQL<T>.New(nil).Select('', aSQL);
   FQuery.Open(aSQL);
   TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, Result);
 end;
@@ -129,7 +129,6 @@ begin
   try
     for Key in DictionaryFields.Keys do
     begin
-      P := FQuery.Params;
       if FQuery.Params.FindParam(Key) <> nil then
         FQuery.Params.ParamByName(Key).Value := DictionaryFields.Items[Key];
     end;
@@ -157,12 +156,12 @@ begin
   end;
 end;
 
-function TSimpleDAO<T>.Find(aWhere: String): TList<T>;
+function TSimpleDAO<T>.Find(aWhere : String) : TList<T>;
 var
   aSQL, aFields, aClassName: String;
 begin
   Result := TList<T>.Create;
-  TSimpleSQL<T>.New(nil).SelectWhere(aWhere, aSQL);
+  TSimpleSQL<T>.New(nil).SelectWhere(aWhere, '', aSQL);
   FQuery.Open(aSQL);
   TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, Result);
 end;

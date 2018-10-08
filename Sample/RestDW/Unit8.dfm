@@ -11,6 +11,7 @@ object Form8: TForm8
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object DBGrid1: TDBGrid
@@ -26,14 +27,14 @@ object Form8: TForm8
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
   end
-  object Button1: TButton
+  object btnFind: TButton
     Left = 8
     Top = 101
     Width = 75
     Height = 25
     Caption = 'Find'
     TabOrder = 1
-    OnClick = Button1Click
+    OnClick = btnFindClick
   end
   object Memo1: TMemo
     Left = 105
@@ -105,33 +106,9 @@ object Form8: TForm8
     TabOrder = 9
     OnClick = Button6Click
   end
-  object RESTDWClientSQL1: TRESTDWClientSQL
-    FieldDefs = <>
-    IndexDefs = <>
-    MasterFields = ''
-    FetchOptions.AssignedValues = [evMode]
-    FetchOptions.Mode = fmAll
-    ResourceOptions.AssignedValues = [rvSilentMode]
-    ResourceOptions.SilentMode = True
-    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.AutoCommitUpdates = True
-    StoreDefs = True
-    MasterCascadeDelete = True
-    Datapacks = -1
-    DataCache = False
-    Params = <>
-    DataBase = RESTDWDataBase1
-    CacheUpdateRecords = False
-    AutoCommitData = False
-    AutoRefreshAfterCommit = False
-    Left = 312
-    Top = 144
-  end
   object RESTDWDataBase1: TRESTDWDataBase
     Active = False
     Compression = True
-    MyIP = '0.0.0.0'
     Login = 'testserver'
     Password = 'testserver'
     Proxy = False

@@ -6,9 +6,6 @@
         <Projects Include="Sample\RestDW\SimpleORM_RestDW.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="D:\Projetos\Componentes\RestDataWare\trunk\CORE\Demos\SimpleServer\Server\RestDWServerProject.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="Sample\Firedac\SimpleORMFiredac.dproj">
             <Dependencies/>
         </Projects>
@@ -32,15 +29,6 @@
     <Target Name="SimpleORM_RestDW:Make">
         <MSBuild Projects="Sample\RestDW\SimpleORM_RestDW.dproj" Targets="Make"/>
     </Target>
-    <Target Name="RestDWServerProject">
-        <MSBuild Projects="D:\Projetos\Componentes\RestDataWare\trunk\CORE\Demos\SimpleServer\Server\RestDWServerProject.dproj"/>
-    </Target>
-    <Target Name="RestDWServerProject:Clean">
-        <MSBuild Projects="D:\Projetos\Componentes\RestDataWare\trunk\CORE\Demos\SimpleServer\Server\RestDWServerProject.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="RestDWServerProject:Make">
-        <MSBuild Projects="D:\Projetos\Componentes\RestDataWare\trunk\CORE\Demos\SimpleServer\Server\RestDWServerProject.dproj" Targets="Make"/>
-    </Target>
     <Target Name="SimpleORMFiredac">
         <MSBuild Projects="Sample\Firedac\SimpleORMFiredac.dproj"/>
     </Target>
@@ -60,13 +48,13 @@
         <MSBuild Projects="SimpleORM.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="SimpleORM_RestDW;RestDWServerProject;SimpleORMFiredac;SimpleORM"/>
+        <CallTarget Targets="SimpleORM_RestDW;SimpleORMFiredac;SimpleORM"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="SimpleORM_RestDW:Clean;RestDWServerProject:Clean;SimpleORMFiredac:Clean;SimpleORM:Clean"/>
+        <CallTarget Targets="SimpleORM_RestDW:Clean;SimpleORMFiredac:Clean;SimpleORM:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="SimpleORM_RestDW:Make;RestDWServerProject:Make;SimpleORMFiredac:Make;SimpleORM:Make"/>
+        <CallTarget Targets="SimpleORM_RestDW:Make;SimpleORMFiredac:Make;SimpleORM:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

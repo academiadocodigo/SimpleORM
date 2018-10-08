@@ -8,12 +8,13 @@ uses
 Type
   TSimpleQueryFiredac = class(TInterfacedObject, iSimpleQuery)
     private
+      FConnection : TFDConnection;
       FQuery : TFDQuery;
       FParams : TParams;
     public
-      constructor Create(aQuery : TFDQuery);
+      constructor Create(aConnection : TFDConnection);
       destructor Destroy; override;
-      class function New(aQuery : TFDQuery) : iSimpleQuery;
+      class function New(aConnection : TFDConnection) : iSimpleQuery;
       function SQL : TStrings;
       function Params : TParams;
       function ExecSQL : iSimpleQuery;
@@ -29,9 +30,11 @@ uses
 
 { TSimpleQuery<T> }
 
-constructor TSimpleQueryFiredac.Create(aQuery : TFDQuery);
+constructor TSimpleQueryFiredac.Create(aConnection : TFDConnection);
 begin
-  FQuery := aQuery;
+  FQuery := TFDQuery.Create(nil);
+  FConnection := aConnection;
+  FQuery.Connection := FConnection;
 end;
 
 function TSimpleQueryFiredac.DataSet: TDataSet;
@@ -41,35 +44,49 @@ end;
 
 destructor TSimpleQueryFiredac.Destroy;
 begin
+  FreeAndNil(FQuery);
   if Assigned(FParams) then
     FreeAndNil(FParams);
   inherited;
 end;
 
 function TSimpleQueryFiredac.ExecSQL: iSimpleQuery;
+var
+  a: string;
 begin
   Result := Self;
-  if Assigned(FParams) then
-    FQuery.Params.Assign(FParams);
+  FQuery.Params.Assign(FParams);
+  FQuery.Prepare;
   FQuery.ExecSQL;
+
+  if Assigned(FParams) then
+    FreeAndNil(FParams);
 end;
 
-class function TSimpleQueryFiredac.New(aQuery : TFDQuery): iSimpleQuery;
+class function TSimpleQueryFiredac.New(aConnection : TFDConnection): iSimpleQuery;
 begin
-  Result := Self.Create(aQuery);
+  Result := Self.Create(aConnection);
 end;
 
 function TSimpleQueryFiredac.Open: iSimpleQuery;
 begin
   Result := Self;
+  FQuery.Close;
+
   if Assigned(FParams) then
     FQuery.Params.Assign(FParams);
+
+  FQuery.Prepare;
   FQuery.Open;
+
+  if Assigned(FParams) then
+    FreeAndNil(FParams);
 end;
 
 function TSimpleQueryFiredac.Open(aSQL: String): iSimpleQuery;
 begin
   Result := Self;
+  FQuery.Close;
   FQuery.Open(aSQL);
 end;
 

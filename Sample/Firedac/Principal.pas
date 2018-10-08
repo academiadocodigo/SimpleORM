@@ -9,7 +9,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids;
+  FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, SimpleInterface, SimpleDAO, Entidade.Pedido, System.Generics.Collections, SimpleQueryFiredac;
 
 type
   TForm9 = class(TForm)
@@ -24,7 +24,6 @@ type
     DBGrid1: TDBGrid;
     DataSource1: TDataSource;
     Memo1: TMemo;
-    FDQuery1: TFDQuery;
     FDConnection1: TFDConnection;
     procedure Button3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -33,8 +32,10 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
+    DAOPedido : iSimpleDAO<TPEDIDO>;
   public
     { Public declarations }
   end;
@@ -46,16 +47,11 @@ implementation
 
 {$R *.dfm}
 
-uses
-  SimpleInterface, SimpleDAO, Entidade.Pedido, System.Generics.Collections, SimpleQueryFiredac;
-
 procedure TForm9.Button1Click(Sender: TObject);
 var
-  DAOPedido : iSimpleDAO<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
   Pedido := TPEDIDO.Create;
-  DAOPedido := TSimpleDAO<TPEDIDO>.New(TSimpleQueryFiredac.New(FDQuery1));
   try
     Pedido.ID := StrToInt(Edit2.Text);
     Pedido.NOME := Edit1.Text;
@@ -70,11 +66,9 @@ end;
 
 procedure TForm9.Button3Click(Sender: TObject);
 var
-  DAOPedido : iSimpleDAO<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
   Pedido := TPEDIDO.Create;
-  DAOPedido := TSimpleDAO<TPEDIDO>.New(TSimpleQueryFiredac.New(FDQuery1));
   try
     Pedido.ID := StrToInt(Edit2.Text);
     Pedido.NOME := Edit1.Text;
@@ -89,11 +83,9 @@ end;
 
 procedure TForm9.Button4Click(Sender: TObject);
 var
-  DAOPedido : iSimpleDAO<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
   Pedido := TPEDIDO.Create;
-  DAOPedido := TSimpleDAO<TPEDIDO>.New(TSimpleQueryFiredac.New(FDQuery1));
   try
     Pedido.ID := StrToInt(Edit2.Text);
     DAOPedido.Delete(Pedido);
@@ -105,14 +97,9 @@ end;
 
 procedure TForm9.Button5Click(Sender: TObject);
 var
-  DAOPedido : iSimpleDAO<TPEDIDO>;
   Pedidos : TList<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  DAOPedido := TSimpleDAO<TPEDIDO>
-                .New(TSimpleQueryFiredac.New(FDQuery1))
-                .DataSource(DataSource1);
-
   Pedidos := DAOPedido.Find;
   try
     for Pedido in Pedidos do
@@ -127,13 +114,8 @@ end;
 
 procedure TForm9.Button6Click(Sender: TObject);
 var
-  DAOPedido : iSimpleDAO<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  DAOPedido := TSimpleDAO<TPEDIDO>
-                .New(TSimpleQueryFiredac.New(FDQuery1))
-                .DataSource(DataSource1);
-
   Pedido := DAOPedido.Find(StrToInt(Edit2.Text));
   try
     Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
@@ -144,15 +126,10 @@ end;
 
 procedure TForm9.Button7Click(Sender: TObject);
 var
-  DAOPedido : iSimpleDAO<TPEDIDO>;
   Pedidos : TList<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  DAOPedido := TSimpleDAO<TPEDIDO>
-                .New(TSimpleQueryFiredac.New( FDQuery1))
-                .DataSource(DataSource1);
-
-  Pedidos := DAOPedido.Find(' Nome = ' + QuotedStr(Edit1.Text) + ' ORDER BY ID ');
+  Pedidos := DAOPedido.Find(' Nome = ' + QuotedStr(Edit1.Text));
   try
     for Pedido in Pedidos do
     begin
@@ -168,6 +145,14 @@ procedure TForm9.DataSource1DataChange(Sender: TObject; Field: TField);
 begin
   Edit1.Text := DataSource1.DataSet.FieldByName('NOME').AsString;
   Edit2.Text := DataSource1.DataSet.FieldByName('ID').AsString;
+end;
+
+procedure TForm9.FormCreate(Sender: TObject);
+begin
+  DAOPedido := TSimpleDAO<TPEDIDO>
+                  .New(TSimpleQueryFiredac.New(FDConnection1))
+                  .DataSource(DataSource1);
+
 end;
 
 end.

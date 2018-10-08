@@ -14,8 +14,8 @@ type
     function Delete(aValue : T) : iSimpleDAO<T>;
     function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
     function Find : TList<T>; overload;
-    function Find( aId : Integer) : T; overload;
-    function Find ( aWhere : String ) : TList<T>; overload;
+    function Find(aId : Integer) : T; overload;
+    function Find (aWhere : String) : TList<T>; overload;
   end;
 
   iSimpleRTTI<T> = interface
@@ -37,9 +37,9 @@ type
     function Insert (var aSQL : String) : iSimpleSQL<T>;
     function Update (var aSQL : String) : iSimpleSQL<T>;
     function Delete (var aSQL : String) : iSimpleSQL<T>;
-    function Select (var aSQL : String) : iSimpleSQL<T>;
+    function Select (OrderBy : String; var aSQL : String) : iSimpleSQL<T>;
     function SelectId (var aSQL : String) : iSimpleSQL<T>;
-    function SelectWhere (aWhere : String; var aSQL: String) : iSimpleSQL<T>;
+    function SelectWhere (aWhere : String; OrderBy : String; var aSQL: String) : iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface

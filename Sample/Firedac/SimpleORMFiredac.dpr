@@ -2,7 +2,8 @@ program SimpleORMFiredac;
 
 uses
   Vcl.Forms,
-  Principal in 'Principal.pas' {Form9};
+  Principal in 'Principal.pas' {Form9},
+  Entidade.Pedido in '..\Entidades\Entidade.Pedido.pas';
 
 {$R *.res}
 

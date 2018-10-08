@@ -8,11 +8,12 @@ uses
 Type
   TSimpleQueryRestDW<T : class, constructor> = class(TInterfacedObject, iSimpleQuery)
     private
+      FConnection : TRESTDWDataBase;
       FQuery : TRESTDWClientSQL;
     public
-      constructor Create(aQuery : TRESTDWClientSQL);
+      constructor Create(aConnection : TRESTDWDataBase);
       destructor Destroy; override;
-      class function New(aQuery : TRESTDWClientSQL) : iSimpleQuery;
+      class function New(aConnection : TRESTDWDataBase) : iSimpleQuery;
       function SQL : TStrings;
       function Params : TParams;
       function ExecSQL : iSimpleQuery;
@@ -28,15 +29,17 @@ uses
 
 { TSimpleQuery<T> }
 
-constructor TSimpleQueryRestDW<T>.Create(aQuery : TRESTDWClientSQL);
+constructor TSimpleQueryRestDW<T>.Create(aConnection : TRESTDWDataBase);
 var
   aTable : String;
 begin
+  FConnection := aConnection;
+  FQuery := TRESTDWClientSQL.Create(nil);
+  FQuery.DataBase := FConnection;
   TSimpleRTTI<T>.New(nil).ClassName(aTable);
-  FQuery := aQuery;   
   FQuery.AutoCommitData := False;
   FQuery.AutoRefreshAfterCommit := True;
-  FQuery.SetInBlockEvents(false);  
+  FQuery.SetInBlockEvents(false);
   FQuery.UpdateTableName := aTable;
 end;
 
@@ -47,6 +50,7 @@ end;
 
 destructor TSimpleQueryRestDW<T>.Destroy;
 begin
+  FreeAndNil(FQuery);
   inherited;
 end;
 
@@ -59,15 +63,15 @@ begin
   FQuery.ApplyUpdates(aErro);
 end;
 
-class function TSimpleQueryRestDW<T>.New(aQuery : TRESTDWClientSQL): iSimpleQuery;
+class function TSimpleQueryRestDW<T>.New(aConnection : TRESTDWDataBase): iSimpleQuery;
 begin
-  Result := Self.Create(aQuery);
+  Result := Self.Create(aConnection);
 end;
 
 function TSimpleQueryRestDW<T>.Open: iSimpleQuery;
 begin
-  FQuery.Close;
   Result := Self;
+  FQuery.Close;
   FQuery.Open;
 end;
 
