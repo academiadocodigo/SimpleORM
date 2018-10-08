@@ -48,6 +48,7 @@ contains
   SimpleQueryFiredac in 'SimpleQueryFiredac.pas',
   SimpleQueryRestDW in 'SimpleQueryRestDW.pas',
   SimpleRTTI in 'SimpleRTTI.pas',
-  SimpleSQL in 'SimpleSQL.pas';
+  SimpleSQL in 'SimpleSQL.pas',
+  SimpleDAOSQLAttribute in 'SimpleDAOSQLAttribute.pas';
 
 end.

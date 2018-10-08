@@ -6,6 +6,7 @@ uses
   System.Classes, System.Generics.Collections, Data.DB, System.TypInfo;
 
 type
+  iSimpleDAOSQLAttribute<T> = interface;
 
   iSimpleDAO<T> = interface
     ['{19261B52-6122-4C41-9DDE-D3A1247CC461}']
@@ -15,7 +16,22 @@ type
     function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
     function Find : TList<T>; overload;
     function Find(aId : Integer) : T; overload;
-    function Find (aWhere : String) : TList<T>; overload;
+    //function Find (aWhere : String) : TList<T>; overload;
+    function SQL : iSimpleDAOSQLAttribute<T>;
+  end;
+
+  iSimpleDAOSQLAttribute<T> = interface
+    ['{5DE6F977-336B-4142-ABD1-EB0173FFF71F}']
+    function Fields (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Where (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function OrderBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function GroupBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Fields : String; overload;
+    function Where : String; overload;
+    function OrderBy : String; overload;
+    function GroupBy : String; overload;
+    function Clear : iSimpleDAOSQLAttribute<T>;
+    function &End : iSimpleDAO<T>;
   end;
 
   iSimpleRTTI<T> = interface
@@ -37,9 +53,12 @@ type
     function Insert (var aSQL : String) : iSimpleSQL<T>;
     function Update (var aSQL : String) : iSimpleSQL<T>;
     function Delete (var aSQL : String) : iSimpleSQL<T>;
-    function Select (OrderBy : String; var aSQL : String) : iSimpleSQL<T>;
-    function SelectId (var aSQL : String) : iSimpleSQL<T>;
-    function SelectWhere (aWhere : String; OrderBy : String; var aSQL: String) : iSimpleSQL<T>;
+    function Select (var aSQL : String) : iSimpleSQL<T>;
+    function SelectId(var aSQL: String): iSimpleSQL<T>;
+    function Fields (aSQL : String) : iSimpleSQL<T>;
+    function Where (aSQL : String) : iSimpleSQL<T>;
+    function OrderBy (aSQL : String) : iSimpleSQL<T>;
+    function GroupBy (aSQL : String) : iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface

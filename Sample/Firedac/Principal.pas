@@ -16,7 +16,7 @@ type
     Button3: TButton;
     Button1: TButton;
     Button4: TButton;
-    Button5: TButton;
+    btnFind: TButton;
     Button6: TButton;
     Button7: TButton;
     Edit2: TEdit;
@@ -28,7 +28,7 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
+    procedure btnFindClick(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
@@ -59,7 +59,7 @@ begin
     DAOPedido.Update(Pedido);
   finally
     Pedido.Free;
-    DAOPedido.Find;
+    btnFindClick(nil);
   end;
 
 end;
@@ -76,7 +76,7 @@ begin
     DAOPedido.Insert(Pedido);
   finally
     Pedido.Free;
-    DAOPedido.Find;
+    btnFindClick(nil);
   end;
 
 end;
@@ -91,16 +91,16 @@ begin
     DAOPedido.Delete(Pedido);
   finally
     Pedido.Free;
-    DAOPedido.Find;
+    btnFindClick(nil);
   end;
 end;
 
-procedure TForm9.Button5Click(Sender: TObject);
+procedure TForm9.btnFindClick(Sender: TObject);
 var
   Pedidos : TList<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  Pedidos := DAOPedido.Find;
+  Pedidos := DAOPedido.SQL.OrderBy('ID').&End.Find;
   try
     for Pedido in Pedidos do
     begin
@@ -129,7 +129,7 @@ var
   Pedidos : TList<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  Pedidos := DAOPedido.Find(' Nome = ' + QuotedStr(Edit1.Text));
+  Pedidos := DAOPedido.SQL.Where(' Nome = ' + QuotedStr(Edit1.Text)).&End.Find;
   try
     for Pedido in Pedidos do
     begin

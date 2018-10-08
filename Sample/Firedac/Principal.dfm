@@ -41,14 +41,14 @@ object Form9: TForm9
     TabOrder = 2
     OnClick = Button4Click
   end
-  object Button5: TButton
+  object btnFind: TButton
     Left = 8
     Top = 101
     Width = 75
     Height = 25
     Caption = 'Find'
     TabOrder = 3
-    OnClick = Button5Click
+    OnClick = btnFindClick
   end
   object Button6: TButton
     Left = 8

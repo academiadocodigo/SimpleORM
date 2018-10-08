@@ -126,8 +126,8 @@ object Form8: TForm8
     StrsTrim2Len = True
     ParamCreate = True
     ClientConnectionDefs.Active = False
-    Left = 392
-    Top = 152
+    Left = 472
+    Top = 320
   end
   object DataSource1: TDataSource
     OnDataChange = DataSource1DataChange

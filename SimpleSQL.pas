@@ -9,6 +9,10 @@ Type
   TSimpleSQL<T : class, constructor> = class(TInterfacedObject, iSimpleSQL<T>)
     private
       FInstance : T;
+      FFields : String;
+      FWhere : String;
+      FOrderBy : String;
+      FGroupBy : String;
     public
       constructor Create(aInstance : T);
       destructor Destroy; override;
@@ -16,9 +20,12 @@ Type
       function Insert (var aSQL : String) : iSimpleSQL<T>;
       function Update (var aSQL : String) : iSimpleSQL<T>;
       function Delete (var aSQL : String) : iSimpleSQL<T>;
-      function Select (OrderBy : String; var aSQL : String) : iSimpleSQL<T>;
-      function SelectId (var aSQL : String) : iSimpleSQL<T>;
-      function SelectWhere (aWhere : String; OrderBy : String ; var aSQL: String) : iSimpleSQL<T>;
+      function Select (var aSQL : String) : iSimpleSQL<T>;
+      function SelectId(var aSQL: String): iSimpleSQL<T>;
+      function Fields (aSQL : String) : iSimpleSQL<T>;
+      function Where (aSQL : String) : iSimpleSQL<T>;
+      function OrderBy (aSQL : String) : iSimpleSQL<T>;
+      function GroupBy (aSQL : String) : iSimpleSQL<T>;
   end;
 
 implementation
@@ -54,6 +61,18 @@ begin
   inherited;
 end;
 
+function TSimpleSQL<T>.Fields(aSQL: String): iSimpleSQL<T>;
+begin
+  Result := Self;
+  FFields := aSQL;
+end;
+
+function TSimpleSQL<T>.GroupBy(aSQL: String): iSimpleSQL<T>;
+begin
+  Result := Self;
+  FGroupBy := aSQL;
+end;
+
 function TSimpleSQL<T>.Insert(var aSQL: String): iSimpleSQL<T>;
 var
   aClassName, aFields, aParam : String;
@@ -75,7 +94,13 @@ begin
   Result := Self.Create(aInstance);
 end;
 
-function TSimpleSQL<T>.Select (OrderBy : String; var aSQL : String) : iSimpleSQL<T>;
+function TSimpleSQL<T>.OrderBy(aSQL: String): iSimpleSQL<T>;
+begin
+  Result := Self;
+  FOrderBy := aSQL;
+end;
+
+function TSimpleSQL<T>.Select (var aSQL : String) : iSimpleSQL<T>;
 var
   aFields, aClassName : String;
 begin
@@ -85,10 +110,22 @@ begin
     .Fields(aFields)
     .ClassName(aClassName);
 
-  aSQL := aSQL + ' SELECT ' + aFields;
+  if FFields <> '' then
+    aSQL := aSQL + ' SELECT ' + FFields
+  else
+    aSQL := aSQL + ' SELECT ' + aFields;
+
   aSQL := aSQL + ' FROM ' + aClassName;
-  if OrderBy <> '' then
-    aSQL := aSQL + ' ORDER BY ' + OrderBy;
+
+  if FWhere <> '' then
+    aSQL := aSQL + ' WHERE ' + FWhere;
+
+  if FGroupBy <> '' then
+    aSQL := aSQL + ' GROUP BY ' + FGroupBy;  
+
+  if FOrderBy <> '' then
+    aSQL := aSQL + ' ORDER BY ' + FOrderBy;
+
 end;
 
 function TSimpleSQL<T>.SelectId(var aSQL: String): iSimpleSQL<T>;
@@ -101,26 +138,12 @@ begin
     .Fields(aFields)
     .ClassName(aClassName)
     .Where(aWhere);
+  if FWhere <> '' then
+    aSQL := aSQL + ' WHERE ' + FWhere;
 
   aSQL := aSQL + ' SELECT ' + aFields;
   aSQL := aSQL + ' FROM ' + aClassName;
   aSQL := aSQL + ' WHERE ' + aWhere;
-end;
-
-function TSimpleSQL<T>.SelectWhere (aWhere : String; OrderBy : String; var aSQL: String) : iSimpleSQL<T>;
-var
-  aFields : String;
-  aClassName : String;
-begin
-  TSimpleRTTI<T>.New(nil)
-    .Fields(aFields)
-    .ClassName(aClassName);
-
-  aSQL := aSQL + ' SELECT ' + aFields;
-  aSQL := aSQL + ' FROM ' + aClassName;
-  aSQL := aSQL + ' WHERE ' + aWhere;
-  if OrderBy <> '' then
-    aSQL := aSQL + ' ORDER BY' + OrderBy;
 end;
 
 function TSimpleSQL<T>.Update(var aSQL: String): iSimpleSQL<T>;
@@ -138,6 +161,12 @@ begin
   aSQL := aSQL + ' SET ' + aUpdate;
   aSQL := aSQL + ' WHERE ' + aWhere;
 
+end;
+
+function TSimpleSQL<T>.Where(aSQL: String): iSimpleSQL<T>;
+begin
+  Result := Self;
+  FWhere := aSQL;
 end;
 
 end.

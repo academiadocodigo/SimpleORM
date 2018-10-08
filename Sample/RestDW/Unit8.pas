@@ -32,6 +32,7 @@ type
     procedure Button6Click(Sender: TObject);
     procedure DataSource1DataChange(Sender: TObject; Field: TField);
     procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
     DAOPedido : iSimpleDAO<TPEDIDO>;
@@ -51,7 +52,11 @@ var
   Pedidos : TList<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  Pedidos := DAOPedido.Find;
+  Pedidos := DAOPedido
+              .SQL
+                .OrderBy('ID')
+              .&End
+              .Find;
   try
     for Pedido in Pedidos do
     begin
@@ -62,6 +67,15 @@ begin
     FreeAndNil(Pedidos);
   end;
 
+end;
+
+procedure TForm8.Button1Click(Sender: TObject);
+begin
+//  DAOPedido
+//    .SQL
+//      .Fields('MAX(ID)')
+//    .&End
+//    .Find;
 end;
 
 procedure TForm8.Button2Click(Sender: TObject);
@@ -129,7 +143,11 @@ var
   Pedidos : TList<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  Pedidos := DAOPedido.Find(' Nome = ' + QuotedStr(Edit1.Text));
+  Pedidos := DAOPedido
+              .SQL
+                .Where(' Nome = ' + QuotedStr(Edit1.Text))
+              .&End
+              .Find;
   try
     for Pedido in Pedidos do
     begin

@@ -104,6 +104,7 @@
         <DCCReference Include="SimpleQueryRestDW.pas"/>
         <DCCReference Include="SimpleRTTI.pas"/>
         <DCCReference Include="SimpleSQL.pas"/>
+        <DCCReference Include="SimpleDAOSQLAttribute.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -146,7 +147,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\..\Public\Documents\Embarcadero\Studio\19.0\Bpl\SimpleORM.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\19.0\Bpl\SimpleORM.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>SimpleORM.bpl</RemoteName>
                         <Overwrite>true</Overwrite>
