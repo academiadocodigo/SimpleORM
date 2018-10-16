@@ -21,7 +21,7 @@ Type
       function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
       function ListFields (var List : TList<String>) : iSimpleRTTI<T>;
       function ClassName (var aClassName : String) : iSimpleRTTI<T>;
-      function DataSetToEntityList (aDataSet : TDataSet; var aList : TList<T>) : iSimpleRTTI<T>;
+      function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
       function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
   end;
 
@@ -116,7 +116,7 @@ begin
 end;
 
 function TSimpleRTTI<T>.DataSetToEntityList(aDataSet: TDataSet;
-  var aList: TList<T>): iSimpleRTTI<T>;
+  var aList: TObjectList<T>): iSimpleRTTI<T>;
 var
   Field : TField;
   teste: string;

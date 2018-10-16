@@ -3,7 +3,9 @@ unit SimpleQueryFiredac;
 interface
 
 uses
-  SimpleInterface, FireDAC.Comp.Client, System.Classes, Data.DB;
+  SimpleInterface, FireDAC.Comp.Client, System.Classes, Data.DB,
+  FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet;
 
 Type
   TSimpleQueryFiredac = class(TInterfacedObject, iSimpleQuery)

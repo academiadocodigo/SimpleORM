@@ -13,6 +13,7 @@ Type
       FWhere : String;
       FOrderBy : String;
       FGroupBy : String;
+      FJoin : String;
     public
       constructor Create(aInstance : T);
       destructor Destroy; override;
@@ -26,6 +27,7 @@ Type
       function Where (aSQL : String) : iSimpleSQL<T>;
       function OrderBy (aSQL : String) : iSimpleSQL<T>;
       function GroupBy (aSQL : String) : iSimpleSQL<T>;
+      function Join (aSQL : String) : iSimpleSQL<T>;
   end;
 
 implementation
@@ -89,6 +91,12 @@ begin
     aSQL := aSQL + ' VALUES (' + aParam + ');';
 end;
 
+function TSimpleSQL<T>.Join(aSQL: String): iSimpleSQL<T>;
+begin
+  Result := Self;
+  FJoin := aSQL;
+end;
+
 class function TSimpleSQL<T>.New(aInstance : T): iSimpleSQL<T>;
 begin
   Result := Self.Create(aInstance);
@@ -116,6 +124,9 @@ begin
     aSQL := aSQL + ' SELECT ' + aFields;
 
   aSQL := aSQL + ' FROM ' + aClassName;
+
+  if FJoin <> '' then
+    aSQL := aSQL + ' ' + FJoin + ' ';
 
   if FWhere <> '' then
     aSQL := aSQL + ' WHERE ' + FWhere;

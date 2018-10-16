@@ -25,7 +25,7 @@ Type
       function Insert(aValue : T) : iSimpleDAO<T>;
       function Update(aValue : T) : iSimpleDAO<T>;
       function Delete(aValue : T) : iSimpleDAO<T>;
-      function Find : TList<T>; overload;
+      function Find : TObjectList<T>; overload;
       function Find( aId : Integer) : T; overload;
       //function Find (aWhere : String) : TList<T>; overload;
       function SQL : iSimpleDAOSQLAttribute<T>;
@@ -68,15 +68,16 @@ begin
   inherited;
 end;
 
-function TSimpleDAO<T>.Find : TList<T>;
+function TSimpleDAO<T>.Find : TObjectList<T>;
 var
   aSQL : String;
 begin
-  Result := TList<T>.Create;
+  Result := TObjectList<T>.Create;
 
   TSimpleSQL<T>
     .New(nil)
     .Fields(FSQLAttribute.Fields)
+    .Join(FSQLAttribute.Join)
     .Where(FSQLAttribute.Where)
     .OrderBy(FSQLAttribute.OrderBy)
     .Select(aSQL);

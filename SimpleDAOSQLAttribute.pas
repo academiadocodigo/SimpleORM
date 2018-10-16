@@ -6,7 +6,7 @@ uses
   SimpleInterface;
 
 Type
-  TSimpleDAOSQLAttribute<T> = class(TInterfacedObject,
+  TSimpleDAOSQLAttribute<T : class> = class(TInterfacedObject,
     iSimpleDAOSQLAttribute<T>)
   private
     [weak]
@@ -15,6 +15,7 @@ Type
     FWhere: String;
     FOrderBy: String;
     FGroupBy: String;
+    FJoin : String;
   public
     constructor Create(Parent: iSimpleDAO<T>);
     destructor Destroy; override;
@@ -23,6 +24,8 @@ Type
     function Where(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
     function OrderBy(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
     function GroupBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Join (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Join : String; overload;
     function Clear : iSimpleDAOSQLAttribute<T>;
     function Fields: String; overload;
     function Where: String; overload;
@@ -50,11 +53,23 @@ begin
   Result := FGroupBy;
 end;
 
+function TSimpleDAOSQLAttribute<T>.Join: String;
+begin
+  Result := FJoin;
+end;
+
+function TSimpleDAOSQLAttribute<T>.Join(
+  aSQL: String): iSimpleDAOSQLAttribute<T>;
+begin
+  Result := Self;
+  FJoin := FJoin + ' ' + aSQL;
+end;
+
 function TSimpleDAOSQLAttribute<T>.GroupBy(
   aSQL: String): iSimpleDAOSQLAttribute<T>;
 begin
   Result := Self;
-  FGroupBy := aSQL;
+  FGroupBy := FGroupBy + ' ' + aSQL;
 end;
 
 function TSimpleDAOSQLAttribute<T>.Clear: iSimpleDAOSQLAttribute<T>;
@@ -64,6 +79,7 @@ begin
   FWhere := '';
   FOrderBy := '';
   FGroupBy := '';
+  FJoin := '';
 end;
 
 constructor TSimpleDAOSQLAttribute<T>.Create(Parent: iSimpleDAO<T>);
@@ -81,7 +97,7 @@ function TSimpleDAOSQLAttribute<T>.Fields(aSQL: String)
   : iSimpleDAOSQLAttribute<T>;
 begin
   Result := Self;
-  FFields := aSQL;
+  FFields := FFields + ' ' + aSQL;
 end;
 
 class function TSimpleDAOSQLAttribute<T>.New(Parent: iSimpleDAO<T>)
@@ -99,14 +115,14 @@ function TSimpleDAOSQLAttribute<T>.OrderBy(aSQL: String)
   : iSimpleDAOSQLAttribute<T>;
 begin
   Result := Self;
-  FOrderBy := aSQL;
+  FOrderBy := FOrderBy + ' ' + aSQL;
 end;
 
 function TSimpleDAOSQLAttribute<T>.Where(aSQL: String)
   : iSimpleDAOSQLAttribute<T>;
 begin
   Result := Self;
-  FWhere := aSQL;
+  FWhere := FWhere + ' ' + aSQL;
 end;
 
 function TSimpleDAOSQLAttribute<T>.Where: String;

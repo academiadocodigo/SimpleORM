@@ -6,26 +6,28 @@ uses
   System.Classes, System.Generics.Collections, Data.DB, System.TypInfo;
 
 type
-  iSimpleDAOSQLAttribute<T> = interface;
+  iSimpleDAOSQLAttribute<T : class> = interface;
 
-  iSimpleDAO<T> = interface
+  iSimpleDAO<T : class> = interface
     ['{19261B52-6122-4C41-9DDE-D3A1247CC461}']
     function Insert(aValue : T) : iSimpleDAO<T>;
     function Update(aValue : T) : iSimpleDAO<T>;
     function Delete(aValue : T) : iSimpleDAO<T>;
     function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
-    function Find : TList<T>; overload;
+    function Find : TObjectList<T>; overload;
     function Find(aId : Integer) : T; overload;
     //function Find (aWhere : String) : TList<T>; overload;
     function SQL : iSimpleDAOSQLAttribute<T>;
   end;
 
-  iSimpleDAOSQLAttribute<T> = interface
+  iSimpleDAOSQLAttribute<T : class> = interface
     ['{5DE6F977-336B-4142-ABD1-EB0173FFF71F}']
     function Fields (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
     function Where (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
     function OrderBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
     function GroupBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Join (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Join : String; overload;
     function Fields : String; overload;
     function Where : String; overload;
     function OrderBy : String; overload;
@@ -34,7 +36,7 @@ type
     function &End : iSimpleDAO<T>;
   end;
 
-  iSimpleRTTI<T> = interface
+  iSimpleRTTI<T : class> = interface
     ['{EEC49F47-24AC-4D82-9BEE-C259330A8993}']
     function ClassName (var aClassName : String) : iSimpleRTTI<T>;
     function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
@@ -44,7 +46,7 @@ type
     function Fields (var aFields : String) : iSimpleRTTI<T>;
     function FieldsInsert (var aFields : String) : iSimpleRTTI<T>;
     function Param (var aParam : String) : iSimpleRTTI<T>;
-    function DataSetToEntityList (aDataSet : TDataSet; var aList : TList<T>) : iSimpleRTTI<T>;
+    function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
     function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
   end;
 
@@ -59,6 +61,7 @@ type
     function Where (aSQL : String) : iSimpleSQL<T>;
     function OrderBy (aSQL : String) : iSimpleSQL<T>;
     function GroupBy (aSQL : String) : iSimpleSQL<T>;
+    function Join (aSQL : String) : iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface
