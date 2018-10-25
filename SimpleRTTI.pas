@@ -196,7 +196,11 @@ begin
     typRtti := ctxRtti.GetType(Info);
     for prpRtti in typRtti.GetProperties do
     begin
+      if CompareText('TDateTime',prpRtti.PropertyType.Name)=0 then
+        aDictionary.Add(prpRtti.Name, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+      else
         aDictionary.Add(prpRtti.Name, prpRtti.GetValue(Pointer(FInstance)).ToString);
+
     end;
   finally
     ctxRtti.Free;
@@ -378,11 +382,11 @@ begin
       for Attribute in prpRtti.GetAttributes do
       begin
         if Attribute is PK then
-          aWhere := aWhere + prpRtti.Name + ' = :' + prpRtti.Name + ', ';
+          aWhere := aWhere + prpRtti.Name + ' = :' + prpRtti.Name + ' AND ';
       end;
     end;
   finally
-    aWhere := Copy(aWhere, 0, Length(aWhere) - 2) + ' ';
+    aWhere := Copy(aWhere, 0, Length(aWhere) - 4) + ' ';
     ctxRtti.Free;
   end;
 end;

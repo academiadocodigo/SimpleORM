@@ -9,7 +9,8 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, SimpleInterface, SimpleDAO, Entidade.Pedido, System.Generics.Collections, SimpleQueryFiredac;
+  FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, SimpleInterface, SimpleDAO, Entidade.Pedido, System.Generics.Collections, SimpleQueryFiredac,
+  Entidade.DoublePK;
 
 type
   TForm9 = class(TForm)
@@ -61,7 +62,6 @@ begin
     Pedido.Free;
     btnFindClick(nil);
   end;
-
 end;
 
 procedure TForm9.Button3Click(Sender: TObject);
@@ -105,7 +105,6 @@ begin
     for Pedido in Pedidos do
     begin
       Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
-      Pedido.Free;
     end;
   finally
     Pedidos.Free;
@@ -134,7 +133,6 @@ begin
     for Pedido in Pedidos do
     begin
       Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
-      Pedido.Free;
     end;
   finally
     Pedidos.Free;
@@ -149,6 +147,8 @@ end;
 
 procedure TForm9.FormCreate(Sender: TObject);
 begin
+  ReportMemoryLeaksOnShutdown := true;
+
   DAOPedido := TSimpleDAO<TPEDIDO>
                   .New(TSimpleQueryFiredac.New(FDConnection1))
                   .DataSource(DataSource1);
