@@ -11,9 +11,11 @@ Type
     FID: Integer;
     FNOME: String;
     FDATA: TDatetime;
+    FVALOR: Currency;
     procedure SetID(const Value: Integer);
     procedure SetNOME(const Value: String);
     procedure SetDATA(const Value: TDatetime);
+    procedure SetVALOR(const Value: Currency);
     public
       constructor Create;
       destructor Destroy; override;
@@ -22,6 +24,7 @@ Type
       property ID : Integer read FID write SetID;
       property NOME : String read FNOME write SetNOME;
       property DATA : TDatetime read FDATA write SetDATA;
+      property VALOR : Currency read FVALOR write SetVALOR;
     end;
 
 implementation
@@ -52,6 +55,11 @@ end;
 procedure TPEDIDO.SetNOME(const Value: String);
 begin
   FNOME := Value;
+end;
+
+procedure TPEDIDO.SetVALOR(const Value: Currency);
+begin
+  FVALOR := Value;
 end;
 
 end.

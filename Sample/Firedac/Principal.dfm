@@ -106,6 +106,14 @@ object Form9: TForm9
       'Memo1')
     TabOrder = 9
   end
+  object Edit3: TEdit
+    Left = 359
+    Top = 41
+    Width = 121
+    Height = 21
+    TabOrder = 10
+    Text = 'Edit3'
+  end
   object DataSource1: TDataSource
     OnDataChange = DataSource1DataChange
     Left = 568

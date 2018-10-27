@@ -26,6 +26,7 @@ type
     DataSource1: TDataSource;
     Memo1: TMemo;
     FDConnection1: TFDConnection;
+    Edit3: TEdit;
     procedure Button3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
@@ -57,6 +58,7 @@ begin
     Pedido.ID := StrToInt(Edit2.Text);
     Pedido.NOME := Edit1.Text;
     Pedido.DATA := now;
+    Pedido.VALOR := StrToCurr(Edit3.Text);
     DAOPedido.Update(Pedido);
   finally
     Pedido.Free;
@@ -73,6 +75,7 @@ begin
     Pedido.ID := StrToInt(Edit2.Text);
     Pedido.NOME := Edit1.Text;
     Pedido.DATA := now;
+    Pedido.VALOR := StrToCurr(Edit3.Text);
     DAOPedido.Insert(Pedido);
   finally
     Pedido.Free;
@@ -143,6 +146,7 @@ procedure TForm9.DataSource1DataChange(Sender: TObject; Field: TField);
 begin
   Edit1.Text := DataSource1.DataSet.FieldByName('NOME').AsString;
   Edit2.Text := DataSource1.DataSet.FieldByName('ID').AsString;
+  Edit3.Text := DataSource1.DataSet.FieldByName('VALOR').AsString;
 end;
 
 procedure TForm9.FormCreate(Sender: TObject);

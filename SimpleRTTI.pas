@@ -9,6 +9,7 @@ Type
   TSimpleRTTI<T : class, constructor> = class(TInterfacedObject, iSimpleRTTI<T>)
     private
       FInstance : T;
+      function __FloatFormat( aValue : String ) : Currency;
     public
       constructor Create( aInstance : T );
       destructor Destroy; override;
@@ -31,6 +32,14 @@ uses
   System.TypInfo, System.SysUtils, SimpleAttributes;
 
 { TSimpleRTTI }
+
+function TSimpleRTTI<T>.__FloatFormat( aValue : String ) : Currency;
+begin
+  while Pos('.', aValue) > 0 do
+    delete(aValue,Pos('.', aValue),1);
+
+  Result := StrToCurr(aValue);
+end;
 
 function TSimpleRTTI<T>.ClassName (var aClassName : String) : iSimpleRTTI<T>;
 var
@@ -188,6 +197,7 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
+  Aux : String;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
@@ -196,11 +206,25 @@ begin
     typRtti := ctxRtti.GetType(Info);
     for prpRtti in typRtti.GetProperties do
     begin
-      if CompareText('TDateTime',prpRtti.PropertyType.Name)=0 then
-        aDictionary.Add(prpRtti.Name, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
-      else
-        aDictionary.Add(prpRtti.Name, prpRtti.GetValue(Pointer(FInstance)).ToString);
-
+      case prpRtti.PropertyType.TypeKind of
+          tkInt64,
+          tkInteger     : aDictionary.Add(prpRtti.Name, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
+          tkFloat       :
+          begin
+            if CompareText('TDateTime',prpRtti.PropertyType.Name)=0 then
+              aDictionary.Add(prpRtti.Name, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+            else
+              aDictionary.Add(prpRtti.Name, __FloatFormat(prpRtti.GetValue(Pointer(FInstance)).ToString));
+          end;
+          tkWChar,
+          tkLString,
+          tkWString,
+          tkUString,
+          tkString      : aDictionary.Add(prpRtti.Name, prpRtti.GetValue(Pointer(FInstance)).AsString);
+          tkVariant     : aDictionary.Add(prpRtti.Name, prpRtti.GetValue(Pointer(FInstance)).AsVariant);
+          else
+            aDictionary.Add(prpRtti.Name, prpRtti.GetValue(Pointer(FInstance)).AsString);
+      end;
     end;
   finally
     ctxRtti.Free;
