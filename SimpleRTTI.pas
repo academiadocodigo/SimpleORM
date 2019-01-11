@@ -213,7 +213,11 @@ begin
           begin
             if CompareText('TDateTime',prpRtti.PropertyType.Name)=0 then
               aDictionary.Add(prpRtti.Name, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
-            else
+            else if   ( CompareText('TTime',prpRtti.PropertyType.Name)=0) then
+               aDictionary.Add(prpRtti.Name, StrToTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+            else if   ( CompareText('TDate',prpRtti.PropertyType.Name)=0) then
+               aDictionary.Add(prpRtti.Name, StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString))
+            else   
               aDictionary.Add(prpRtti.Name, __FloatFormat(prpRtti.GetValue(Pointer(FInstance)).ToString));
           end;
           tkWChar,
