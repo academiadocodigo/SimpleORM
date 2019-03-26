@@ -3,21 +3,30 @@ unit SimpleInterface;
 interface
 
 uses
-  System.Classes, System.Generics.Collections, Data.DB, System.TypInfo;
+  System.Classes,
+  System.Generics.Collections,
+  Data.DB,
+  System.TypInfo,
+  System.SysUtils,
+  VCL.Forms;
 
 type
   iSimpleDAOSQLAttribute<T : class> = interface;
 
   iSimpleDAO<T : class> = interface
     ['{19261B52-6122-4C41-9DDE-D3A1247CC461}']
-    function Insert(aValue : T) : iSimpleDAO<T>;
-    function Update(aValue : T) : iSimpleDAO<T>;
-    function Delete(aValue : T) : iSimpleDAO<T>;
+    function Insert(aValue : T) : iSimpleDAO<T>; overload;
+    function Insert: iSimpleDAO<T>; overload;
+    function Update(aValue : T) : iSimpleDAO<T>; overload;
+    function Update : iSimpleDAO<T>; overload;
+    function Delete(aValue : T) : iSimpleDAO<T>; overload;
+    function Delete : iSimpleDAO<T>; overload;
     function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
-    function Find : TObjectList<T>; overload;
+    function Find : iSimpleDAO<T>; overload;
+    function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
     function Find(aId : Integer) : T; overload;
-    //function Find (aWhere : String) : TList<T>; overload;
     function SQL : iSimpleDAOSQLAttribute<T>;
+    function BindForm(aForm : TForm)  : iSimpleDAO<T>;
   end;
 
   iSimpleDAOSQLAttribute<T : class> = interface
@@ -38,6 +47,7 @@ type
 
   iSimpleRTTI<T : class> = interface
     ['{EEC49F47-24AC-4D82-9BEE-C259330A8993}']
+    function TableName(var aTableName: String): ISimpleRTTI<T>;
     function ClassName (var aClassName : String) : iSimpleRTTI<T>;
     function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
     function ListFields (var List : TList<String>) : iSimpleRTTI<T>;
@@ -48,6 +58,8 @@ type
     function Param (var aParam : String) : iSimpleRTTI<T>;
     function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
     function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
+    function BindClassToForm (aForm : TForm;  const aEntity : T) : iSimpleRTTI<T>;
+    function BindFormToClass (aForm : TForm; var aEntity : T) : iSimpleRTTI<T>;
   end;
 
   iSimpleSQL<T> = interface

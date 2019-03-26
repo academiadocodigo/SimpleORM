@@ -6,30 +6,34 @@ uses
   SimpleAttributes;
 
 Type
+  [Tabela('PEDIDO')]
   TPEDIDO = class
-    private
+  private
     FID: Integer;
-    FNOME: String;
-    FDATA: TDatetime;
-    FVALOR: Currency;
+    FCLIENTE: String;
+    FDATAPEDIDO: TDatetime;
+    FVALORTOTAL: Currency;
     procedure SetID(const Value: Integer);
-    procedure SetNOME(const Value: String);
-    procedure SetDATA(const Value: TDatetime);
-    procedure SetVALOR(const Value: Currency);
-    public
-      constructor Create;
-      destructor Destroy; override;
-    published
-      [PK, AutoInc]
-      property ID : Integer read FID write SetID;
-      property NOME : String read FNOME write SetNOME;
-      property DATA : TDatetime read FDATA write SetDATA;
-      property VALOR : Currency read FVALOR write SetVALOR;
-    end;
+    procedure SetCLIENTE(const Value: String);
+    procedure SetDATAPEDIDO(const Value: TDatetime);
+    procedure SetVALORTOTAL(const Value: Currency);
+  public
+    constructor Create;
+    destructor Destroy; override;
+  published
+    [Campo('ID'), Pk, AutoInc]
+    property ID: Integer read FID write SetID;
+    [Campo('NOME')]
+    property CLIENTE: String read FCLIENTE write SetCLIENTE;
+    [Campo('DATA')]
+    property DATAPEDIDO: TDatetime read FDATAPEDIDO write SetDATAPEDIDO;
+    [Campo('VALOR')]
+    property VALORTOTAL: Currency read FVALORTOTAL write SetVALORTOTAL;
+  end;
 
 implementation
 
-{ TMinhaClasse }
+{ TPEDIDO }
 
 constructor TPEDIDO.Create;
 begin
@@ -42,9 +46,9 @@ begin
   inherited;
 end;
 
-procedure TPEDIDO.SetDATA(const Value: TDatetime);
+procedure TPEDIDO.SetDATAPEDIDO(const Value: TDatetime);
 begin
-  FDATA := Value;
+  FDATAPEDIDO := Value;
 end;
 
 procedure TPEDIDO.SetID(const Value: Integer);
@@ -52,14 +56,15 @@ begin
   FID := Value;
 end;
 
-procedure TPEDIDO.SetNOME(const Value: String);
+procedure TPEDIDO.SetCLIENTE(const Value: String);
 begin
-  FNOME := Value;
+  FCLIENTE := Value;
 end;
 
-procedure TPEDIDO.SetVALOR(const Value: Currency);
+procedure TPEDIDO.SetVALORTOTAL(const Value: Currency);
 begin
-  FVALOR := Value;
+  FVALORTOTAL := Value;
 end;
 
 end.
+

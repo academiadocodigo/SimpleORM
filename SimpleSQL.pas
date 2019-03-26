@@ -49,7 +49,7 @@ begin
   Result := Self;
 
   TSimpleRTTI<T>.New(FInstance)
-    .ClassName(aClassName)
+    .TableName(aClassName)
     .Where(aWhere);
 
   aSQL := aSQL + 'DELETE FROM ' + aClassName;
@@ -82,7 +82,7 @@ begin
   Result := Self;
 
     TSimpleRTTI<T>.New(FInstance)
-      .ClassName(aClassName)
+      .TableName(aClassName)
       .FieldsInsert(aFields)
       .Param(aParam);
 
@@ -116,7 +116,7 @@ begin
 
   TSimpleRTTI<T>.New(nil)
     .Fields(aFields)
-    .ClassName(aClassName);
+    .TableName(aClassName);
 
   if FFields <> '' then
     aSQL := aSQL + ' SELECT ' + FFields
@@ -147,7 +147,7 @@ begin
 
   TSimpleRTTI<T>.New(FInstance)
     .Fields(aFields)
-    .ClassName(aClassName)
+    .TableName(aClassName)
     .Where(aWhere);
   if FWhere <> '' then
     aSQL := aSQL + ' WHERE ' + FWhere;
@@ -164,7 +164,7 @@ begin
   Result := Self;
 
   TSimpleRTTI<T>.New(FInstance)
-    .ClassName(ClassName)
+    .TableName(ClassName)
     .Update(aUpdate)
     .Where(aWhere);
 
