@@ -88,9 +88,11 @@ uses
   System.RTTI,
   Data.DB,
   TypInfo,
+  {$IFNDEF CONSOLE}
   VCL.Forms,
   VCL.StdCtrls,
   Vcl.ExtCtrls,
+  {$ENDIF}
   System.Classes;
 
 Type
@@ -99,10 +101,11 @@ Type
       FInstance : T;
       function __findRTTIField(ctxRtti : TRttiContext; classe: TClass; const Field: String): TRttiField;
       function __FloatFormat( aValue : String ) : Currency;
+      {$IFNDEF CONSOLE}
       function __BindValueToComponent( aComponent : TComponent; aValue : Variant) : iSimpleRTTI<T>;
       function __BindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : iSimpleRTTI<T>;
-
       function __GetComponentToValue( aComponent : TComponent) : TValue;
+      {$ENDIF}
       function __GetRTTIPropertyValue(aEntity : T; aPropertyName : String) : Variant;
       function __GetRTTIProperty(aEntity : T; aPropertyName : String) : TRttiProperty;
     public
@@ -122,8 +125,10 @@ Type
       function ClassName (var aClassName : String) : iSimpleRTTI<T>;
       function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
       function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
+      {$IFNDEF CONSOLE}
       function BindClassToForm (aForm : TForm; const aEntity : T): iSimpleRTTI<T>;
       function BindFormToClass (aForm : TForm; var aEntity : T) : iSimpleRTTI<T>;
+      {$ENDIF}
   end;
 
 implementation
@@ -131,11 +136,14 @@ implementation
 uses
   System.SysUtils, 
   SimpleAttributes,
+  {$IFNDEF CONSOLE}
   Vcl.ComCtrls,
+  {$ENDIF}
   Variants;
 
 { TSimpleRTTI }
 
+{$IFNDEF CONSOLE}
 function TSimpleRTTI<T>.__BindValueToComponent(aComponent: TComponent;
   aValue: Variant): iSimpleRTTI<T>;
 begin
@@ -205,6 +213,7 @@ begin
   end;
 
 end;
+{$ENDIF}
 
 function TSimpleRTTI<T>.__findRTTIField(ctxRtti: TRttiContext; classe: TClass;
   const Field: String): TRttiField;
@@ -223,6 +232,7 @@ begin
   Result := StrToCurr(aValue);
 end;
 
+{$IFNDEF CONSOLE}
 function TSimpleRTTI<T>.__GetComponentToValue(aComponent: TComponent): TValue;
 var
   a: string;
@@ -252,6 +262,7 @@ begin
 
   a := Result.TOString;
 end;
+{$ENDIF}
 
 function TSimpleRTTI<T>.__GetRTTIProperty(aEntity: T;
   aPropertyName: String): TRttiProperty;
@@ -287,6 +298,7 @@ begin
 
 end;
 
+{$IFNDEF CONSOLE}
 function TSimpleRTTI<T>.BindClassToForm(aForm: TForm;
   const aEntity: T): iSimpleRTTI<T>;
 var
@@ -341,20 +353,13 @@ begin
               __GetRTTIProperty(aEntity, Bind(Attribute).Field),
               __GetComponentToValue(aForm.FindComponent(prpRtti.Name))
             );
-
-//            __BindValueToComponent(
-//                              aForm.FindComponent(prpRtti.Name),
-//                              __GetRTTIPropertyValue(
-//                                                      aEntity,
-//                                                      Bind(Attribute).Field
-//                              )
-//            );
       end;
     end;
   finally
     ctxRtti.Free;
   end;
 end;
+{$ENDIF}
 
 function TSimpleRTTI<T>.ClassName (var aClassName : String) : iSimpleRTTI<T>;
 var
@@ -601,7 +606,11 @@ begin
           vIgnore := True;
       end;
       if not vIgnore then
+      begin
+        if vCampo = '' then vCampo := prpRtti.Name;
         aFields := aFields + vCampo + ', ';
+      end;
+
     end;
   finally
     aFields := Copy(aFields, 0, Length(aFields) - 2) + ' ';
