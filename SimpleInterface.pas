@@ -21,6 +21,7 @@ type
     function Update : iSimpleDAO<T>; overload;
     function Delete(aValue : T) : iSimpleDAO<T>; overload;
     function Delete : iSimpleDAO<T>; overload;
+    function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
     function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
     function Find : iSimpleDAO<T>; overload;
     function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
