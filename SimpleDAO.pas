@@ -30,8 +30,8 @@ Type
       function Update(aValue : T) : iSimpleDAO<T>; overload;
       function Update : iSimpleDAO<T>; overload;
       function Delete(aValue : T) : iSimpleDAO<T>; overload;
+      function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
       function Delete : iSimpleDAO<T>; overload;
-	  function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
       function Find : iSimpleDAO<T>; overload;
       function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
       function Find( aId : Integer) : T; overload;
@@ -79,24 +79,6 @@ begin
   FQuery.ExecSQL;
 end;
 
-function TSimpleDAO<T>.Delete(aField, aValue: String): iSimpleDAO<T>;
-var
-  aSQL, aClassName : String;
-  FInstance : T;
-begin
-  Result := Self;
-
-  TSimpleRTTI<T>
-    .New(FInstance)
-    .TableName(aClassName);
-
-  aSQL := 'DELETE FROM ' + aClassName + ' WHERE ' + aField + ' = ' + aValue;
-
-  FQuery.SQL.Clear;
-  FQuery.SQL.Add(aSQL);
-  FQuery.ExecSQL;
-end;
-
 function TSimpleDAO<T>.Delete: iSimpleDAO<T>;
 var
   aSQL : String;
@@ -110,6 +92,32 @@ begin
     FQuery.SQL.Add(aSQL);
     TSimpleRTTI<T>.New(nil).BindFormToClass(FForm, Entity);
     Self.FillParameter(Entity);
+    FQuery.ExecSQL;
+  finally
+    FreeAndNil(Entity);
+  end;
+end;
+
+function TSimpleDAO<T>.Delete(aField,
+  aValue: String): iSimpleDAO<T>;
+var
+  aSQL : String;
+  Entity : T;
+  aTableName: string;
+begin
+  Result := Self;
+  Entity := T.Create;
+  try
+    TSimpleSQL<T>.New(Entity).Delete(aSQL);
+
+    TSimpleRTTI<T>
+      .New(Entity)
+      .TableName(aTableName);
+
+    aSQL := 'DELETE FROM ' + aTableName + ' WHERE ' + aField + ' = ' + aValue;
+
+    FQuery.SQL.Clear;
+    FQuery.SQL.Add(aSQL);
     FQuery.ExecSQL;
   finally
     FreeAndNil(Entity);
