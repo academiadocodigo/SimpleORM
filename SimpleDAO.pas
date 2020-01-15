@@ -31,6 +31,7 @@ Type
       function Update : iSimpleDAO<T>; overload;
       function Delete(aValue : T) : iSimpleDAO<T>; overload;
       function Delete : iSimpleDAO<T>; overload;
+	  function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
       function Find : iSimpleDAO<T>; overload;
       function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
       function Find( aId : Integer) : T; overload;
@@ -75,6 +76,24 @@ begin
   FQuery.SQL.Clear;
   FQuery.SQL.Add(aSQL);
   Self.FillParameter(aValue);
+  FQuery.ExecSQL;
+end;
+
+function TSimpleDAO<T>.Delete(aField, aValue: String): iSimpleDAO<T>;
+var
+  aSQL, aClassName : String;
+  FInstance : T;
+begin
+  Result := Self;
+
+  TSimpleRTTI<T>
+    .New(FInstance)
+    .TableName(aClassName);
+
+  aSQL := 'DELETE FROM ' + aClassName + ' WHERE ' + aField + ' = ' + aValue;
+
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(aSQL);
   FQuery.ExecSQL;
 end;
 
