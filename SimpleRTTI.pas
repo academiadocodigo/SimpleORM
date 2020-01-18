@@ -102,10 +102,11 @@ Type
       function __findRTTIField(ctxRtti : TRttiContext; classe: TClass; const Field: String): TRttiField;
       function __FloatFormat( aValue : String ) : Currency;
       {$IFNDEF CONSOLE}
-      function __BindValueToComponent( aComponent : TComponent; aValue : Variant) : iSimpleRTTI<T>;
-      function __BindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : iSimpleRTTI<T>;
       function __GetComponentToValue( aComponent : TComponent) : TValue;
+      function __BindValueToComponent( aComponent : TComponent; aValue : Variant) : iSimpleRTTI<T>;
       {$ENDIF}
+      function __BindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : iSimpleRTTI<T>;
+
       function __GetRTTIPropertyValue(aEntity : T; aPropertyName : String) : Variant;
       function __GetRTTIProperty(aEntity : T; aPropertyName : String) : TRttiProperty;
     public
@@ -170,7 +171,7 @@ begin
   if aComponent is TShape then
     (aComponent as TShape).Brush.Color := aValue;
 end;
-
+{$ENDIF}
 function TSimpleRTTI<T>.__BindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : iSimpleRTTI<T>;
 begin
   case aProperty.PropertyType.TypeKind of
@@ -213,7 +214,6 @@ begin
   end;
 
 end;
-{$ENDIF}
 
 function TSimpleRTTI<T>.__findRTTIField(ctxRtti: TRttiContext; classe: TClass;
   const Field: String): TRttiField;
@@ -262,6 +262,7 @@ begin
 
   a := Result.TOString;
 end;
+
 {$ENDIF}
 
 function TSimpleRTTI<T>.__GetRTTIProperty(aEntity: T;
@@ -331,6 +332,7 @@ begin
 
 end;
 
+
 function TSimpleRTTI<T>.BindFormToClass(aForm: TForm;
   var aEntity: T): iSimpleRTTI<T>;
 var
@@ -353,6 +355,14 @@ begin
               __GetRTTIProperty(aEntity, Bind(Attribute).Field),
               __GetComponentToValue(aForm.FindComponent(prpRtti.Name))
             );
+
+//            __BindValueToComponent(
+//                              aForm.FindComponent(prpRtti.Name),
+//                              __GetRTTIPropertyValue(
+//                                                      aEntity,
+//                                                      Bind(Attribute).Field
+//                              )
+//            );
       end;
     end;
   finally
@@ -560,8 +570,12 @@ begin
           begin
             if CompareText('TDateTime',prpRtti.PropertyType.Name)=0 then
               aDictionary.Add(vCampo, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
-            else
-              aDictionary.Add(vCampo, __FloatFormat(prpRtti.GetValue(Pointer(FInstance)).ToString));
+            else if   ( CompareText('TTime',prpRtti.PropertyType.Name)=0) then
+               aDictionary.Add(prpRtti.Name, StrToTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+            else if   ( CompareText('TDate',prpRtti.PropertyType.Name)=0) then
+               aDictionary.Add(prpRtti.Name, StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString))
+            else   
+              aDictionary.Add(prpRtti.Name, __FloatFormat(prpRtti.GetValue(Pointer(FInstance)).ToString));
           end;
           tkWChar,
           tkLString,
@@ -606,11 +620,7 @@ begin
           vIgnore := True;
       end;
       if not vIgnore then
-      begin
-        if vCampo = '' then vCampo := prpRtti.Name;
         aFields := aFields + vCampo + ', ';
-      end;
-
     end;
   finally
     aFields := Copy(aFields, 0, Length(aFields) - 2) + ' ';

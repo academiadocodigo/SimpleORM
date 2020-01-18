@@ -34,22 +34,20 @@ Type
       destructor Destroy; override;
       class function New(aQuery : iSimpleQuery) : iSimpleDAO<T>; overload;
       function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
-      function Insert(aValue : T) : iSimpleDAO<T>; overload;
-      function Update(aValue : T) : iSimpleDAO<T>; overload;
-      function Delete(aValue : T) : iSimpleDAO<T>; overload;
-      function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
       {$IFNDEF CONSOLE}
       function Insert: iSimpleDAO<T>; overload;
       function Update : iSimpleDAO<T>; overload;
       function Delete : iSimpleDAO<T>; overload;
+      function BindForm(aForm : TForm)  : iSimpleDAO<T>;
       {$ENDIF}
+      function Insert(aValue : T) : iSimpleDAO<T>; overload;
+      function Update(aValue : T) : iSimpleDAO<T>; overload;
+      function Delete(aValue : T) : iSimpleDAO<T>; overload;
+	    function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
       function Find : iSimpleDAO<T>; overload;
       function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
       function Find( aId : Integer) : T; overload;
       function SQL : iSimpleDAOSQLAttribute<T>;
-      {$IFNDEF CONSOLE}
-      function BindForm(aForm : TForm)  : iSimpleDAO<T>;
-      {$ENDIF}
   end;
 
 implementation
@@ -94,6 +92,24 @@ begin
   FQuery.ExecSQL;
 end;
 
+function TSimpleDAO<T>.Delete(aField, aValue: String): iSimpleDAO<T>;
+var
+  aSQL, aClassName : String;
+  FInstance : T;
+begin
+  Result := Self;
+
+  TSimpleRTTI<T>
+    .New(FInstance)
+    .TableName(aClassName);
+
+  aSQL := 'DELETE FROM ' + aClassName + ' WHERE ' + aField + ' = ' + aValue;
+
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(aSQL);
+  FQuery.ExecSQL;
+end;
+
 {$IFNDEF CONSOLE}
 function TSimpleDAO<T>.Delete: iSimpleDAO<T>;
 var
@@ -114,32 +130,6 @@ begin
   end;
 end;
 {$ENDIF}
-
-function TSimpleDAO<T>.Delete(aField,
-  aValue: String): iSimpleDAO<T>;
-var
-  aSQL : String;
-  Entity : T;
-  aTableName: string;
-begin
-  Result := Self;
-  Entity := T.Create;
-  try
-    TSimpleSQL<T>.New(Entity).Delete(aSQL);
-
-    TSimpleRTTI<T>
-      .New(Entity)
-      .TableName(aTableName);
-
-    aSQL := 'DELETE FROM ' + aTableName + ' WHERE ' + aField + ' = ' + aValue;
-
-    FQuery.SQL.Clear;
-    FQuery.SQL.Add(aSQL);
-    FQuery.ExecSQL;
-  finally
-    FreeAndNil(Entity);
-  end;
-end;
 
 destructor TSimpleDAO<T>.Destroy;
 begin
