@@ -11,18 +11,16 @@ uses
   VCL.Forms,
   {$ENDIF}
   System.SysUtils;
-
 type
   iSimpleDAOSQLAttribute<T : class> = interface;
 
   iSimpleDAO<T : class> = interface
+    ['{19261B52-6122-4C41-9DDE-D3A1247CC461}']
     {$IFNDEF CONSOLE}
     function Insert: iSimpleDAO<T>; overload;
     function Update : iSimpleDAO<T>; overload;
     function Delete : iSimpleDAO<T>; overload;
-    function BindForm(aForm : TForm)  : iSimpleDAO<T>;
     {$ENDIF}
-    ['{19261B52-6122-4C41-9DDE-D3A1247CC461}']
     function Insert(aValue : T) : iSimpleDAO<T>; overload;
     function Update(aValue : T) : iSimpleDAO<T>; overload;
     function Delete(aValue : T) : iSimpleDAO<T>; overload;
@@ -32,6 +30,9 @@ type
     function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
     function Find(aId : Integer) : T; overload;
     function SQL : iSimpleDAOSQLAttribute<T>;
+    {$IFNDEF CONSOLE}
+    function BindForm(aForm : TForm)  : iSimpleDAO<T>;
+    {$ENDIF}
   end;
 
   iSimpleDAOSQLAttribute<T : class> = interface

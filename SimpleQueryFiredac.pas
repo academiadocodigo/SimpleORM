@@ -59,6 +59,7 @@ begin
   Result := Self;
   if Assigned(FParams) then
     FQuery.Params.Assign(FParams);
+
   FQuery.Prepare;
   FQuery.ExecSQL;
 
