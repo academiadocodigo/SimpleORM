@@ -638,6 +638,9 @@ begin
           
         if Attribute is AutoInc then
           vIgnore := True;
+
+        if Attribute is Ignore then
+          vIgnore := True;
       end;
       if not vIgnore then
         aFields := aFields + vCampo + ', ';
