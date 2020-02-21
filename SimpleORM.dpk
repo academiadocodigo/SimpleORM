@@ -49,6 +49,9 @@ contains
   SimpleQueryRestDW in 'SimpleQueryRestDW.pas',
   SimpleRTTI in 'SimpleRTTI.pas',
   SimpleSQL in 'SimpleSQL.pas',
-  SimpleDAOSQLAttribute in 'SimpleDAOSQLAttribute.pas';
+  SimpleDAOSQLAttribute in 'SimpleDAOSQLAttribute.pas',
+  SimpleStoreProcInterface in 'SimpleStoreProcInterface.pas',
+  SimpleStoreProcFiredac in 'SimpleStoreProcFiredac.pas',
+  SimpleDAOStoreProc in 'SimpleDAOStoreProc.pas';
 
 end.

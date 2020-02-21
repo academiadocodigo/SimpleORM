@@ -2,8 +2,8 @@ object Form9: TForm9
   Left = 0
   Top = 0
   Caption = 'Form9'
-  ClientHeight = 346
-  ClientWidth = 618
+  ClientHeight = 438
+  ClientWidth = 758
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,6 +12,9 @@ object Form9: TForm9
   Font.Style = []
   OldCreateOrder = False
   OnCreate = FormCreate
+  DesignSize = (
+    758
+    438)
   PixelsPerInch = 96
   TextHeight = 13
   object Button3: TButton
@@ -19,25 +22,25 @@ object Form9: TForm9
     Top = 8
     Width = 75
     Height = 25
-    Caption = 'Insert'
+    Caption = 'Insert Bind'
     TabOrder = 0
     OnClick = Button3Click
   end
   object Button1: TButton
-    Left = 8
+    Left = 89
     Top = 39
-    Width = 75
+    Width = 97
     Height = 25
-    Caption = 'Update'
+    Caption = 'Update Object'
     TabOrder = 1
     OnClick = Button1Click
   end
   object Button4: TButton
-    Left = 8
+    Left = 89
     Top = 70
-    Width = 75
+    Width = 97
     Height = 25
-    Caption = 'Delete'
+    Caption = 'Delete Object'
     TabOrder = 2
     OnClick = Button4Click
   end
@@ -52,7 +55,7 @@ object Form9: TForm9
   end
   object Button6: TButton
     Left = 8
-    Top = 132
+    Top = 163
     Width = 75
     Height = 25
     Caption = 'FindID'
@@ -61,7 +64,7 @@ object Form9: TForm9
   end
   object Button7: TButton
     Left = 8
-    Top = 163
+    Top = 194
     Width = 75
     Height = 25
     Caption = 'FindWhere'
@@ -69,26 +72,25 @@ object Form9: TForm9
     OnClick = Button7Click
   end
   object Edit2: TEdit
-    Left = 112
+    Left = 192
     Top = 14
     Width = 59
     Height = 21
     TabOrder = 6
-    Text = '1'
   end
   object Edit1: TEdit
-    Left = 112
+    Left = 192
     Top = 41
     Width = 241
     Height = 21
     TabOrder = 7
-    Text = 'Edit1'
   end
   object DBGrid1: TDBGrid
-    Left = 112
+    Left = 192
     Top = 68
-    Width = 489
-    Height = 120
+    Width = 549
+    Height = 273
+    Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = DataSource1
     TabOrder = 8
     TitleFont.Charset = DEFAULT_CHARSET
@@ -98,26 +100,79 @@ object Form9: TForm9
     TitleFont.Style = []
   end
   object Memo1: TMemo
-    Left = 112
-    Top = 194
-    Width = 489
-    Height = 128
+    Left = 192
+    Top = 356
+    Width = 549
+    Height = 66
+    Anchors = [akLeft, akRight, akBottom]
     Lines.Strings = (
       'Memo1')
     TabOrder = 9
   end
   object Edit3: TEdit
-    Left = 359
+    Left = 439
     Top = 41
     Width = 121
     Height = 21
     TabOrder = 10
-    Text = 'Edit3'
+  end
+  object Button2: TButton
+    Left = 8
+    Top = 132
+    Width = 75
+    Height = 25
+    Caption = 'FindObject'
+    TabOrder = 11
+    OnClick = Button2Click
+  end
+  object DateTimePicker1: TDateTimePicker
+    Left = 566
+    Top = 41
+    Width = 175
+    Height = 21
+    Date = 43549.000000000000000000
+    Time = 0.636917974537937000
+    TabOrder = 12
+  end
+  object Button5: TButton
+    Left = 89
+    Top = 8
+    Width = 97
+    Height = 25
+    Caption = 'Insert Object'
+    TabOrder = 13
+    OnClick = Button5Click
+  end
+  object Button8: TButton
+    Left = 8
+    Top = 39
+    Width = 75
+    Height = 25
+    Caption = 'Update Bind'
+    TabOrder = 14
+    OnClick = Button8Click
+  end
+  object Button9: TButton
+    Left = 8
+    Top = 70
+    Width = 75
+    Height = 25
+    Caption = 'Delete Bind'
+    TabOrder = 15
+    OnClick = Button9Click
+  end
+  object Button10: TButton
+    Left = 8
+    Top = 250
+    Width = 113
+    Height = 25
+    Caption = 'StoreProcedure'
+    TabOrder = 16
+    OnClick = Button10Click
   end
   object DataSource1: TDataSource
-    OnDataChange = DataSource1DataChange
-    Left = 568
-    Top = 8
+    Left = 696
+    Top = 88
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
@@ -126,7 +181,7 @@ object Form9: TForm9
       'Password=masterkey'
       'DriverID=FB')
     LoginPrompt = False
-    Left = 520
-    Top = 8
+    Left = 552
+    Top = 88
   end
 end

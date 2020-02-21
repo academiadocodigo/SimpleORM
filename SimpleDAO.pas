@@ -3,8 +3,15 @@ unit SimpleDAO;
 interface
 
 uses
-  SimpleInterface, System.RTTI, System.Generics.Collections, System.Classes,
-  Data.DB, SimpleDAOSQLAttribute;
+  SimpleInterface,
+  System.RTTI,
+  System.Generics.Collections,
+  System.Classes,
+  Data.DB,
+  {$IFNDEF CONSOLE}
+  VCL.Forms,
+  {$ENDIF}
+  SimpleDAOSQLAttribute;
 
 Type
   TSimpleDAO<T: class, constructor> = class(TInterfacedObject, iSimpleDAO<T>)
@@ -15,20 +22,34 @@ Type
       FClassName : String;
       FDataSource : TDataSource;
       FSQLAttribute : iSimpleDAOSQLAttribute<T>;
+      {$IFNDEF CONSOLE}
+      FForm : TForm;
+      {$ENDIF}
+      FList : TObjectList<T>;
       function FillParameter(aInstance : T) : iSimpleDAO<T>; overload;
       function FillParameter(aInstance : T; aId : Variant) : iSimpleDAO<T>; overload;
+      procedure OnDataChange(Sender : TObject; Field : TField);
     public
       constructor Create(aQuery : iSimpleQuery);
       destructor Destroy; override;
-      class function New(aQuery : iSimpleQuery) : iSimpleDAO<T>;
+      class function New(aQuery : iSimpleQuery) : iSimpleDAO<T>; overload;
       function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
-      function Insert(aValue : T) : iSimpleDAO<T>;
-      function Update(aValue : T) : iSimpleDAO<T>;
-      function Delete(aValue : T) : iSimpleDAO<T>;
-      function Find : TObjectList<T>; overload;
+      function Insert(aValue : T) : iSimpleDAO<T>; overload;
+      function Update(aValue : T) : iSimpleDAO<T>; overload;
+      function Delete(aValue : T) : iSimpleDAO<T>; overload;
+      function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
+      {$IFNDEF CONSOLE}
+      function Insert: iSimpleDAO<T>; overload;
+      function Update : iSimpleDAO<T>; overload;
+      function Delete : iSimpleDAO<T>; overload;
+      {$ENDIF}
+      function Find : iSimpleDAO<T>; overload;
+      function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
       function Find( aId : Integer) : T; overload;
-      //function Find (aWhere : String) : TList<T>; overload;
       function SQL : iSimpleDAOSQLAttribute<T>;
+      {$IFNDEF CONSOLE}
+      function BindForm(aForm : TForm)  : iSimpleDAO<T>;
+      {$ENDIF}
   end;
 
 implementation
@@ -38,10 +59,19 @@ uses
 
 { TGenericDAO }
 
+{$IFNDEF CONSOLE}
+function TSimpleDAO<T>.BindForm(aForm : TForm)  : iSimpleDAO<T>;
+begin
+  Result := Self;
+  FForm := aForm;
+end;
+{$ENDIF}
+
 constructor TSimpleDAO<T>.Create(aQuery : iSimpleQuery);
 begin
   FQuery := aQuery;
   FSQLAttribute := TSimpleDAOSQLAttribute<T>.New(Self);
+  FList := TObjectList<T>.Create;
 end;
 
 function TSimpleDAO<T>.DataSource(aDataSource: TDataSource): iSimpleDAO<T>;
@@ -49,6 +79,7 @@ begin
   Result := Self;
   FDataSource := aDataSource;
   FDataSource.DataSet := FQuery.DataSet;
+  FDataSource.OnDataChange := OnDataChange;
 end;
 
 function TSimpleDAO<T>.Delete(aValue: T): iSimpleDAO<T>;
@@ -63,16 +94,64 @@ begin
   FQuery.ExecSQL;
 end;
 
+{$IFNDEF CONSOLE}
+function TSimpleDAO<T>.Delete: iSimpleDAO<T>;
+var
+  aSQL : String;
+  Entity : T;
+begin
+  Result := Self;
+  Entity := T.Create;
+  try
+    TSimpleSQL<T>.New(Entity).Delete(aSQL);
+    FQuery.SQL.Clear;
+    FQuery.SQL.Add(aSQL);
+    TSimpleRTTI<T>.New(nil).BindFormToClass(FForm, Entity);
+    Self.FillParameter(Entity);
+    FQuery.ExecSQL;
+  finally
+    FreeAndNil(Entity);
+  end;
+end;
+{$ENDIF}
+
+function TSimpleDAO<T>.Delete(aField,
+  aValue: String): iSimpleDAO<T>;
+var
+  aSQL : String;
+  Entity : T;
+  aTableName: string;
+begin
+  Result := Self;
+  Entity := T.Create;
+  try
+    TSimpleSQL<T>.New(Entity).Delete(aSQL);
+
+    TSimpleRTTI<T>
+      .New(Entity)
+      .TableName(aTableName);
+
+    aSQL := 'DELETE FROM ' + aTableName + ' WHERE ' + aField + ' = ' + aValue;
+
+    FQuery.SQL.Clear;
+    FQuery.SQL.Add(aSQL);
+    FQuery.ExecSQL;
+  finally
+    FreeAndNil(Entity);
+  end;
+end;
+
 destructor TSimpleDAO<T>.Destroy;
 begin
+  FreeAndNil(FList);
   inherited;
 end;
 
-function TSimpleDAO<T>.Find : TObjectList<T>;
+function TSimpleDAO<T>.Find : iSimpleDAO<T>;
 var
   aSQL : String;
 begin
-  Result := TObjectList<T>.Create;
+  Result := Self;
 
   TSimpleSQL<T>
     .New(nil)
@@ -82,9 +161,11 @@ begin
     .OrderBy(FSQLAttribute.OrderBy)
     .Select(aSQL);
 
+  FQuery.DataSet.DisableControls;
   FQuery.Open(aSQL);
-  TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, Result);
+  TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, FList);
   FSQLAttribute.Clear;
+  FQuery.DataSet.EnableControls;
 end;
 
 function TSimpleDAO<T>.Find(aId: Integer): T;
@@ -98,6 +179,46 @@ begin
   Self.FillParameter(Result, aId);
   FQuery.Open;
   TSimpleRTTI<T>.New(nil).DataSetToEntity(FQuery.DataSet, Result);
+end;
+
+{$IFNDEF CONSOLE}
+function TSimpleDAO<T>.Insert: iSimpleDAO<T>;
+var
+  aSQL : String;
+  Entity : T;
+begin
+  Result := Self;
+  Entity := T.Create;
+  try
+    TSimpleSQL<T>.New(Entity).Insert(aSQL);
+    FQuery.SQL.Clear;
+    FQuery.SQL.Add(aSQL);
+    TSimpleRTTI<T>.New(nil).BindFormToClass(FForm, Entity);
+    Self.FillParameter(Entity);
+    FQuery.ExecSQL;
+  finally
+    FreeAndNil(Entity);
+  end;
+end;
+{$ENDIF}
+
+function TSimpleDAO<T>.Find(var aList: TObjectList<T>): iSimpleDAO<T>;
+var
+  aSQL : String;
+begin
+  Result := Self;
+
+  TSimpleSQL<T>
+    .New(nil)
+    .Fields(FSQLAttribute.Fields)
+    .Join(FSQLAttribute.Join)
+    .Where(FSQLAttribute.Where)
+    .OrderBy(FSQLAttribute.OrderBy)
+    .Select(aSQL);
+
+  FQuery.Open(aSQL);
+  TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, aList);
+  FSQLAttribute.Clear;
 end;
 
 function TSimpleDAO<T>.Insert(aValue: T): iSimpleDAO<T>;
@@ -118,10 +239,45 @@ begin
   Result := Self.Create(aQuery);
 end;
 
+procedure TSimpleDAO<T>.OnDataChange(Sender: TObject; Field: TField);
+begin
+  if ( FList.Count > 0) and (FDataSource.DataSet.RecNo-1 <= FList.Count) then
+  begin
+    {$IFNDEF CONSOLE}
+    if Assigned(FForm) then
+     TSimpleRTTI<T>
+      .New(nil)
+      .BindClassToForm(FForm, FList[FDataSource.DataSet.RecNo-1]);
+    {$ENDIF}
+  end;
+
+end;
+
 function TSimpleDAO<T>.SQL: iSimpleDAOSQLAttribute<T>;
 begin
   Result := FSQLAttribute;
 end;
+
+{$IFNDEF CONSOLE}
+function TSimpleDAO<T>.Update: iSimpleDAO<T>;
+var
+  aSQL : String;
+  Entity : T;
+begin
+  Result := Self;
+  Entity := T.Create;
+  try
+    TSimpleSQL<T>.New(Entity).Update(aSQL);
+    FQuery.SQL.Clear;
+    FQuery.SQL.Add(aSQL);
+    TSimpleRTTI<T>.New(nil).BindFormToClass(FForm, Entity);
+    Self.FillParameter(Entity);
+    FQuery.ExecSQL;
+  finally
+    FreeAndNil(Entity)
+  end;
+end;
+{$ENDIF}
 
 function TSimpleDAO<T>.Update(aValue: T): iSimpleDAO<T>;
 var
