@@ -28,6 +28,7 @@ Type
       function OrderBy (aSQL : String) : iSimpleSQL<T>;
       function GroupBy (aSQL : String) : iSimpleSQL<T>;
       function Join (aSQL : String) : iSimpleSQL<T>;
+      function StoreProcName(var aStoreProcName : String) : iSimpleSQL<T>;
   end;
 
 implementation
@@ -49,7 +50,7 @@ begin
   Result := Self;
 
   TSimpleRTTI<T>.New(FInstance)
-    .ClassName(aClassName)
+    .TableName(aClassName)
     .Where(aWhere);
 
   aSQL := aSQL + 'DELETE FROM ' + aClassName;
@@ -82,7 +83,7 @@ begin
   Result := Self;
 
     TSimpleRTTI<T>.New(FInstance)
-      .ClassName(aClassName)
+      .TableName(aClassName)
       .FieldsInsert(aFields)
       .Param(aParam);
 
@@ -116,7 +117,7 @@ begin
 
   TSimpleRTTI<T>.New(nil)
     .Fields(aFields)
-    .ClassName(aClassName);
+    .TableName(aClassName);
 
   if FFields <> '' then
     aSQL := aSQL + ' SELECT ' + FFields
@@ -147,7 +148,7 @@ begin
 
   TSimpleRTTI<T>.New(FInstance)
     .Fields(aFields)
-    .ClassName(aClassName)
+    .TableName(aClassName)
     .Where(aWhere);
   if FWhere <> '' then
     aSQL := aSQL + ' WHERE ' + FWhere;
@@ -164,7 +165,7 @@ begin
   Result := Self;
 
   TSimpleRTTI<T>.New(FInstance)
-    .ClassName(ClassName)
+    .TableName(ClassName)
     .Update(aUpdate)
     .Where(aWhere);
 
@@ -178,6 +179,16 @@ function TSimpleSQL<T>.Where(aSQL: String): iSimpleSQL<T>;
 begin
   Result := Self;
   FWhere := aSQL;
+end;
+
+function TSimpleSQL<T>.StoreProcName(var aStoreProcName: String): iSimpleSQL<T>;
+{ Retorna o nome da Store Procedure }
+var
+  lProcedureName: String;
+begin
+  Result := Self;
+  TSimpleRTTI<T>.New(FInstance).StoreProcName(lProcedureName);
+  aStoreProcName := lProcedureName;
 end;
 
 end.

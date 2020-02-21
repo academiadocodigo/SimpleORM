@@ -39,7 +39,7 @@ begin
   TSimpleRTTI<T>.New(nil).ClassName(aTable);
   FQuery.AutoCommitData := False;
   FQuery.AutoRefreshAfterCommit := True;
-  FQuery.SetInBlockEvents(false);
+  //FQuery.SetInBlockEvents(false);
   FQuery.UpdateTableName := aTable;
 end;
 
