@@ -822,7 +822,6 @@ begin
     begin
       if Atributo is ProceName then
       aProcedureName := Uppercase(ProceName(Atributo).Name);
-      Exit
     end;
   finally
     ctxRtti.Free;
