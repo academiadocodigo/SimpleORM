@@ -64,7 +64,8 @@ type
     function Param (var aParam : String) : iSimpleRTTI<T>;
     function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
     function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
-    function StoreProcName(var aProcedureName : String) : iSimpleRTTI<T>;    
+    function StoreProcName(var aProcedureName : String) : iSimpleRTTI<T>;
+    function StoreProcResult(var aResult : String) : iSimpleRTTI<T>;
     {$IFNDEF CONSOLE}
     function BindClassToForm (aForm : TForm;  const aEntity : T) : iSimpleRTTI<T>;
     function BindFormToClass (aForm : TForm; var aEntity : T) : iSimpleRTTI<T>;
@@ -83,7 +84,6 @@ type
     function OrderBy (aSQL : String) : iSimpleSQL<T>;
     function GroupBy (aSQL : String) : iSimpleSQL<T>;
     function Join (aSQL : String) : iSimpleSQL<T>;
-    function StoreProcName(var aStoreProcName : String) : iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface
@@ -96,6 +96,11 @@ type
     function Open : iSimpleQuery; overload;
   end;
 
+ iSimpleStoreProcedure<T> = interface
+    ['{CB04F596-0CD3-43C8-A86A-3B795499C260}']
+    function ProcName(Out aStoreProcName : String) : iSimpleStoreProcedure<T>;
+    function ProcResult(var aResult : String) : iSimpleStoreProcedure<T>;
+  end;
 
 
 implementation
