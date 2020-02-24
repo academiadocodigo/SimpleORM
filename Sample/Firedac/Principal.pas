@@ -228,7 +228,7 @@ begin
 
     TSimpleDAOStoreProc<TPEDIDO>
       .New(TSimpleStoreProcFiredac.New(FDConnection1))
-      .Update(Pedido)
+      .Execute(Pedido)
       .&End;
   finally
     Pedido.Free;
@@ -250,7 +250,7 @@ begin
 
     TSimpleDAOStoreProc<TPEDIDO>
       .New(TSimpleStoreProcFiredac.New(FDConnection1))
-      .Update(Pedido)
+      .Execute(Pedido)
       .Result
       .&End;
 

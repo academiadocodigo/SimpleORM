@@ -51,7 +51,7 @@ Type
     constructor Create(aStoreProc: iSimpleStoreProc);
     class function New(aStoreProc: iSimpleStoreProc): iSimpleDAOStoreProc<T>;
     destructor Destroy; override;
-    function Update(aValue: T): iSimpleDAOStoreProc<T>;
+    function Execute(aValue: T): iSimpleDAOStoreProc<T>;
     function Result: iSimpleDAOStoreProc<T>;
     function &End: iSimpleDAOStoreProc<T>;
   end;
@@ -71,7 +71,7 @@ begin
   inherited;
 end;
 
-function TSimpleDAOStoreProc<T>.Update(aValue: T): iSimpleDAOStoreProc<T>;
+function TSimpleDAOStoreProc<T>.Execute(aValue: T): iSimpleDAOStoreProc<T>;
 begin
   Result := Self;
   fValue := aValue;

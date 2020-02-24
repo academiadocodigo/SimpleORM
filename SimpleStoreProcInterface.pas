@@ -46,7 +46,7 @@ type
 
   iSimpleDAOStoreProc<T: class> = interface
     ['{E9014B4A-EA81-4F14-AA9B-4B7FE03C4E81}']
-    function Update(aValue: T): iSimpleDAOStoreProc<T>;
+    function Execute(aValue: T): iSimpleDAOStoreProc<T>;
     function Result: iSimpleDAOStoreProc<T>;
     function &End: iSimpleDAOStoreProc<T>;
   end;
