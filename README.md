@@ -106,7 +106,7 @@ SimpleAttributes,
 
 SimpleStoreProcInterface,
 
-`Dependendo do seu driver de Conexão utilizar as Uses` SimpleStoreProcFiredac;
+SimpleStoreProcFiredac;
 
 ## Inicialização do SimpleORM com Store procedure
 
