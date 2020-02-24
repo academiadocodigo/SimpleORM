@@ -53,7 +53,7 @@ Type
 
 `Ignore`  - Ignorar o Campo nas Operações de CRUD.
 
-`FieldRetorno` - Informa o nome do campo de retorno de Store Procedure.
+`FieldRetorno` - Informa o nome do campo de retorno na Store Procedure.
 
 # Principais Operações
 
@@ -362,7 +362,7 @@ begin
 end
 
 ```
-Abaixo um exemplo de execução no SimpleORM 
+Abaixo um exemplo de execução com retorno de valor ( .result ) no SimpleORM 
 ```delphi
 var
   Pedido: TPEDIDO;
