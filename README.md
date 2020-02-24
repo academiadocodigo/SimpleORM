@@ -13,6 +13,7 @@ uses
 
 Type
   [Tabela('PEDIDO')]
+  [ProceName('PEDIDO_IU')]  
   TPEDIDO = class
   private
     FID: Integer;
@@ -28,6 +29,7 @@ Type
     destructor Destroy; override;
   published
     [Campo('ID'), Pk, AutoInc]
+    [FieldRetorno('RESULTID')]	
     property ID: Integer read FID write SetID;
     [Campo('NOME')]
     property CLIENTE: String read FCLIENTE write SetCLIENTE;
@@ -41,6 +43,8 @@ Type
 ## Atributos
 `Tabela`  - Informa o Nome da Tabela no Banco em que a Classe faz o mapeamento.
 
+`ProceName` - Informa o Nome da Store Procedure no Banco em que a Classe faz o mapeamento.
+
 `Campo`   - Informa o Nome do Campo no Banco de Dados em que a property está fazendo Referência.
 
 `PK`      - Informa se o Campo é PrimaryKey.
@@ -49,6 +53,7 @@ Type
 
 `Ignore`  - Ignorar o Campo nas Operações de CRUD.
 
+`FieldRetorno` - Informa o nome do campo de retorno de Store Procedure.
 
 # Principais Operações
 
