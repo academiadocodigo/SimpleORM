@@ -46,7 +46,15 @@ type
   public
     constructor Create(Const aName: String);
     property Name: String read FName write FName;
-  end;  
+  end;
+
+  FieldRetorno = class(TCustomAttribute)
+  private
+    FName: String;
+  public
+    constructor Create(Const aName: String);
+    property Name: String read FName write FName;
+  end;
 
 implementation
 
@@ -80,6 +88,13 @@ end;
 { ProceName }
 
 constructor ProceName.Create(const aName: String);
+begin
+  FName := aName;
+end;
+
+{ FieldRetorno }
+
+constructor FieldRetorno.Create(const aName: String);
 begin
   FName := aName;
 end;
