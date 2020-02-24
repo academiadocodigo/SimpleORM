@@ -17,6 +17,13 @@ object Form9: TForm9
     438)
   PixelsPerInch = 96
   TextHeight = 13
+  object Label1: TLabel
+    Left = 8
+    Top = 312
+    Width = 67
+    Height = 13
+    Caption = 'Id de Retorno'
+  end
   object Button3: TButton
     Left = 8
     Top = 8
@@ -170,18 +177,43 @@ object Form9: TForm9
     TabOrder = 16
     OnClick = Button10Click
   end
+  object EditResultId: TEdit
+    Left = 8
+    Top = 331
+    Width = 59
+    Height = 21
+    TabOrder = 17
+  end
+  object Button11: TButton
+    Left = 8
+    Top = 281
+    Width = 161
+    Height = 25
+    Caption = 'StoreProcedure / Retorno ID'
+    TabOrder = 18
+    OnClick = Button11Click
+  end
   object DataSource1: TDataSource
     Left = 696
     Top = 88
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'Database=D:\Bancos\Firebird\PDVUPDATES.FDB'
+      
+        'Database=C:\Delphi Files\Componentes - DXE10_Tokio\SimpleRepo\Sa' +
+        'mple\Database\PDVUPDATES.FDB'
       'User_Name=SYSDBA'
-      'Password=masterkey'
+      'Password=a236512'
       'DriverID=FB')
     LoginPrompt = False
     Left = 552
     Top = 88
+  end
+  object FDPhysFBDriverLink1: TFDPhysFBDriverLink
+    VendorLib = 
+      'C:\Delphi Files\Componentes - DXE10_Tokio\SimpleRepo\Sample\Fire' +
+      'dac\fbclient.dll'
+    Left = 448
+    Top = 96
   end
 end

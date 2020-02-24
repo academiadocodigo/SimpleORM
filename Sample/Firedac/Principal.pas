@@ -9,10 +9,15 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, SimpleInterface, SimpleDAO, Entidade.Pedido, System.Generics.Collections, SimpleQueryFiredac,
+  FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids,
+  SimpleInterface,
+  SimpleDAO,
+  Entidade.Pedido,
+  System.Generics.Collections,
+  SimpleQueryFiredac,
 //  Entidade.DoublePK,
   SimpleAttributes, Vcl.ExtCtrls, Vcl.ComCtrls,
-SimpleStoreProcFiredac;
+  SimpleStoreProcFiredac, FireDAC.Phys.IBBase;
 
 type
   TForm9 = class(TForm)
@@ -40,6 +45,10 @@ type
     Button8: TButton;
     Button9: TButton;
     Button10: TButton;
+    FDPhysFBDriverLink1: TFDPhysFBDriverLink;
+    EditResultId: TEdit;
+    Label1: TLabel;
+    Button11: TButton;
 
     procedure Button3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -53,6 +62,7 @@ type
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
     procedure Button10Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
   private
     { Private declarations }
     DAOPedido : iSimpleDAO<TPEDIDO>;
@@ -224,7 +234,32 @@ begin
     Pedido.Free;
     btnFindClick(nil);
   end;
+end;
 
+procedure TForm9.Button11Click(Sender: TObject);
+var
+  Pedido: TPEDIDO;
+begin
+  EditResultId.Text := '';
+  Pedido := TPEDIDO.Create;
+  try
+    Pedido.ID := StrToInt(Edit2.Text);
+    Pedido.CLIENTE := Edit1.Text;
+    Pedido.DATAPEDIDO := now;
+    Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
+
+    TSimpleDAOStoreProc<TPEDIDO>
+      .New(TSimpleStoreProcFiredac.New(FDConnection1))
+      .Update(Pedido)
+      .Result
+      .&End;
+
+  EditResultId.Text := IntToStr(Pedido.ID);
+
+  finally
+    Pedido.Free;
+    btnFindClick(nil);
+  end;
 end;
 
 end.
