@@ -51,6 +51,7 @@ Type
     function NameStoreProc(Const aNome: String): iSimpleStoreProc;
     function Params(Const aNome: String; aValue: variant): iSimpleStoreProc;
     function ExecProc: iSimpleStoreProc;
+    function Return(Const aNome: String; Out aValue: Variant ) : iSimpleStoreProc;
   end;
 
 implementation
@@ -95,6 +96,15 @@ begin
     FStoreProce.Params.ParamByName(aNome).Value := aValue
   else
     FStoreProce.Params.CreateParam( ftVariant  , aNome , ptInput ).Value := aValue;
+end;
+
+function TSimpleStoreProcFiredac.Return(Const aNome: String; out aValue: Variant ) : iSimpleStoreProc;
+begin
+  result := self;
+  if FStoreProce.Params.FindParam(aNome) <> nil then
+   aValue := FStoreProce.Params.ParamByName(aNome).Value
+  else
+    aValue := FStoreProce.Params.CreateParam( ftVariant , aNome , ptResult ).Value;
 end;
 
 end.
