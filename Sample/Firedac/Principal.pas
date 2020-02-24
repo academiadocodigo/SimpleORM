@@ -10,14 +10,16 @@ uses
   FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
   FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids,
+  Vcl.ExtCtrls, Vcl.ComCtrls,FireDAC.Phys.IBBase,
   SimpleInterface,
   SimpleDAO,
   Entidade.Pedido,
   System.Generics.Collections,
   SimpleQueryFiredac,
 //  Entidade.DoublePK,
-  SimpleAttributes, Vcl.ExtCtrls, Vcl.ComCtrls,
-  SimpleStoreProcFiredac, FireDAC.Phys.IBBase;
+  SimpleAttributes,
+  SimpleStoreProcFiredac,
+  SimpleStoreProcInterface;
 
 type
   TForm9 = class(TForm)
@@ -66,6 +68,8 @@ type
   private
     { Private declarations }
     DAOPedido : iSimpleDAO<TPEDIDO>;
+    DAOSPPedido : iSimpleDAOStoreProc<TPEDIDO>;
+
   public
     { Public declarations }
   end;
@@ -203,6 +207,7 @@ end;
 procedure TForm9.FormCreate(Sender: TObject);
 var
   Conn : iSimpleQuery;
+  ConnSp : iSimpleStoreProc;
 begin
   ReportMemoryLeaksOnShutdown := true;
 
@@ -213,11 +218,17 @@ begin
                   .New(Conn)
                   .DataSource(DataSource1)
                   .BindForm(Self);
+
+
+  ConnSp := TSimpleStoreProcFiredac.New(FDConnection1);
+  DAOSPPedido := TSimpleDAOStoreProc<TPEDIDO>
+                  .New(ConnSp).&End;
 end;
 
 procedure TForm9.Button10Click(Sender: TObject);
 var
   Pedido: TPEDIDO;
+
 begin
   Pedido := TPEDIDO.Create;
   try
@@ -226,10 +237,8 @@ begin
     Pedido.DATAPEDIDO := now;
     Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
 
-    TSimpleDAOStoreProc<TPEDIDO>
-      .New(TSimpleStoreProcFiredac.New(FDConnection1))
-      .Execute(Pedido)
-      .&End;
+    DAOSPPedido.Execute(Pedido).&End;
+
   finally
     Pedido.Free;
     btnFindClick(nil);
@@ -247,14 +256,9 @@ begin
     Pedido.CLIENTE := Edit1.Text;
     Pedido.DATAPEDIDO := now;
     Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
+    DAOSPPedido.Execute(Pedido).Result.&End;
 
-    TSimpleDAOStoreProc<TPEDIDO>
-      .New(TSimpleStoreProcFiredac.New(FDConnection1))
-      .Execute(Pedido)
-      .Result
-      .&End;
-
-  EditResultId.Text := IntToStr(Pedido.ID);
+    EditResultId.Text := IntToStr(Pedido.ID);
 
   finally
     Pedido.Free;
