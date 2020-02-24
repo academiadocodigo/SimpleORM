@@ -28,7 +28,6 @@ Type
       function OrderBy (aSQL : String) : iSimpleSQL<T>;
       function GroupBy (aSQL : String) : iSimpleSQL<T>;
       function Join (aSQL : String) : iSimpleSQL<T>;
-      function StoreProcName(var aStoreProcName : String) : iSimpleSQL<T>;
   end;
 
 implementation
@@ -179,16 +178,6 @@ function TSimpleSQL<T>.Where(aSQL: String): iSimpleSQL<T>;
 begin
   Result := Self;
   FWhere := aSQL;
-end;
-
-function TSimpleSQL<T>.StoreProcName(var aStoreProcName: String): iSimpleSQL<T>;
-{ Retorna o nome da Store Procedure }
-var
-  lProcedureName: String;
-begin
-  Result := Self;
-  TSimpleRTTI<T>.New(FInstance).StoreProcName(lProcedureName);
-  aStoreProcName := lProcedureName;
 end;
 
 end.
