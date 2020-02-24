@@ -7,7 +7,8 @@ uses
 
 Type
   [Tabela('PEDIDO')]
-  [ProceName('PEDIDO_IU')]
+//  [ProceName('PEDIDO_IU')]
+  [ProceName('PEDIDO_IU_RESULT')]
   TPEDIDO = class
   private
     FID: Integer;
@@ -23,6 +24,7 @@ Type
     destructor Destroy; override;
   published
     [Campo('ID'), Pk, AutoInc]
+    [FieldRetorno('RESULTID')]
     property ID: Integer read FID write SetID;
     [Campo('NOME')]
     property CLIENTE: String read FCLIENTE write SetCLIENTE;
