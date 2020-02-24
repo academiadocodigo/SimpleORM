@@ -126,7 +126,8 @@ Type
       function ClassName (var aClassName : String) : iSimpleRTTI<T>;
       function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
       function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
-      function StoreProcName (var aProcedureName : String) : iSimpleRTTI<T>;      
+      function StoreProcName (var aProcedureName : String) : iSimpleRTTI<T>;
+      function StoreProcResult(var aResult : String) : iSimpleRTTI<T>;
       {$IFNDEF CONSOLE}
       function BindClassToForm (aForm : TForm; const aEntity : T): iSimpleRTTI<T>;
       function BindFormToClass (aForm : TForm; var aEntity : T) : iSimpleRTTI<T>;
@@ -826,8 +827,37 @@ begin
   finally
     ctxRtti.Free;
   end;
-
-
 end;
+
+function TSimpleRTTI<T>.StoreProcResult(var aResult : String): iSimpleRTTI<T>;
+{ Retorna o nome da Store Procedure }
+var
+  Info      : PTypeInfo;
+  Prop      : TRttiProperty;
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  Atributo  : TCustomAttribute;
+begin
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for Prop in typRtti.GetProperties do
+    begin
+      for Atributo in Prop.GetAttributes do
+      begin
+        if Atributo is FieldRetorno then
+        Begin
+          aResult := Uppercase(FieldRetorno(Atributo).Name);
+          break;
+        End;
+      end;
+    end;
+  finally
+    ctxRtti.Free;
+  end;
+end;
+
 
 end.
