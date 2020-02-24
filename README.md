@@ -96,6 +96,18 @@ end;
 
 `Bind`      - Você pode informar o formulário que deseja que o SimpleORM faça o Bind automatico entre a Classe e os Componentes da tela (Edit, Combo, CheckBox, RadioButton e etc...)
 
+## Uses Necessárias para Store Procedure 
+
+SimpleInterface,
+
+SimpleDAOStoreProc,
+
+SimpleAttributes,
+
+SimpleStoreProcInterface,
+
+`Dependendo do seu driver de Conexão utilizar as Uses` SimpleStoreProcFiredac;
+
 ## Inicialização do SimpleORM com Store procedure
 
 ```delphi
