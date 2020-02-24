@@ -266,7 +266,9 @@ end;
 
 ## STORE PRCOCEDURE  
 
-Para utilização de store procedure que segue o padrão de mapeamento de uma classe com atributo ProceName e o desenvolvimento de uma store procudere no banco.
+Para utilização de uma store procedure, este segue o padrão de mapeamento de uma classe com atributo ProceName.
+
+ver mapeamento acima ( [ProceName('PEDIDO_IU')] )
 
 Exemplo do desenvolvimento de uma S.P. no Firebird
 
@@ -299,7 +301,7 @@ begin
 end
 ```
 
-Abaixo um exemplo de execução no SimpleORM , ver mapeamento acima ( [ProceName('PEDIDO_IU')] )
+Abaixo um exemplo de execução no SimpleORM 
 ```delphi
 var
   Pedido: TPEDIDO;
@@ -319,12 +321,14 @@ begin
 end;
 ```
 
-Você também pode retornar um valor 
-
-Exemplo do desenvolvimento de uma S.P. no Firebird com retorno de valor ( RESULTID do tipo Inteiro )
-
+Você também pode retornar um valor , definir o campo de retorno para atribuito o valor de retorno
 ```delphi
+   [FieldRetorno('RESULTID')]	
+    property ID: Integer read FID write SetID;
+```
 
+Exemplo do desenvolvimento de uma S.P. no Firebird com retorno de valor ( RESULTID com tipo Inteiro )
+```delphi
 create or alter procedure PEDIDO_IU_RESULT (
     ID integer,
     NOME varchar(60),
@@ -358,4 +362,26 @@ begin
 end
 
 ```
+Abaixo um exemplo de execução no SimpleORM 
+```delphi
+var
+  Pedido: TPEDIDO;
+begin
+  EditResultId.Text := '';
+  Pedido := TPEDIDO.Create;
+  try
+    Pedido.ID := StrToInt(Edit2.Text);
+    Pedido.CLIENTE := Edit1.Text;
+    Pedido.DATAPEDIDO := now;
+    Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
+    DAOSPPedido.Execute(Pedido).Result.&End;
+
+    EditResultId.Text := IntToStr(Pedido.ID);
+
+  finally
+    Pedido.Free;
+  end;
+end;
+```
+
 
