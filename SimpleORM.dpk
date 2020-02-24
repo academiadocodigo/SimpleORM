@@ -52,6 +52,7 @@ contains
   SimpleDAOSQLAttribute in 'SimpleDAOSQLAttribute.pas',
   SimpleStoreProcInterface in 'SimpleStoreProcInterface.pas',
   SimpleStoreProcFiredac in 'SimpleStoreProcFiredac.pas',
-  SimpleDAOStoreProc in 'SimpleDAOStoreProc.pas';
+  SimpleDAOStoreProc in 'SimpleDAOStoreProc.pas',
+  SimpleSP in 'SimpleSP.pas';
 
 end.
