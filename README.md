@@ -96,6 +96,25 @@ end;
 
 `Bind`      - Você pode informar o formulário que deseja que o SimpleORM faça o Bind automatico entre a Classe e os Componentes da tela (Edit, Combo, CheckBox, RadioButton e etc...)
 
+## Inicialização do SimpleORM com Store procedure
+
+```delphi
+var
+  ConnSp : iSimpleStoreProc;
+  DAOSPPedido : iSimpleDAOStoreProc<TPEDIDO>;
+begin
+  ConnSp := TSimpleStoreProcFiredac.New(FDConnection1);
+  DAOSPPedido := TSimpleDAOStoreProc<TPEDIDO>
+                  .New(ConnSp).&End;
+end;
+```
+
+`ConnSp`      - Instancia a Interface iSimpleStoreProc passando o componente de conexão que o SimpleORM irá trabalhar.
+
+`DAOSPPedido` - Instância o DAOSP para uma Entidade Mapeada, passando a Classe de Mapeamento como Atributo Genérico.
+
+`New`       - Recebe a Interface de Conexão iSimpleStoreProc.
+
 
 ## MAPEAMENTO DO BIND DO FORMULÁRIO
 Quando você fizer o mapeamento Bind do Formulário, não precisará ligar manualmente os campos da classe ao Edits, o SimpleORM faz isso
