@@ -264,3 +264,98 @@ begin
 end;
 ```
 
+## STORE PRCOCEDURE  
+
+Para utilização de store procedure que segue o padrão de mapeamento de uma classe com atributo ProceName e o desenvolvimento de uma store procudere no banco.
+
+Exemplo do desenvolvimento de uma S.P. no Firebird
+
+```delphi
+create or alter procedure PEDIDO_IU (
+    ID integer,
+    NOME varchar(60),
+    DATA timestamp,
+    VALOR decimal(18,2))
+as
+begin
+  if (exists(select id from pedido where (id = :id))) then
+    update pedido
+    set nome = :nome,
+        data = :data,
+        valor = :valor
+    where (id = :id);
+  else
+    insert into pedido (
+        id,
+        nome,
+        data,
+        valor)
+    values (
+        :id,
+        :nome,
+        :data,
+        :valor);
+
+end
+```
+
+Abaixo um exemplo de execução no SimpleORM , ver mapeamento acima ( [ProceName('PEDIDO_IU')] )
+```delphi
+var
+  Pedido: TPEDIDO;
+begin
+  Pedido := TPEDIDO.Create;
+  try
+    Pedido.ID := StrToInt(Edit2.Text);
+    Pedido.CLIENTE := Edit1.Text;
+    Pedido.DATAPEDIDO := now;
+    Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
+
+    DAOSPPedido.Execute(Pedido).&End;
+
+  finally
+    Pedido.Free;
+  end;
+end;
+```
+
+Você também pode retornar um valor 
+
+Exemplo do desenvolvimento de uma S.P. no Firebird com retorno de valor ( RESULTID do tipo Inteiro )
+
+```delphi
+
+create or alter procedure PEDIDO_IU_RESULT (
+    ID integer,
+    NOME varchar(60),
+    DATA timestamp,
+    VALOR decimal(18,2))
+returns (
+    RESULTID integer)
+as
+begin
+  RESULTID  = :id;
+  if (exists(select id from pedido where (id = :id))) then
+    update pedido
+    set nome = :nome,
+        data = :data,
+        valor = :valor
+    where (id = :id);
+  else
+  begin
+    RESULTID = gen_id(gen_pedido_id,1);
+    insert into pedido (
+        id,
+        nome,
+        data,
+        valor)
+    values (
+        :RESULTID,
+        :nome,
+        :data,
+        :valor);
+    end
+end
+
+```
+
