@@ -847,9 +847,9 @@ begin
     begin
       for Atributo in Prop.GetAttributes do
       begin
-        if Atributo is FieldRetorno then
+        if Atributo is FieldResult then
         Begin
-          aResult := Uppercase(FieldRetorno(Atributo).Name);
+          aResult := Uppercase(FieldResult(Atributo).Name);
           break;
         End;
       end;

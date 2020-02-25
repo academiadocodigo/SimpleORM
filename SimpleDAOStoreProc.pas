@@ -34,7 +34,12 @@ uses
   System.Classes,
   System.SysUtils,
   System.TypInfo,
-  SimpleStoreProcInterface, SimpleInterface;
+  System.Variants,
+  SimpleInterface,
+  SimpleRTTI,
+  SimpleAttributes,
+  SimpleSP,
+  SimpleStoreProcInterface;
 
 Type
   TSimpleDAOStoreProc<T: class, constructor> = class(TInterfacedObject,
@@ -57,14 +62,6 @@ Type
   end;
 
 implementation
-
-uses
-  SimpleRTTI,
-  System.Variants,
-  SimpleSP,
-  SimpleAttributes;
-
-{ TGenericDAO }
 
 destructor TSimpleDAOStoreProc<T>.Destroy;
 begin
@@ -149,7 +146,7 @@ begin
     begin
       for Atributo in Prop.GetAttributes do
       begin
-        if Atributo is FieldRetorno then
+        if Atributo is FieldResult then
         Begin
           Prop.SetValue(TObject(aValue), VarToInt(aVariant));
           break;

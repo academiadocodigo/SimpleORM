@@ -24,7 +24,7 @@ Type
     destructor Destroy; override;
   published
     [Campo('ID'), Pk, AutoInc]
-    [FieldRetorno('RESULTID')]
+    [FieldResult('RESULTID')]
     property ID: Integer read FID write SetID;
     [Campo('NOME')]
     property CLIENTE: String read FCLIENTE write SetCLIENTE;

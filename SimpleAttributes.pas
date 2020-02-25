@@ -48,7 +48,7 @@ type
     property Name: String read FName write FName;
   end;
 
-  FieldRetorno = class(TCustomAttribute)
+  FieldResult = class(TCustomAttribute)
   private
     FName: String;
   public
@@ -92,9 +92,9 @@ begin
   FName := aName;
 end;
 
-{ FieldRetorno }
+{ FieldResult }
 
-constructor FieldRetorno.Create(const aName: String);
+constructor FieldResult.Create(const aName: String);
 begin
   FName := aName;
 end;
