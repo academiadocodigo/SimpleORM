@@ -29,7 +29,7 @@ Type
     destructor Destroy; override;
   published
     [Campo('ID'), Pk, AutoInc]
-    [FieldRetorno('RESULTID')]	
+    [FieldResult('RESULTID')]	
     property ID: Integer read FID write SetID;
     [Campo('NOME')]
     property CLIENTE: String read FCLIENTE write SetCLIENTE;
@@ -53,7 +53,7 @@ Type
 
 `Ignore`  - Ignorar o Campo nas Operações de CRUD.
 
-`FieldRetorno` - Informa o nome do campo de retorno na Store Procedure.
+`FieldResult` - Informa o nome do campo de retorno na Store Procedure.
 
 # Principais Operações
 
