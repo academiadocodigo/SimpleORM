@@ -474,7 +474,8 @@ begin
             begin
               if (Attribute is Campo) then
                 vCampo := Campo(Attribute).Name;
-            end;
+
+            end;
           
             if vCampo = Field.DisplayName then
             begin
@@ -764,6 +765,9 @@ begin
       begin
         if (Attribute is Campo) then
           vCampo := Campo(Attribute).Name;
+         
+        if Attribute is Ignore then
+          vIgnore := True;          
           
         if Attribute is Ignore then
           vIgnore := True;
