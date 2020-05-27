@@ -412,7 +412,8 @@ begin
             begin
               if (Attribute is Campo) then
                 vCampo := Campo(Attribute).Name;
-            end;
+
+            end;
 
             if LowerCase(vCampo) = LowerCase(Field.DisplayName) then
             begin
@@ -483,8 +484,7 @@ begin
             begin
               if (Attribute is Campo) then
                 vCampo := Campo(Attribute).Name;
-            end;
-
+            end;
             if LowerCase(vCampo) = LowerCase(Field.DisplayName) then
             begin
               case prpRtti.PropertyType.TypeKind of
@@ -714,6 +714,9 @@ begin
       
         if Attribute is Ignore then
           vIgnore := True;
+          
+       if Attribute is Ignore then
+          vIgnore := True;    
 
         if Attribute is AutoInc then
           vIgnore := True;
