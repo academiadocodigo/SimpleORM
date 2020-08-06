@@ -25,6 +25,9 @@ type
   PK = class(TCustomAttribute)
   end;
 
+  FK = class(TCustomAttribute)
+  end;
+
   Ignore = class(TCustomAttribute)
   end;
 

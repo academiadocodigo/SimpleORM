@@ -539,6 +539,7 @@ var
   Aux : String;
   vCampo: string;
   vIgnore: Boolean;
+  vFK : Boolean;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
@@ -557,17 +558,37 @@ begin
 
         if Attribute is Ignore then
           vIgnore := True;
+
+        if Attribute is FK then
+          vFK := True;
       end;
 
       if not vIgnore then
       begin
         case prpRtti.PropertyType.TypeKind of
           tkInt64,
-          tkInteger     : aDictionary.Add(vCampo, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
+          tkInteger     :
+            begin
+              if vFK then
+                begin
+                  if prpRtti.GetValue(Pointer(FInstance)).AsInteger = 0 then
+                    aDictionary.Add(vCampo, Null)
+                  else
+                    aDictionary.Add(vCampo, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
+                end
+              else
+                aDictionary.Add(vCampo, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
+            end;
           tkFloat       :
           begin
             if CompareText('TDateTime',prpRtti.PropertyType.Name)=0 then
               aDictionary.Add(vCampo, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+            else
+            if CompareText('TDate',prpRtti.PropertyType.Name)=0 then
+              aDictionary.Add(vCampo, StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString))
+            else
+            if CompareText('TTime',prpRtti.PropertyType.Name)=0 then
+              aDictionary.Add(vCampo, StrToTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
             else
               aDictionary.Add(vCampo, __FloatFormat(prpRtti.GetValue(Pointer(FInstance)).ToString));
           end;
