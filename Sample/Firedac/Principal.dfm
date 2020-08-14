@@ -167,7 +167,7 @@ object Form9: TForm9
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      'Database=D:\Bancos\Firebird\PDVUPDATES.FDB'
+      'Database=C:\lixo\PDVUPDATES.FDB'
       'User_Name=SYSDBA'
       'Password=masterkey'
       'DriverID=FB')

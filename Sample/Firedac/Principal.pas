@@ -10,7 +10,7 @@ uses
   FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
   FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, SimpleInterface, SimpleDAO, Entidade.Pedido, System.Generics.Collections, SimpleQueryFiredac,
-  Entidade.DoublePK,
+  {Entidade.DoublePK,}
   SimpleAttributes, Vcl.ExtCtrls, Vcl.ComCtrls;
 
 type

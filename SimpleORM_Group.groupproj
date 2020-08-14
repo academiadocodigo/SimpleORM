@@ -9,6 +9,9 @@
         <Projects Include="Sample\Firedac\SimpleORMFiredac.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Sample\horse\SimpleORMHorse.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="SimpleORMFiredac:Make">
         <MSBuild Projects="Sample\Firedac\SimpleORMFiredac.dproj" Targets="Make"/>
     </Target>
+    <Target Name="SimpleORMHorse">
+        <MSBuild Projects="Sample\horse\SimpleORMHorse.dproj"/>
+    </Target>
+    <Target Name="SimpleORMHorse:Clean">
+        <MSBuild Projects="Sample\horse\SimpleORMHorse.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMHorse:Make">
+        <MSBuild Projects="Sample\horse\SimpleORMHorse.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="SimpleORM;SimpleORMFiredac"/>
+        <CallTarget Targets="SimpleORM;SimpleORMFiredac;SimpleORMHorse"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="SimpleORM:Clean;SimpleORMFiredac:Clean"/>
+        <CallTarget Targets="SimpleORM:Clean;SimpleORMFiredac:Clean;SimpleORMHorse:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="SimpleORM:Make;SimpleORMFiredac:Make"/>
+        <CallTarget Targets="SimpleORM:Make;SimpleORMFiredac:Make;SimpleORMHorse:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
