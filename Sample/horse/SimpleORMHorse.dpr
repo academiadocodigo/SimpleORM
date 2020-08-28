@@ -7,6 +7,7 @@ program SimpleORMHorse;
 uses
   Horse,
   Horse.Jhonson,
+  Horse.CORS,
   Model.Connection in 'Model\Connection\Model.Connection.pas',
   DataSetConverter4D.Helper in 'DataSetConverter4D.Helper.pas',
   DataSetConverter4D.Impl in 'DataSetConverter4D.Impl.pas',
@@ -22,6 +23,7 @@ var
 begin
   App := THorse.Create(9000);
   App.Use(JHonson);
+  App.Use(CORS);
 
   Controller.Produto.Registry(App);
 

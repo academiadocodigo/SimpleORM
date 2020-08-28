@@ -37,7 +37,7 @@ begin
   FConnList.Add(TFDConnection.Create(nil));
   Result := Pred(FConnList.Count);
   FConnList.Items[Result].Params.DriverID := 'FB';
-  FConnList.Items[Result].Params.Database := 'C:\lixo\BASE.FDB';
+  FConnList.Items[Result].Params.Database := 'D:\Projetos\Componentes\SimpleORM\SimpleORM.git\trunk\Sample\Database\PDVUPDATES.FDB';
   FConnList.Items[Result].Params.UserName := 'SYSDBA';
   FConnList.Items[Result].Params.Password := 'masterkey';
   FConnList.Items[Result].Connected;
