@@ -53,8 +53,6 @@ begin
 end;
 
 function TSimpleQueryFiredac.ExecSQL: iSimpleQuery;
-var
-  a: string;
 begin
   Result := Self;
   if Assigned(FParams) then

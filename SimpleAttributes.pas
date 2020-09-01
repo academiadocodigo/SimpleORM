@@ -28,10 +28,16 @@ type
   FK = class(TCustomAttribute)
   end;
 
+  NotNull = class(TCustomAttribute)
+  end;
+
   Ignore = class(TCustomAttribute)
   end;
 
   AutoInc = class(TCustomAttribute)
+  end;
+
+  NumberOnly = class(TCustomAttribute)
   end;
 
   Bind = class(TCustomAttribute)

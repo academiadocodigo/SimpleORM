@@ -18,9 +18,6 @@ Type
   TSimpleDAO<T: class, constructor> = class(TInterfacedObject, iSimpleDAO<T>)
     private
       FQuery : iSimpleQuery;
-      FDictionaryFields : TDictionary<string, variant>;
-      FFields, FWhere, FUpdate, FParam : String;
-      FClassName : String;
       FDataSource : TDataSource;
       FSQLAttribute : iSimpleDAOSQLAttribute<T>;
       {$IFNDEF CONSOLE}
