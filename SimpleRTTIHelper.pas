@@ -20,6 +20,8 @@ type
     function EhChaveEstrangeira: Boolean;
     function EhSomenteNumeros: Boolean;
     function EhPermitidoNulo: Boolean;
+    function DisplayName: string;
+    function FieldName: string;
   end;
 
   TRttiTypeHelper = class helper for TRttiType
@@ -27,7 +29,9 @@ type
     function Tem<T: TCustomAttribute>: Boolean;
     function GetAttribute<T: TCustomAttribute>: T;
     function GetPropertyFromAttribute<T: TCustomAttribute>
-      : TRttiProperty;
+      : TRttiProperty; overload;
+    function GetPropertyFromAttribute<T: Campo>(const aFieldName: string)
+      : TRttiProperty; overload;
     function GetPKField: TRttiProperty;
     function IsTabela: Boolean;
   end;
@@ -50,6 +54,14 @@ begin
   for oAtributo in GetAttributes do
     if oAtributo is T then
       Exit((oAtributo as T));
+end;
+
+function TRttiPropertyHelper.DisplayName: string;
+begin
+  Result := Name;
+
+  if Tem<Display> then
+    Result := GetAttribute<Display>.Name
 end;
 
 function TRttiPropertyHelper.EhCampo: Boolean;
@@ -92,6 +104,13 @@ begin
   Result := Tem<NumberOnly>
 end;
 
+function TRttiPropertyHelper.FieldName: string;
+begin
+  Result := Name;
+  if EhCampo then
+    Result := GetAttribute<Campo>.Name;
+end;
+
 function TRttiPropertyHelper.Tem<T>: Boolean;
 begin
   Result := GetAttribute<T> <> nil
@@ -112,6 +131,22 @@ end;
 function TRttiTypeHelper.GetPKField: TRttiProperty;
 begin
   Result := GetPropertyFromAttribute<PK>;
+end;
+
+function TRttiTypeHelper.GetPropertyFromAttribute<T>(
+  const aFieldName: string): TRttiProperty;
+var
+  RttiProp: TRttiProperty;
+begin
+  Result := nil;
+  for RttiProp in GetProperties do
+  begin
+    if RttiProp.GetAttribute<T> = nil then
+      Continue;
+
+    if RttiProp.GetAttribute<Campo>.Name = aFieldName then
+      Exit(RttiProp);
+  end;
 end;
 
 function TRttiTypeHelper.GetPropertyFromAttribute<T>: TRttiProperty;

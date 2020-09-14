@@ -50,6 +50,9 @@ contains
   SimpleRTTI in 'SimpleRTTI.pas',
   SimpleSQL in 'SimpleSQL.pas',
   SimpleDAOSQLAttribute in 'SimpleDAOSQLAttribute.pas',
-  SimpleRTTIHelper in 'SimpleRTTIHelper.pas';
+  SimpleRTTIHelper in 'SimpleRTTIHelper.pas',
+  SimpleValidator in 'SimpleValidator.pas',
+  SimpleUtil in 'SimpleUtil.pas',
+  SimpleEntity in 'SimpleEntity.pas';
 
 end.
