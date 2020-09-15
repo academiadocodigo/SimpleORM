@@ -12,6 +12,9 @@
         <Projects Include="Sample\horse\SimpleORMHorse.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Sample\Validation\SimpleORMValidation.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +50,23 @@
     <Target Name="SimpleORMHorse:Make">
         <MSBuild Projects="Sample\horse\SimpleORMHorse.dproj" Targets="Make"/>
     </Target>
+    <Target Name="SimpleORMValidation">
+        <MSBuild Projects="Sample\Validation\SimpleORMValidation.dproj"/>
+    </Target>
+    <Target Name="SimpleORMValidation:Clean">
+        <MSBuild Projects="Sample\Validation\SimpleORMValidation.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMValidation:Make">
+        <MSBuild Projects="Sample\Validation\SimpleORMValidation.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="SimpleORM;SimpleORMFiredac;SimpleORMHorse"/>
+        <CallTarget Targets="SimpleORM;SimpleORMFiredac;SimpleORMHorse;SimpleORMValidation"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="SimpleORM:Clean;SimpleORMFiredac:Clean;SimpleORMHorse:Clean"/>
+        <CallTarget Targets="SimpleORM:Clean;SimpleORMFiredac:Clean;SimpleORMHorse:Clean;SimpleORMValidation:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="SimpleORM:Make;SimpleORMFiredac:Make;SimpleORMHorse:Make"/>
+        <CallTarget Targets="SimpleORM:Make;SimpleORMFiredac:Make;SimpleORMHorse:Make;SimpleORMValidation:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
