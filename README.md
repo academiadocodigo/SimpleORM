@@ -9,6 +9,7 @@ Homologado para os drivers de Conexão Firedac e RestDataware.
 
 [andersonlugarinhoramos](https://github.com/andersonlugarinhoramos/geradorsimpleorm)</br>
 [alan-petry](https://github.com/alan-petry/GeraClassesSimpleORM)
+[Douglas09](https://github.com/Douglas09/GeradorDeClasses_SimpleORM_MySql)
 
 Entidade do Banco de Dados Mapeada
 
