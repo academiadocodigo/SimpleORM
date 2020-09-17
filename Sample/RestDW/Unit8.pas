@@ -15,11 +15,15 @@ type
     RESTDWDataBase1: TRESTDWDataBase;
     DBGrid1: TDBGrid;
     DataSource1: TDataSource;
+    
+    [Campo('ID')]
+    Edit1: TEdit;
+    [Campo('NOME')]
+    Edit2: TEdit;
+
     btnFind: TButton;
     Memo1: TMemo;
     Button2: TButton;
-    Edit1: TEdit;
-    Edit2: TEdit;
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
@@ -30,9 +34,9 @@ type
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
-    procedure DataSource1DataChange(Sender: TObject; Field: TField);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
   private
     { Private declarations }
     DAOPedido : iSimpleDAO<TPEDIDO>;
@@ -49,33 +53,33 @@ implementation
 
 procedure TForm8.btnFindClick(Sender: TObject);
 var
-  Pedidos : TList<TPEDIDO>;
+  Pedidos : TObjectList<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  Pedidos := DAOPedido
+  Pedidos := TObjectList<TPEDIDO>.Create();
+   DAOPedido
               .SQL
                 .OrderBy('ID')
               .&End
-              .Find;
+              .Find(Pedidos);
   try
     for Pedido in Pedidos do
     begin
       Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
-      Pedido.Free;
     end;
   finally
-    FreeAndNil(Pedidos);
+    Pedidos.free;
   end;
 
 end;
 
 procedure TForm8.Button1Click(Sender: TObject);
 begin
-//  DAOPedido
-//    .SQL
-//      .Fields('MAX(ID)')
-//    .&End
-//    .Find;
+  DAOPedido
+    .SQL
+      .Fields('MAX(ID)')
+    .&End
+    .Find;
 end;
 
 procedure TForm8.Button2Click(Sender: TObject);
@@ -143,7 +147,8 @@ var
   Pedidos : TList<TPEDIDO>;
   Pedido : TPEDIDO;
 begin
-  Pedidos := DAOPedido
+  Pedidos := TObjectList<TPEDIDO>.Create();
+  DAOPedido
               .SQL
                 .Where(' Nome = ' + QuotedStr(Edit1.Text))
               .&End
@@ -152,24 +157,24 @@ begin
     for Pedido in Pedidos do
     begin
       Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
-      Pedido.Free;
     end;
   finally
     Pedidos.Free;
   end;
 end;
 
-procedure TForm8.DataSource1DataChange(Sender: TObject; Field: TField);
+procedure TForm8.DBGrid1DblClick(Sender: TObject);
 begin
   Edit1.Text := DataSource1.DataSet.FieldByName('NOME').AsString;
   Edit2.Text := DataSource1.DataSet.FieldByName('ID').AsString;
 end;
 
-procedure TForm8.FormCreate(Sender: TObject);
+Procedure TForm8.FormCreate(Sender: TObject);
 begin
   DAOPedido := TSimpleDAO<TPEDIDO>
                 .New(TSimpleQueryRestDW<TPEDIDO>.New(RESTDWDataBase1))
-                .DataSource(DataSource1);
+                .DataSource(DataSource1)
+                .BindForm(Self);
 end;
 
 end.
