@@ -5,11 +5,11 @@ O SimpleORM tem o Objetivo de facilitar suas implementações de CRUD, agilizand
 
 Homologado para os drivers de Conexão Firedac e RestDataware.
 
-#### Gerador de Classes para o SimpleORM
+#### Gerador de Classes para o SimpleORM criados pela Comunidade
 
 [andersonlugarinhoramos](https://github.com/andersonlugarinhoramos/geradorsimpleorm)</br>
-[alan-petry](https://github.com/alan-petry/GeraClassesSimpleORM)
-[Douglas09](https://github.com/Douglas09/GeradorDeClasses_SimpleORM_MySql)
+[alan-petry](https://github.com/alan-petry/GeraClassesSimpleORM)</br>
+[Douglas09](https://github.com/Douglas09/GeradorDeClasses_SimpleORM_MySql)</br>
 
 Entidade do Banco de Dados Mapeada
 
