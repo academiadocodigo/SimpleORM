@@ -26,6 +26,7 @@ object Form8: TForm8
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnDblClick = DBGrid1DblClick
   end
   object btnFind: TButton
     Left = 8
@@ -107,15 +108,17 @@ object Form8: TForm8
     OnClick = Button6Click
   end
   object RESTDWDataBase1: TRESTDWDataBase
-    Active = False
+    Active = True
     Compression = True
-    Login = 'testserver'
-    Password = 'testserver'
+    CriptOptions.Use = False
+    CriptOptions.Key = 'RDWBASEKEY256'
+    MyIP = '127.0.0.1'
+    AuthenticationOptions.AuthorizationOption = rdwAONone
     Proxy = False
     ProxyOptions.Port = 8888
     PoolerService = '127.0.0.1'
     PoolerPort = 8082
-    PoolerName = 'TServerMethodDM.RESTDWPoolerDB1'
+    PoolerName = 'TdmService.RESTDWPoolerFD'
     StateConnection.AutoCheck = False
     StateConnection.InTime = 1000
     RequestTimeOut = 10000
@@ -124,13 +127,20 @@ object Form8: TForm8
     StrsTrim = False
     StrsEmpty2Null = False
     StrsTrim2Len = True
+    HandleRedirects = False
+    RedirectMaximum = 0
     ParamCreate = True
+    FailOver = False
+    FailOverConnections = <>
+    FailOverReplaceDefaults = False
     ClientConnectionDefs.Active = False
+    UserAgent = 
+      'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, l' +
+      'ike Gecko) Chrome/41.0.2227.0 Safari/537.36'
     Left = 472
     Top = 320
   end
   object DataSource1: TDataSource
-    OnDataChange = DataSource1DataChange
     Left = 504
     Top = 104
   end
