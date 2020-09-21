@@ -18,7 +18,7 @@ type
     btnCancelar: TButton;
     btnNovo: TButton;
     pnlErros: TPanel;
-    lstErros: TListBox;
+    lstSaidas: TListBox;
     btnSalvar: TButton;
     btnExcluir: TButton;
     btnEditar: TButton;

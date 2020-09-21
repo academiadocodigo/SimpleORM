@@ -60,7 +60,7 @@ object fBase: TfBase
     Height = 150
     Align = alBottom
     TabOrder = 2
-    object lstErros: TListBox
+    object lstSaidas: TListBox
       AlignWithMargins = True
       Left = 9
       Top = 9

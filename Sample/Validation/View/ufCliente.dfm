@@ -172,7 +172,7 @@ inherited fCliente: TfCliente
   object btnGerarRelatorio: TButton [22]
     Left = 8
     Top = 338
-    Width = 430
+    Width = 210
     Height = 25
     Anchors = [akLeft, akBottom]
     Caption = 'Gerar Relat'#243'rio'
@@ -202,5 +202,15 @@ inherited fCliente: TfCliente
   inherited edtPesquisar: TEdit
     TabOrder = 16
     OnKeyUp = edtPesquisarKeyUp
+  end
+  object btnGerarJson: TButton [26]
+    Left = 228
+    Top = 338
+    Width = 210
+    Height = 25
+    Anchors = [akLeft, akBottom]
+    Caption = 'Gerar JSON'
+    TabOrder = 17
+    OnClick = btnGerarJsonClick
   end
 end

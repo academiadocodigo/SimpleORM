@@ -40,6 +40,7 @@ type
     dtpNascimento: TDateTimePicker;
     [Bind('DataCadastro')]
     dtpCadastro: TDateTimePicker;
+    btnGerarJson: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
@@ -50,6 +51,7 @@ type
     procedure btnGerarRelatorioClick(Sender: TObject);
     procedure edtPesquisarKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure btnGerarJsonClick(Sender: TObject);
   private
     DAOCliente: iSimpleDAO<TCliente>;
     procedure BuscarTodosClientes;
@@ -98,13 +100,13 @@ procedure TfCliente.btnSalvarClick(Sender: TObject);
 var
   oCliente: TCliente;
 begin
-  lstErros.Clear;
+  lstSaidas.Clear;
   oCliente := TCliente.Create;
   try
     oCliente.Parse(Self);
-    TSimpleValidator.Validate(oCliente, lstErros.Items);
+    TSimpleValidator.Validate(oCliente, lstSaidas.Items);
 
-    if lstErros.Items.Count > 0 then
+    if lstSaidas.Items.Count > 0 then
       raise Exception.Create('Encontrado Erros de preenchimento!');
 
     case FStatus of
@@ -118,6 +120,23 @@ begin
     inherited;
   finally
     FreeAndNil(oCliente);
+  end;
+end;
+
+procedure TfCliente.btnGerarJsonClick(Sender: TObject);
+var
+  oClientes: TClientes;
+begin
+  inherited;
+  lstSaidas.Items.Clear;
+
+  oClientes := TClientes.Create;
+  try
+    oClientes.Parse(dtsDados.DataSet);
+    lstSaidas.Items.Add(oClientes.ToJSON);
+    lstSaidas.Items.Add(oClientes.ToJSONRefletion);
+  finally
+    FreeAndNil(oClientes);
   end;
 end;
 
