@@ -42,7 +42,15 @@ type
     function GetAttribute<T: TCustomAttribute>: T;
   end;
 
+  TValueHelper = record helper for TValue
+  public
+    function AsStringNumberOnly: String;
+  end;
+
 implementation
+
+uses
+  System.SysUtils;
 
 { TRttiPropertyMelhorado }
 
@@ -184,6 +192,21 @@ end;
 function TRttiFieldHelper.Tem<T>: Boolean;
 begin
   Result := GetAttribute<T> <> nil
+end;
+
+{ TValueHelper.NumberOnly }
+
+function TValueHelper.AsStringNumberOnly: String;
+var
+  sContent: string;
+  nIndex: Integer;
+begin
+  Result := '';
+  sContent := Trim(AsString);
+
+  for nIndex := 1 to Length(sContent) do
+    if CharInSet(sContent[nIndex], ['0'..'9']) then
+      Result := Result + sContent[nIndex];
 end;
 
 end.

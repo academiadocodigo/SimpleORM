@@ -53,6 +53,8 @@ contains
   SimpleRTTIHelper in 'SimpleRTTIHelper.pas',
   SimpleValidator in 'SimpleValidator.pas',
   SimpleUtil in 'SimpleUtil.pas',
-  SimpleEntity in 'SimpleEntity.pas';
+  SimpleEntity in 'SimpleEntity.pas',
+  SimpleJSONUtil in 'SimpleJSONUtil.pas',
+  SimpleJSON in 'SimpleJSON.pas';
 
 end.
