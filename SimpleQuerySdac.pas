@@ -1,21 +1,20 @@
-Unit SimpleQueryZeos;
+Unit SimpleQuerySdac;
 
 interface
 
 uses
-  SimpleInterface,  ZAbstractConnection, ZConnection,
-  ZAbstractRODataset, ZAbstractDataset, ZAbstractTable, ZDataset, System.Classes, Data.DB;
+  SimpleInterface, System.Classes, Data.DB,MSAccess;
 
 Type
-  TSimpleQueryZeos = class(TInterfacedObject, iSimpleQuery)
+  TSimpleQuerySdac = class(TInterfacedObject, iSimpleQuery)
     private
-      FConnection : TZConnection;
-      FQuery : TZQuery;
+      FConnection : TMSConnection;
+      FQuery : TMSQuery;
       FParams : TParams;
     public
-      constructor Create(aConnection : TZConnection);
+      constructor Create(aConnection : TMSConnection);
       destructor Destroy; override;
-      class function New(aConnection : TZConnection) : iSimpleQuery;
+      class function New(aConnection : TMSConnection) : iSimpleQuery;
       function SQL : TStrings;
       function Params : TParams;
       function ExecSQL : iSimpleQuery;
@@ -31,19 +30,19 @@ uses
 
 { TSimpleQuery<T> }
 
-constructor TSimpleQueryZeos.Create(aConnection : TZConnection);
+constructor TSimpleQuerySdac.Create(aConnection : TMSConnection);
 begin
-  FQuery := TZQuery.Create(nil);
+  FQuery := TMSQuery.Create(nil);
   FConnection := aConnection;
   FQuery.Connection := FConnection;
 end;
 
-function TSimpleQueryZeos.DataSet: TDataSet;
+function TSimpleQuerySdac.DataSet: TDataSet;
 begin
   Result := TDataSet(FQuery);
 end;
 
-destructor TSimpleQueryZeos.Destroy;
+destructor TSimpleQuerySdac.Destroy;
 begin
   FreeAndNil(FQuery);
   if Assigned(FParams) then
@@ -51,7 +50,7 @@ begin
   inherited;
 end;
 
-function TSimpleQueryZeos.ExecSQL: iSimpleQuery;
+function TSimpleQuerySdac.ExecSQL: iSimpleQuery;
 var
   a: string;
 begin
@@ -65,12 +64,12 @@ begin
     FreeAndNil(FParams);
 end;
 
-class function TSimpleQueryZeos.New(aConnection : TZConnection): iSimpleQuery;
+class function TSimpleQuerySdac.New(aConnection : TMSConnection): iSimpleQuery;
 begin
   Result := Self.Create(aConnection);
 end;
 
-function TSimpleQueryZeos.Open: iSimpleQuery;
+function TSimpleQuerySdac.Open: iSimpleQuery;
 begin
   Result := Self;
   FQuery.Close;
@@ -85,7 +84,7 @@ begin
     FreeAndNil(FParams);
 end;
 
-function TSimpleQueryZeos.Open(aSQL: String): iSimpleQuery;
+function TSimpleQuerySdac.Open(aSQL: String): iSimpleQuery;
 begin
   Result := Self;
   FQuery.Close;
@@ -94,7 +93,7 @@ begin
   FQuery.Open;
 end;
 
-function TSimpleQueryZeos.Params: TParams;
+function TSimpleQuerySdac.Params: TParams;
 begin
   if not Assigned(FParams) then
   begin
@@ -104,7 +103,7 @@ begin
   Result := FParams;
 end;
 
-function TSimpleQueryZeos.SQL: TStrings;
+function TSimpleQuerySdac.SQL: TStrings;
 begin
   Result := FQuery.SQL;
 end;
