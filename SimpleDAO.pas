@@ -42,7 +42,7 @@ Type
       function Update : iSimpleDAO<T>; overload;
       function Delete : iSimpleDAO<T>; overload;
       {$ENDIF}
-      function Find : iSimpleDAO<T>; overload;
+      function Find(aBindList : Boolean = True) : iSimpleDAO<T>; overload;
       function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
       function Find( aId : Integer) : T; overload;
       function SQL : iSimpleDAOSQLAttribute<T>;
@@ -146,7 +146,7 @@ begin
   inherited;
 end;
 
-function TSimpleDAO<T>.Find : iSimpleDAO<T>;
+function TSimpleDAO<T>.Find(aBindList : Boolean = True) : iSimpleDAO<T>;
 var
   aSQL : String;
 begin
@@ -162,7 +162,10 @@ begin
 
   FQuery.DataSet.DisableControls;
   FQuery.Open(aSQL);
-  TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, FList);
+
+  if aBindList then
+    TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, FList);
+
   FSQLAttribute.Clear;
   FQuery.DataSet.EnableControls;
 end;
