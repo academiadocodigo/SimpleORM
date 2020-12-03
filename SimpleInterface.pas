@@ -27,7 +27,7 @@ type
     function LastID : iSimpleDAO<T>;
     function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
     function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
-    function Find : iSimpleDAO<T>; overload;
+    function Find(aBindList : Boolean = True) : iSimpleDAO<T>; overload;
     function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
     function Find(aId : Integer) : T; overload;
     function SQL : iSimpleDAOSQLAttribute<T>;
