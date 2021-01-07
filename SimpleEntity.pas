@@ -4,7 +4,11 @@ interface
 
 uses
   {$IFNDEF CONSOLE}
-  Vcl.Forms,
+    {$IFDEF FMX}
+      FMX.Forms,
+    {$ELSE}
+      Vcl.Forms,
+    {$ENDIF}
   {$ENDIF}
   Data.DB, System.Generics.Collections, System.SysUtils;
 

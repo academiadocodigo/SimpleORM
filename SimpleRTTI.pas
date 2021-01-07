@@ -89,9 +89,12 @@ uses
   Data.DB,
   TypInfo,
   {$IFNDEF CONSOLE}
-  VCL.Forms,
-  VCL.StdCtrls,
-  Vcl.ExtCtrls,
+    FMX.Types,
+    {$IFDEF FMX}
+      FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
+    {$ELSE}
+      Vcl.Forms, VCL.StdCtrls, Vcl.ExtCtrls,
+    {$ENDIF}
   {$ENDIF}
   System.Classes,
   System.SysUtils;
@@ -139,6 +142,8 @@ implementation
 
 uses
   SimpleAttributes,
+
+
   {$IFNDEF CONSOLE}
   Vcl.ComCtrls,
   Vcl.Graphics,
@@ -161,20 +166,37 @@ begin
   if aComponent is TComboBox then
     (aComponent as TComboBox).ItemIndex := (aComponent as TComboBox).Items.IndexOf(aValue);
 
+  {$IFDEF VCL}
   if aComponent is TRadioGroup then
     (aComponent as TRadioGroup).ItemIndex := (aComponent as TRadioGroup).Items.IndexOf(aValue);
 
+  if aComponent is TShape then
+    (aComponent as TShape).Brush.Color := aValue;
+  {$ENDIF}
+
+  //DateControls
+  {$IFDEF VCL}
+    if aComponent is TDateTimePicker then
+    (aComponent as TDateTimePicker).Date := aValue;
+  {$ENDIF}
+  {$IFDEF FMX}
+  if aComponent is TDateEdit then
+    (aComponent as TDateEdit).Date := aValue;
+  {$ENDIF}
+
   if aComponent is TCheckBox then
+  {$IFDEF VCL}
     (aComponent as TCheckBox).Checked := aValue;
+  {$ELSEIF IFDEF FMX}
+    (aComponent as TCheckBox).IsChecked := aValue;
+  {$ENDIF}
 
   if aComponent is TTrackBar then
     (aComponent as TTrackBar).Position := aValue;
 
-  if aComponent is TDateTimePicker then
-    (aComponent as TDateTimePicker).Date := aValue;
 
-  if aComponent is TShape then
-    (aComponent as TShape).Brush.Color := aValue;
+
+
 end;
 {$ENDIF}
 
@@ -242,20 +264,34 @@ begin
   if aComponent is TComboBox then
     Result := TValue.FromVariant((aComponent as TComboBox).Items[(aComponent as TComboBox).ItemIndex]);
 
+  {$IFDEF VCL}
   if aComponent is TRadioGroup then
     Result := TValue.FromVariant((aComponent as TRadioGroup).Items[(aComponent as TRadioGroup).ItemIndex]);
 
+  if aComponent is TShape then
+    Result := TValue.FromVariant((aComponent as TShape).Brush.Color);
+  {$ENDIF}
+
   if aComponent is TCheckBox then
+  {$IFDEF VCL}
     Result := TValue.FromVariant((aComponent as TCheckBox).Checked);
+  {$ELSEIF IFDEF FMX}
+      Result := TValue.FromVariant((aComponent as TCheckBox).IsChecked);
+  {$ENDIF}
+
 
   if aComponent is TTrackBar then
     Result := TValue.FromVariant((aComponent as TTrackBar).Position);
 
+  {$IFDEF VCL}
   if aComponent is TDateTimePicker then
     Result := TValue.FromVariant((aComponent as TDateTimePicker).DateTime);
+  {$ENDIF}
+  {$IFDEF FMX}
+  if aComponent is TDateEdit then
+    Result := TValue.FromVariant((aComponent as TDateEdit).DateTime);
+  {$ENDIF}
 
-  if aComponent is TShape then
-    Result := TValue.FromVariant((aComponent as TShape).Brush.Color);
 
   a := Result.TOString;
 end;
