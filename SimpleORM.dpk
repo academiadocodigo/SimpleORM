@@ -39,7 +39,13 @@ requires
   FireDAC,
   FireDACCommonDriver,
   FireDACCommon,
-  RestDatawareCORE;
+  RestDatawareCORE,
+  DbxCommonDriver,
+  bindengine,
+  bindcomp,
+  RESTComponents,
+  dac260,
+  unidac260;
 
 contains
   SimpleAttributes in 'SimpleAttributes.pas',
@@ -55,6 +61,7 @@ contains
   SimpleUtil in 'SimpleUtil.pas',
   SimpleEntity in 'SimpleEntity.pas',
   SimpleJSONUtil in 'SimpleJSONUtil.pas',
-  SimpleJSON in 'SimpleJSON.pas';
+  SimpleJSON in 'SimpleJSON.pas',
+  SimpleQueryUnidac in 'SimpleQueryUnidac.pas';
 
 end.
