@@ -37,6 +37,7 @@ Type
       function Delete(aValue : T) : iSimpleDAO<T>; overload;
       function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
       function LastID : iSimpleDAO<T>;
+      function LastRecord : iSimpleDAO<T>;
       {$IFNDEF CONSOLE}
       function Insert: iSimpleDAO<T>; overload;
       function Update : iSimpleDAO<T>; overload;
@@ -45,6 +46,7 @@ Type
       function Find(aBindList : Boolean = True) : iSimpleDAO<T>; overload;
       function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
       function Find( aId : Integer) : T; overload;
+      function Find(aKey : String; aValue : Variant) : iSimpleDAO<T>; overload;
       function SQL : iSimpleDAOSQLAttribute<T>;
       {$IFNDEF CONSOLE}
       function BindForm(aForm : TForm)  : iSimpleDAO<T>;
@@ -206,9 +208,29 @@ end;
 {$ENDIF}
 
 function TSimpleDAO<T>.LastID: iSimpleDAO<T>;
+var
+  aSQL : String;
 begin
   Result := Self;
-  FQuery.Open('SELECT LAST_INSERT_ID() as ID');
+
+  TSimpleSQL<T>
+    .New(nil)
+    .LastID(aSQL);
+
+  FQuery.Open(aSQL);
+end;
+
+function TSimpleDAO<T>.LastRecord: iSimpleDAO<T>;
+var
+  aSQL : String;
+begin
+  Result := Self;
+
+  TSimpleSQL<T>
+    .New(nil)
+    .LastRecord(aSQL);
+
+  FQuery.Open(aSQL);
 end;
 
 function TSimpleDAO<T>.Find(var aList: TObjectList<T>): iSimpleDAO<T>;
@@ -240,8 +262,9 @@ begin
   FQuery.SQL.Add(aSQL);
   Self.FillParameter(aValue);
   FQuery.ExecSQL;
-end;
 
+  Self.LastRecord;
+end;
 
 class function TSimpleDAO<T>.New(aQuery : iSimpleQuery): iSimpleDAO<T>;
 begin
@@ -291,6 +314,9 @@ end;
 function TSimpleDAO<T>.Update(aValue: T): iSimpleDAO<T>;
 var
   aSQL : String;
+  DictionaryFields : TDictionary<String, Variant>;
+  aPK : String;
+  aPkValue : Integer;
 begin
   Result := Self;
   TSimpleSQL<T>.New(aValue).Update(aSQL);
@@ -298,6 +324,11 @@ begin
   FQuery.SQL.Add(aSQL);
   Self.FillParameter(aValue);
   FQuery.ExecSQL;
+
+  DictionaryFields := TDictionary<String, Variant>.Create;
+  TSimpleRTTI<T>.New(aValue).DictionaryFields(DictionaryFields).PrimaryKey(aPK);
+  aPkValue := DictionaryFields.Items[aPK];
+  Self.Find(aPKValue);
 end;
 
 function TSimpleDAO<T>.FillParameter(aInstance: T): iSimpleDAO<T>;
@@ -336,6 +367,18 @@ begin
   finally
     FreeAndNil(ListFields);
   end;
+end;
+
+function TSimpleDAO<T>.Find(aKey: String; aValue: Variant): iSimpleDAO<T>;
+var
+  aSQL : String;
+begin
+  Result := Self;
+  TSimpleSQL<T>.New(nil).Where(aKey + ' = :' + aKey).Select(aSQL);
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(aSQL);
+  FQuery.Params.ParamByName(aKey).Value := aValue;
+  FQuery.Open;
 end;
 
 end.
