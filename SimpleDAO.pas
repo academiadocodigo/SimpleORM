@@ -46,6 +46,7 @@ Type
       function Find(aBindList : Boolean = True) : iSimpleDAO<T>; overload;
       function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
       function Find( aId : Integer) : T; overload;
+      function Find(aKey : String; aValue : Variant) : iSimpleDAO<T>; overload;
       function SQL : iSimpleDAOSQLAttribute<T>;
       {$IFNDEF CONSOLE}
       function BindForm(aForm : TForm)  : iSimpleDAO<T>;
@@ -366,6 +367,18 @@ begin
   finally
     FreeAndNil(ListFields);
   end;
+end;
+
+function TSimpleDAO<T>.Find(aKey: String; aValue: Variant): iSimpleDAO<T>;
+var
+  aSQL : String;
+begin
+  Result := Self;
+  TSimpleSQL<T>.New(nil).Where(aKey + ' = :' + aKey).Select(aSQL);
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(aSQL);
+  FQuery.Params.ParamByName(aKey).Value := aValue;
+  FQuery.Open;
 end;
 
 end.

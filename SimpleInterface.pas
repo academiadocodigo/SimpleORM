@@ -31,6 +31,7 @@ type
     function Find(aBindList : Boolean = True) : iSimpleDAO<T>; overload;
     function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
     function Find(aId : Integer) : T; overload;
+    function Find(aKey : String; aValue : Variant) : iSimpleDAO<T>; overload;
     function SQL : iSimpleDAOSQLAttribute<T>;
     {$IFNDEF CONSOLE}
     function BindForm(aForm : TForm)  : iSimpleDAO<T>;
