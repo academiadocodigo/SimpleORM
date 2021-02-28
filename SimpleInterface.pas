@@ -29,11 +29,13 @@ type
     function Update(aValue : T) : iSimpleDAO<T>; overload;
     function Delete(aValue : T) : iSimpleDAO<T>; overload;
     function LastID : iSimpleDAO<T>;
+    function LastRecord : iSimpleDAO<T>;
     function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
     function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
     function Find(aBindList : Boolean = True) : iSimpleDAO<T>; overload;
     function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
     function Find(aId : Integer) : T; overload;
+    function Find(aKey : String; aValue : Variant) : iSimpleDAO<T>; overload;
     function SQL : iSimpleDAOSQLAttribute<T>;
     {$IFNDEF CONSOLE}
     function BindForm(aForm : TForm)  : iSimpleDAO<T>;
@@ -69,6 +71,7 @@ type
     function Param (var aParam : String) : iSimpleRTTI<T>;
     function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
     function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
+    function PrimaryKey(var aPK : String) : iSimpleRTTI<T>;
     {$IFNDEF CONSOLE}
     function BindClassToForm (aForm : TForm;  const aEntity : T) : iSimpleRTTI<T>;
     function BindFormToClass (aForm : TForm; var aEntity : T) : iSimpleRTTI<T>;
@@ -87,6 +90,8 @@ type
     function OrderBy (aSQL : String) : iSimpleSQL<T>;
     function GroupBy (aSQL : String) : iSimpleSQL<T>;
     function Join (aSQL : String) : iSimpleSQL<T>;
+    function LastID (var aSQL : String) : iSimpleSQL<T>;
+    function LastRecord (var aSQL : String) : iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface

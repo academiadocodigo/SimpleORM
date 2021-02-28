@@ -28,6 +28,8 @@ Type
       function OrderBy (aSQL : String) : iSimpleSQL<T>;
       function GroupBy (aSQL : String) : iSimpleSQL<T>;
       function Join (aSQL : String) : iSimpleSQL<T>;
+      function LastID (var aSQL : String) : iSimpleSQL<T>;
+      function LastRecord (var aSQL : String) : iSimpleSQL<T>;
   end;
 
 implementation
@@ -95,6 +97,37 @@ function TSimpleSQL<T>.Join(aSQL: String): iSimpleSQL<T>;
 begin
   Result := Self;
   FJoin := aSQL;
+end;
+
+function TSimpleSQL<T>.LastID(var aSQL: String): iSimpleSQL<T>;
+var
+  aClassName, aPK, aFields : String;
+begin
+  Result := Self;
+
+  TSimpleRTTI<T>.New(FInstance)
+    .TableName(aClassName)
+    .PrimaryKey(aPK);
+
+  aSQL := aSQL + 'select first(1) ' + aPK;
+  aSQL := aSQL + ' from '+ aClassName;
+  aSQL := aSQL + ' order by ' + aPK + ' desc';
+end;
+
+function TSimpleSQL<T>.LastRecord(var aSQL: String): iSimpleSQL<T>;
+var
+  aClassName, aPK, aFields : String;
+begin
+  Result := Self;
+
+  TSimpleRTTI<T>.New(FInstance)
+    .TableName(aClassName)
+    .Fields(aFields)
+    .PrimaryKey(aPK);
+
+  aSQL := aSQL + 'select first(1) '+aFields;
+  aSQL := aSQL + ' from '+ aClassName;
+  aSQL := aSQL + ' order by ' + aPK + ' desc';
 end;
 
 class function TSimpleSQL<T>.New(aInstance : T): iSimpleSQL<T>;

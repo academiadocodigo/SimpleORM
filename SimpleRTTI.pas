@@ -132,6 +132,7 @@ Type
       function ClassName (var aClassName : String) : iSimpleRTTI<T>;
       function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
       function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
+      function PrimaryKey(var aPK : String) : iSimpleRTTI<T>;
       {$IFNDEF CONSOLE}
       function BindClassToForm (aForm : TForm; const aEntity : T): iSimpleRTTI<T>;
       function BindFormToClass (aForm : TForm; var aEntity : T) : iSimpleRTTI<T>;
@@ -690,6 +691,29 @@ begin
     end;
   finally
     aParam := Copy(aParam, 0, Length(aParam) - 2) + ' ';
+    ctxRtti.Free;
+  end;
+end;
+
+function TSimpleRTTI<T>.PrimaryKey(var aPK: String): iSimpleRTTI<T>;
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
+begin
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if prpRtti.EhChavePrimaria then
+        aPK := prpRtti.FieldName;
+    end;
+  finally
     ctxRtti.Free;
   end;
 end;
