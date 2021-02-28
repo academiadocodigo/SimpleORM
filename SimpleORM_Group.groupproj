@@ -15,6 +15,9 @@
         <Projects Include="Sample\Validation\SimpleORMValidation.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Sample\Unidac\SimpleORMUnidac.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -59,14 +62,23 @@
     <Target Name="SimpleORMValidation:Make">
         <MSBuild Projects="Sample\Validation\SimpleORMValidation.dproj" Targets="Make"/>
     </Target>
+    <Target Name="SimpleORMUnidac">
+        <MSBuild Projects="Sample\Unidac\SimpleORMUnidac.dproj"/>
+    </Target>
+    <Target Name="SimpleORMUnidac:Clean">
+        <MSBuild Projects="Sample\Unidac\SimpleORMUnidac.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMUnidac:Make">
+        <MSBuild Projects="Sample\Unidac\SimpleORMUnidac.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="SimpleORM;SimpleORMFiredac;SimpleORMHorse;SimpleORMValidation"/>
+        <CallTarget Targets="SimpleORM;SimpleORMFiredac;SimpleORMHorse;SimpleORMValidation;SimpleORMUnidac"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="SimpleORM:Clean;SimpleORMFiredac:Clean;SimpleORMHorse:Clean;SimpleORMValidation:Clean"/>
+        <CallTarget Targets="SimpleORM:Clean;SimpleORMFiredac:Clean;SimpleORMHorse:Clean;SimpleORMValidation:Clean;SimpleORMUnidac:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="SimpleORM:Make;SimpleORMFiredac:Make;SimpleORMHorse:Make;SimpleORMValidation:Make"/>
+        <CallTarget Targets="SimpleORM:Make;SimpleORMFiredac:Make;SimpleORMHorse:Make;SimpleORMValidation:Make;SimpleORMUnidac:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
