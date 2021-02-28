@@ -5,7 +5,11 @@ interface
 uses
   System.Classes, Data.DB, System.Generics.Collections,
   {$IFNDEF CONSOLE}
-  Vcl.Forms, Vcl.StdCtrls, Vcl.ComCtrls,
+    {$IFDEF FMX}
+      FMX.Forms, FMX.StdCtrls, FMX.DateTimeCtrls,
+    {$ELSE}
+      Vcl.Forms, Vcl.StdCtrls, Vcl.ComCtrls,
+    {$ENDIF}
   {$ENDIF}
   SimpleEntity;
 

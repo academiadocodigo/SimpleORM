@@ -8,7 +8,11 @@ uses
   Data.DB,
   System.TypInfo,
   {$IFNDEF CONSOLE}
-  VCL.Forms,
+    {$IFDEF FMX}
+      FMX.Forms,
+    {$ELSE}
+      Vcl.Forms,
+    {$ENDIF}
   {$ENDIF}
   System.SysUtils;
 type

@@ -9,7 +9,11 @@ uses
   System.Classes,
   Data.DB,
   {$IFNDEF CONSOLE}
-  VCL.Forms,
+    {$IFDEF FMX}
+      FMX.Forms,
+    {$ELSE}
+      Vcl.Forms,
+    {$ENDIF}
   {$ENDIF}
   SimpleDAOSQLAttribute,
   System.Threading;
