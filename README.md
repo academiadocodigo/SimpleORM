@@ -5,6 +5,9 @@ O SimpleORM tem o Objetivo de facilitar suas implementações de CRUD, agilizand
 
 Homologado para os drivers de Conexão Firedac e RestDataware.
 
+#### Link do Grupo no Telegram
+[Grupo SimpleORM](https://t.me/joinchat/Tv8fVFe_hdz0rJwq)
+
 #### Gerador de Classes para o SimpleORM criados pela Comunidade
 
 [andersonlugarinhoramos](https://github.com/andersonlugarinhoramos/geradorsimpleorm)</br>
