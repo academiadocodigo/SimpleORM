@@ -36,6 +36,9 @@ Type
 
 implementation
 
+uses
+  System.SysUtils;
+
 { TSimpleDAOSQLAttribute<T> }
 
 function TSimpleDAOSQLAttribute<T>.&End: iSimpleDAO<T>;

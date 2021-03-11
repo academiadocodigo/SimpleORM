@@ -31,7 +31,7 @@ Type
 implementation
 
 uses
-  SimpleRTTI, System.Generics.Collections;
+  SimpleRTTI, System.Generics.Collections, System.SysUtils;
 { TSimpleSQL<T> }
 
 constructor TSimpleSQL<T>.Create(aInstance : T);
