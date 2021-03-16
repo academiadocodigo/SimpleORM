@@ -146,6 +146,7 @@ begin
     .Fields(FSQLAttribute.Fields)
     .Join(FSQLAttribute.Join)
     .Where(FSQLAttribute.Where)
+	.GroupBy(FSQLAttribute.GroupBy)
     .OrderBy(FSQLAttribute.OrderBy)
     .Select(aSQL);
   FQuery.DataSet.DisableControls;
@@ -219,6 +220,7 @@ begin
     .Fields(FSQLAttribute.Fields)
     .Join(FSQLAttribute.Join)
     .Where(FSQLAttribute.Where)
+	.GroupBy(FSQLAttribute.GroupBy)
     .OrderBy(FSQLAttribute.OrderBy)
     .Select(aSQL);
   FQuery.Open(aSQL);
