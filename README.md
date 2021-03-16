@@ -286,4 +286,5 @@ end;
 ```
 
 ## Grupo do telegram
-[Grupo do Tlegram](https://t.me/joinchat/Tv8fVFe_hdz0rJwq)
+Esse grupo tem como objetivo ajudar seus integrantes em assuntos diversos ao uso do componente, e colaboração para a evolução desse maravilhoso ORM ([Object-relational mapping](https://pt.wikipedia.org/wiki/Mapeamento_objeto-relacional)).
+Acesse com esse link para participar do [Grupo SimpleORM](https://t.me/joinchat/Tv8fVFe_hdz0rJwq)
