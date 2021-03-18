@@ -237,7 +237,7 @@ begin
   FQuery.SQL.Add(aSQL);
   Self.FillParameter(aValue);
   FQuery.ExecSQL;
-  Self.LastRecord;
+  //Self.LastRecord;
 end;
 class function TSimpleDAO<T>.New(aQuery : iSimpleQuery): iSimpleDAO<T>;
 begin
@@ -292,10 +292,10 @@ begin
   FQuery.SQL.Add(aSQL);
   Self.FillParameter(aValue);
   FQuery.ExecSQL;
-  DictionaryFields := TDictionary<String, Variant>.Create;
-  TSimpleRTTI<T>.New(aValue).DictionaryFields(DictionaryFields).PrimaryKey(aPK);
-  aPkValue := DictionaryFields.Items[aPK];
-  Self.Find(aPKValue);
+  //DictionaryFields := TDictionary<String, Variant>.Create;
+  //TSimpleRTTI<T>.New(aValue).DictionaryFields(DictionaryFields).PrimaryKey(aPK);
+  //aPkValue := DictionaryFields.Items[aPK];
+  //Self.Find(aPKValue);
 end;
 function TSimpleDAO<T>.FillParameter(aInstance: T): iSimpleDAO<T>;
 var
