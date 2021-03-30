@@ -8,6 +8,7 @@
   <img src="https://img.shields.io/github/v/release/bittencourtthulio/SimpleORM?style=flat-square">
   <img src="https://img.shields.io/github/stars/bittencourtthulio/SimpleORM?style=flat-square">
   <img src="https://img.shields.io/github/contributors/bittencourtthulio/SimpleORM?color=orange&style=flat-square">
+  <img src="https://img.shields.io/github/forks/bittencourtthulio/SimpleORM?style=flat-square">
    <img src="https://tokei.rs/b1/github/bittencourtthulio/SimpleORM?color=red&category=lines">
   <img src="https://tokei.rs/b1/github/bittencourtthulio/SimpleORM?color=green&category=code">
   <img src="https://tokei.rs/b1/github/bittencourtthulio/SimpleORM?color=yellow&category=files">
