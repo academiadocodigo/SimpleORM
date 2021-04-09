@@ -146,8 +146,10 @@ uses
 
 
   {$IFNDEF CONSOLE}
-  Vcl.ComCtrls,
-  Vcl.Graphics,
+    {$IFNDEF FMX}
+      Vcl.ComCtrls,
+      Vcl.Graphics,
+    {$ENDIF}
   {$ENDIF}
   Variants,
   SimpleRTTIHelper,
@@ -193,8 +195,11 @@ begin
   {$ENDIF}
 
   if aComponent is TTrackBar then
-    (aComponent as TTrackBar).Position := aValue;
-
+    {$IFDEF VCL}
+      (aComponent as TTrackBar).Position := aValue;
+    {$ELSEIF IFDEF FMX}
+      (aComponent as TTrackBar).Position.X := aValue;
+    {$ENDIF}
 
 
 
@@ -282,7 +287,11 @@ begin
 
 
   if aComponent is TTrackBar then
-    Result := TValue.FromVariant((aComponent as TTrackBar).Position);
+    {$IFDEF VCL}
+      Result := TValue.FromVariant((aComponent as TTrackBar).Position);
+    {$ELSEIF IFDEF FMX}
+      Result := TValue.FromVariant((aComponent as TTrackBar).Position.X);
+    {$ENDIF}
 
   {$IFDEF VCL}
   if aComponent is TDateTimePicker then
