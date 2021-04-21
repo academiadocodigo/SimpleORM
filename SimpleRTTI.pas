@@ -89,9 +89,9 @@ uses
   Data.DB,
   TypInfo,
   {$IFNDEF CONSOLE}
-    FMX.Types,
+
     {$IFDEF FMX}
-      FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
+      FMX.Types, FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
     {$ELSE}
       Vcl.Forms, VCL.StdCtrls, Vcl.ExtCtrls,
     {$ENDIF}
@@ -105,7 +105,6 @@ Type
   TSimpleRTTI<T : class, constructor> = class(TInterfacedObject, iSimpleRTTI<T>)
     private
       FInstance : T;
-      function __findRTTIField(ctxRtti : TRttiContext; classe: TClass; const Field: String): TRttiField;
       function __FloatFormat( aValue : String ) : Currency;
       {$IFNDEF CONSOLE}
       function __BindValueToComponent( aComponent : TComponent; aValue : Variant) : iSimpleRTTI<T>;
@@ -240,15 +239,6 @@ begin
       aProperty.SetValue(Pointer(aEntity), aValue);
   end;
 
-end;
-
-function TSimpleRTTI<T>.__findRTTIField(ctxRtti: TRttiContext; classe: TClass;
-  const Field: String): TRttiField;
-var
-  typRtti : TRttiType;
-begin
-  typRtti := ctxRtti.GetType(classe.ClassInfo);
-  Result  := typRtti.GetField(Field);
 end;
 
 function TSimpleRTTI<T>.__FloatFormat( aValue : String ) : Currency;
