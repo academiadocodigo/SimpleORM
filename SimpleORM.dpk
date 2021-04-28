@@ -27,12 +27,6 @@ package SimpleORM;
 {$ENDIF IMPLICITBUILDING}
 {$IMPLICITBUILD ON}
 
-rcontains
-  SimpleTypes in 'SimpleTypes.pas';
-
-contains
-  SimpleTypes in 'SimpleTypes.pas';
-
 requires
   rtl,
   vcl,
@@ -53,7 +47,7 @@ requires
   dac260,
   unidac260;
 
-ocontains
+contains
   SimpleAttributes in 'SimpleAttributes.pas',
   SimpleDAO in 'SimpleDAO.pas',
   SimpleInterface in 'SimpleInterface.pas',
@@ -69,6 +63,7 @@ ocontains
   SimpleJSONUtil in 'SimpleJSONUtil.pas',
   SimpleJSON in 'SimpleJSON.pas',
   SimpleQueryUnidac in 'SimpleQueryUnidac.pas',
-  SimpleDAO.DataSetToJSON in 'SimpleDAO.DataSetToJSON.pas';
+  SimpleDAO.DataSetToJSON in 'SimpleDAO.DataSetToJSON',
+  SimpleTypes in 'SimpleTypes';
 
-d.
+end.
