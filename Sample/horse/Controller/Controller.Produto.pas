@@ -46,18 +46,31 @@ begin
 end;
 
 procedure Insert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  FDAO : iDAOGeneric<TProduto>;
+  vJSONResult : TJSONObject;
 begin
+  FDAO := TDAOGeneric<TProduto>.New;
 
+  vJSONResult := FDAO.Insert(Req.Body<TJSONObject>);
+
+  Res.Send<TJSONObject>(vJSONResult).Status(THTTPStatus.Created);;
 end;
 
 procedure Update(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  FDAO : iDAOGeneric<TProduto>;
 begin
-
+  FDAO := TDAOGeneric<TProduto>.New;
+  Res.Send<TJSONObject>(FDAO.Update(Req.Body<TJSONObject>)).Status(THTTPStatus.Accepted);
 end;
 
 procedure Delete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  FDAO : iDAOGeneric<TProduto>;
 begin
-
+  FDAO := TDAOGeneric<TProduto>.New;
+  Res.Send<TJSONObject>(FDAO.Delete('GUUID', Req.Params.Items['id'])).Status(THTTPStatus.NoContent);
 end;
 
 

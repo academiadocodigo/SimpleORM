@@ -6,6 +6,7 @@ uses
   System.Classes,
   System.Generics.Collections,
   Data.DB,
+  SimpleTypes,
   System.TypInfo,
   {$IFNDEF CONSOLE}
     {$IFDEF FMX}
@@ -64,6 +65,7 @@ type
     function ClassName (var aClassName : String) : iSimpleRTTI<T>;
     function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
     function ListFields (var List : TList<String>) : iSimpleRTTI<T>;
+    function ListBindFields (var List : TList<String>) : iSimpleRTTI<T>;
     function Update (var aUpdate : String) : iSimpleRTTI<T>;
     function Where (var aWhere : String) : iSimpleRTTI<T>;
     function Fields (var aFields : String) : iSimpleRTTI<T>;
@@ -80,6 +82,7 @@ type
 
   iSimpleSQL<T> = interface
     ['{1590A7C6-6E32-4579-9E60-38C966C1EB49}']
+    function SQLType(SQLType : TSQLType) : iSimpleSQL<T>;
     function Insert (var aSQL : String) : iSimpleSQL<T>;
     function Update (var aSQL : String) : iSimpleSQL<T>;
     function Delete (var aSQL : String) : iSimpleSQL<T>;
@@ -100,6 +103,8 @@ type
     function Params : TParams;
     function ExecSQL : iSimpleQuery;
     function DataSet : TDataSet;
+    function SQLType(SQLType : TSQLType) : iSimpleQuery; overload;
+    function SQLType : TSQLType; overload;
     function Open(aSQL : String) : iSimpleQuery; overload;
     function Open : iSimpleQuery; overload;
   end;

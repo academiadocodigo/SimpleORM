@@ -196,7 +196,9 @@ begin
   Result := Self;
   TSimpleSQL<T>
     .New(nil)
+    .SQLType(Self.FQuery.SQLType)
     .LastID(aSQL);
+
   FQuery.Open(aSQL);
 end;
 function TSimpleDAO<T>.LastRecord: iSimpleDAO<T>;
@@ -206,6 +208,7 @@ begin
   Result := Self;
   TSimpleSQL<T>
     .New(nil)
+    .SQLType(Self.FQuery.SQLType)
     .LastRecord(aSQL);
   FQuery.Open(aSQL);
 end;
@@ -237,7 +240,7 @@ begin
   FQuery.SQL.Add(aSQL);
   Self.FillParameter(aValue);
   FQuery.ExecSQL;
-  //Self.LastRecord;
+  Self.LastRecord;
 end;
 class function TSimpleDAO<T>.New(aQuery : iSimpleQuery): iSimpleDAO<T>;
 begin
@@ -292,10 +295,10 @@ begin
   FQuery.SQL.Add(aSQL);
   Self.FillParameter(aValue);
   FQuery.ExecSQL;
-  //DictionaryFields := TDictionary<String, Variant>.Create;
-  //TSimpleRTTI<T>.New(aValue).DictionaryFields(DictionaryFields).PrimaryKey(aPK);
-  //aPkValue := DictionaryFields.Items[aPK];
-  //Self.Find(aPKValue);
+  DictionaryFields := TDictionary<String, Variant>.Create;
+  TSimpleRTTI<T>.New(aValue).DictionaryFields(DictionaryFields).PrimaryKey(aPK);
+  aPkValue := DictionaryFields.Items[aPK];
+  Self.Find(aPKValue);
 end;
 function TSimpleDAO<T>.FillParameter(aInstance: T): iSimpleDAO<T>;
 var
@@ -322,7 +325,9 @@ var
   ListFields : TList<String>;
 begin
   ListFields := TList<String>.Create;
-  TSimpleRTTI<T>.New(aInstance).ListFields(ListFields);
+
+  TSimpleRTTI<T>.New(aInstance).ListBindFields(ListFields);
+
   try
     for I := 0 to Pred(ListFields.Count) do
     begin

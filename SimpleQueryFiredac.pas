@@ -4,7 +4,7 @@ interface
 
 uses
   SimpleInterface, FireDAC.Comp.Client, System.Classes, Data.DB,
-  FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.Stan.Param, FireDAC.DatS, SimpleTypes,
   FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet;
 
 Type
@@ -13,6 +13,7 @@ Type
       FConnection : TFDConnection;
       FQuery : TFDQuery;
       FParams : TParams;
+      FSQLType : TSQLType;
     public
       constructor Create(aConnection : TFDConnection);
       destructor Destroy; override;
@@ -21,6 +22,8 @@ Type
       function Params : TParams;
       function ExecSQL : iSimpleQuery;
       function DataSet : TDataSet;
+      function SQLType(SQLType : TSQLType) : iSimpleQuery; overload;
+      function SQLType : TSQLType; overload;
       function Open(aSQL : String) : iSimpleQuery; overload;
       function Open : iSimpleQuery; overload;
   end;
@@ -37,6 +40,13 @@ begin
   FQuery := TFDQuery.Create(nil);
   FConnection := aConnection;
   FQuery.Connection := FConnection;
+end;
+
+function TSimpleQueryFiredac.SQLType(SQLType : TSQLType) : iSimpleQuery;
+begin
+  Result := Self;
+
+  FSQLType := SQLType;
 end;
 
 function TSimpleQueryFiredac.DataSet: TDataSet;
@@ -105,6 +115,11 @@ end;
 function TSimpleQueryFiredac.SQL: TStrings;
 begin
   Result := FQuery.SQL;
+end;
+
+function TSimpleQueryFiredac.SQLType: TSQLType;
+begin
+  Result := FSQLType;
 end;
 
 end.
