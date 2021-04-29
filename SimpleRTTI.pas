@@ -79,7 +79,9 @@
 {$WARN XML_NO_MATCHING_PARM ON}
 {$WARN IMMUTABLE_STRINGS OFF}
 unit SimpleRTTI;
+
 interface
+
 uses
   SimpleInterface,
   System.Generics.Collections,
@@ -87,27 +89,28 @@ uses
   Data.DB,
   TypInfo,
   {$IFNDEF CONSOLE}
-    FMX.Types,
     {$IFDEF FMX}
-      FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
+      FMX.Types, FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
     {$ELSE}
       Vcl.Forms, VCL.StdCtrls, Vcl.ExtCtrls,
     {$ENDIF}
   {$ENDIF}
   System.Classes,
   System.SysUtils;
+
 Type
   ESimpleRTTI = Exception;
+
   TSimpleRTTI<T : class, constructor> = class(TInterfacedObject, iSimpleRTTI<T>)
     private
       FInstance : T;
-      function __findRTTIField(ctxRtti : TRttiContext; classe: TClass; const Field: String): TRttiField;
       function __FloatFormat( aValue : String ) : Currency;
       {$IFNDEF CONSOLE}
       function __BindValueToComponent( aComponent : TComponent; aValue : Variant) : iSimpleRTTI<T>;
       function __GetComponentToValue( aComponent : TComponent) : TValue;
       {$ENDIF}
       function __BindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : iSimpleRTTI<T>;
+
       function __GetRTTIPropertyValue(aEntity : T; aPropertyName : String) : Variant;
       function __GetRTTIProperty(aEntity : T; aPropertyName : String) : TRttiProperty;
     public
@@ -116,7 +119,7 @@ Type
       class function New( aInstance : T ) : iSimpleRTTI<T>;
       class procedure DictionaryFieldClass(var aDictionary : TDictionary<string, string>);
       function TableName(var aTableName: String): ISimpleRTTI<T>;
-      
+
       function Fields (var aFields : String) : iSimpleRTTI<T>;
       function FieldsInsert (var aFields : String) : iSimpleRTTI<T>;
       function Param (var aParam : String) : iSimpleRTTI<T>;
@@ -134,9 +137,12 @@ Type
       function BindFormToClass (aForm : TForm; var aEntity : T) : iSimpleRTTI<T>;
       {$ENDIF}
   end;
+
 implementation
+
 uses
   SimpleAttributes,
+
 
   {$IFNDEF CONSOLE}
     {$IFNDEF FMX}
@@ -147,22 +153,29 @@ uses
   Variants,
   SimpleRTTIHelper,
   System.UITypes;
+
 { TSimpleRTTI }
+
 {$IFNDEF CONSOLE}
 function TSimpleRTTI<T>.__BindValueToComponent(aComponent: TComponent;
   aValue: Variant): iSimpleRTTI<T>;
 begin
   if VarIsNull(aValue) then exit;
+
   if aComponent is TEdit then
     (aComponent as TEdit).Text := aValue;
+
   if aComponent is TComboBox then
     (aComponent as TComboBox).ItemIndex := (aComponent as TComboBox).Items.IndexOf(aValue);
+
   {$IFDEF VCL}
   if aComponent is TRadioGroup then
     (aComponent as TRadioGroup).ItemIndex := (aComponent as TRadioGroup).Items.IndexOf(aValue);
+
   if aComponent is TShape then
     (aComponent as TShape).Brush.Color := aValue;
   {$ENDIF}
+
   //DateControls
   {$IFDEF VCL}
     if aComponent is TDateTimePicker then
@@ -172,12 +185,14 @@ begin
   if aComponent is TDateEdit then
     (aComponent as TDateEdit).Date := aValue;
   {$ENDIF}
+
   if aComponent is TCheckBox then
   {$IFDEF VCL}
     (aComponent as TCheckBox).Checked := aValue;
   {$ELSEIF IFDEF FMX}
     (aComponent as TCheckBox).IsChecked := aValue;
   {$ENDIF}
+
   if aComponent is TTrackBar then
     {$IFDEF VCL}
       (aComponent as TTrackBar).Position := aValue;
@@ -185,8 +200,11 @@ begin
       (aComponent as TTrackBar).Position.X := aValue;
     {$ENDIF}
 
+
+
 end;
 {$ENDIF}
+
 function TSimpleRTTI<T>.__BindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : iSimpleRTTI<T>;
 begin
   case aProperty.PropertyType.TypeKind of
@@ -209,32 +227,26 @@ begin
     tkString, tkWChar, tkLString, tkWString, tkVariant, tkUString:
       aProperty.SetValue(Pointer(aEntity), aValue);
     tkArray: ;
-    tkRecord: ;
     tkInterface: ;
     tkInt64: aProperty.SetValue(Pointer(aEntity), aValue.Cast<Int64>);
     tkDynArray: ;
     tkClassRef: ;
     tkPointer: ;
     tkProcedure: ;
-    tkMRecord: ;
     else
       aProperty.SetValue(Pointer(aEntity), aValue);
   end;
+
 end;
-function TSimpleRTTI<T>.__findRTTIField(ctxRtti: TRttiContext; classe: TClass;
-  const Field: String): TRttiField;
-var
-  typRtti : TRttiType;
-begin
-  typRtti := ctxRtti.GetType(classe.ClassInfo);
-  Result  := typRtti.GetField(Field);
-end;
+
 function TSimpleRTTI<T>.__FloatFormat( aValue : String ) : Currency;
 begin
   while Pos('.', aValue) > 0 do
     delete(aValue,Pos('.', aValue),1);
+
   Result := StrToCurr(aValue);
 end;
+
 {$IFNDEF CONSOLE}
 function TSimpleRTTI<T>.__GetComponentToValue(aComponent: TComponent): TValue;
 var
@@ -242,14 +254,18 @@ var
 begin
   if aComponent is TEdit then
     Result := TValue.FromVariant((aComponent as TEdit).Text);
+
   if aComponent is TComboBox then
     Result := TValue.FromVariant((aComponent as TComboBox).Items[(aComponent as TComboBox).ItemIndex]);
+
   {$IFDEF VCL}
   if aComponent is TRadioGroup then
     Result := TValue.FromVariant((aComponent as TRadioGroup).Items[(aComponent as TRadioGroup).ItemIndex]);
+
   if aComponent is TShape then
     Result := TValue.FromVariant((aComponent as TShape).Brush.Color);
   {$ENDIF}
+
   if aComponent is TCheckBox then
   {$IFDEF VCL}
     Result := TValue.FromVariant((aComponent as TCheckBox).Checked);
@@ -257,12 +273,14 @@ begin
       Result := TValue.FromVariant((aComponent as TCheckBox).IsChecked);
   {$ENDIF}
 
+
   if aComponent is TTrackBar then
     {$IFDEF VCL}
       Result := TValue.FromVariant((aComponent as TTrackBar).Position);
     {$ELSEIF IFDEF FMX}
       Result := TValue.FromVariant((aComponent as TTrackBar).Position.X);
     {$ENDIF}
+
   {$IFDEF VCL}
   if aComponent is TDateTimePicker then
     Result := TValue.FromVariant((aComponent as TDateTimePicker).DateTime);
@@ -272,9 +290,11 @@ begin
     Result := TValue.FromVariant((aComponent as TDateEdit).DateTime);
   {$ENDIF}
 
+
   a := Result.TOString;
 end;
 {$ENDIF}
+
 function TSimpleRTTI<T>.__GetRTTIProperty(aEntity: T;
   aPropertyName: String): TRttiProperty;
 var
@@ -287,17 +307,21 @@ begin
     Result := typRttiEntity.GetProperty(aPropertyName);
     if not Assigned(Result) then
       Result := typRttiEntity.GetPropertyFromAttribute<Campo>(aPropertyName);
+
     if not Assigned(Result) then
       raise ESimpleRTTI.Create('Property ' + aPropertyName + ' not found!');
   finally
     ctxRttiEntity.Free;
   end;
+
 end;
+
 function TSimpleRTTI<T>.__GetRTTIPropertyValue(aEntity: T;
   aPropertyName: String): Variant;
 begin
   Result := __GetRTTIProperty(aEntity, aPropertyName).GetValue(Pointer(aEntity)).AsVariant;
 end;
+
 {$IFNDEF CONSOLE}
 function TSimpleRTTI<T>.BindClassToForm(aForm: TForm;
   const aEntity: T): iSimpleRTTI<T>;
@@ -327,6 +351,7 @@ begin
     ctxRtti.Free;
   end;
 end;
+
 function TSimpleRTTI<T>.BindFormToClass(aForm: TForm;
   var aEntity: T): iSimpleRTTI<T>;
 var
@@ -354,6 +379,7 @@ begin
   end;
 end;
 {$ENDIF}
+
 function TSimpleRTTI<T>.ClassName (var aClassName : String) : iSimpleRTTI<T>;
 var
   Info      : PTypeInfo;
@@ -370,10 +396,12 @@ begin
     ctxRtti.Free;
   end;
 end;
+
 constructor TSimpleRTTI<T>.Create( aInstance : T );
 begin
   FInstance := aInstance;
 end;
+
 function TSimpleRTTI<T>.DataSetToEntity(aDataSet: TDataSet;
   var aEntity: T): iSimpleRTTI<T>;
 var
@@ -412,7 +440,6 @@ begin
                 tkMethod: ;
                 tkVariant: ;
                 tkArray: ;
-                tkRecord: ;
                 tkInterface: ;
                 tkDynArray: ;
                 tkClassRef: ;
@@ -430,6 +457,7 @@ begin
   end;
   aDataSet.First;
 end;
+
 function TSimpleRTTI<T>.DataSetToEntityList(aDataSet: TDataSet;
   var aList: TObjectList<T>): iSimpleRTTI<T>;
 var
@@ -471,7 +499,6 @@ begin
               tkMethod: ;
               tkVariant: ;
               tkArray: ;
-              tkRecord: ;
               tkInterface: ;
               tkDynArray: ;
               tkClassRef: ;
@@ -489,10 +516,13 @@ begin
   end;
   aDataSet.First;
 end;
+
 destructor TSimpleRTTI<T>.Destroy;
 begin
+
   inherited;
 end;
+
 class procedure TSimpleRTTI<T>.DictionaryFieldClass(
   var aDictionary: TDictionary<string, string>);
 var
@@ -509,7 +539,6 @@ begin
       begin
         if prpRtti.IsIgnore then
           Continue;
-
         aDictionary.Add(prpRtti.FieldName, prpRtti.DisplayName);
       end;
   finally
@@ -534,6 +563,7 @@ begin
     begin
       if prpRtti.IsIgnore then
         Continue;
+
       case prpRtti.PropertyType.TypeKind of
         tkInteger, tkInt64:
           begin
@@ -574,6 +604,7 @@ begin
     ctxRtti.Free;
   end;
 end;
+
 function TSimpleRTTI<T>.Fields (var aFields : String) : iSimpleRTTI<T>;
 var
   ctxRtti   : TRttiContext;
@@ -596,6 +627,7 @@ begin
     ctxRtti.Free;
   end;
 end;
+
 function TSimpleRTTI<T>.FieldsInsert(var aFields: String): iSimpleRTTI<T>;
 var
   ctxRtti   : TRttiContext;
@@ -612,8 +644,10 @@ begin
     begin
       if prpRtti.IsAutoInc then
         Continue;
+
       if prpRtti.IsIgnore then
         Continue;
+
       aFields := aFields + prpRtti.FieldName + ', ';
     end;
   finally
@@ -621,6 +655,7 @@ begin
     ctxRtti.Free;
   end;
 end;
+
 function TSimpleRTTI<T>.ListBindFields(var List: TList<String>): iSimpleRTTI<T>;
 var
   ctxRtti   : TRttiContext;
@@ -665,11 +700,14 @@ begin
   finally
     ctxRtti.Free;
   end;
+
 end;
+
 class function TSimpleRTTI<T>.New( aInstance : T ): iSimpleRTTI<T>;
 begin
   Result := Self.Create(aInstance);
 end;
+
 function TSimpleRTTI<T>.Param (var aParam : String) : iSimpleRTTI<T>;
 var
   ctxRtti   : TRttiContext;
@@ -686,8 +724,10 @@ begin
     begin
       if prpRtti.IsIgnore then
         Continue;
+
       if prpRtti.IsAutoInc then
         Continue;
+
       aParam  := aParam + ':' + prpRtti.FieldName + ', ';
     end;
   finally
@@ -695,6 +735,7 @@ begin
     ctxRtti.Free;
   end;
 end;
+
 function TSimpleRTTI<T>.PrimaryKey(var aPK: String): iSimpleRTTI<T>;
 var
   ctxRtti   : TRttiContext;
@@ -707,6 +748,7 @@ begin
   ctxRtti := TRttiContext.Create;
   try
     typRtti := ctxRtti.GetType(Info);
+
     for prpRtti in typRtti.GetProperties do
     begin
       if prpRtti.EhChavePrimaria then
@@ -734,6 +776,7 @@ begin
     vCtxRtti.Free;
   end;
 end;
+
 function TSimpleRTTI<T>.Update(var aUpdate : String) : iSimpleRTTI<T>;
 var
   ctxRtti   : TRttiContext;
@@ -750,8 +793,10 @@ begin
     begin
       if prpRtti.IsIgnore then
         Continue;
+
       if prpRtti.IsAutoInc then
         Continue;
+
       aUpdate := aUpdate + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ', ';
     end;
   finally
@@ -759,6 +804,7 @@ begin
     ctxRtti.Free;
   end;
 end;
+
 function TSimpleRTTI<T>.Where (var aWhere : String) : iSimpleRTTI<T>;
 var
   ctxRtti   : TRttiContext;
@@ -781,4 +827,5 @@ begin
     ctxRtti.Free;
   end;
 end;
+
 end.
