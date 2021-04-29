@@ -226,14 +226,12 @@ begin
     tkString, tkWChar, tkLString, tkWString, tkVariant, tkUString:
       aProperty.SetValue(Pointer(aEntity), aValue);
     tkArray: ;
-    tkRecord: ;
     tkInterface: ;
     tkInt64: aProperty.SetValue(Pointer(aEntity), aValue.Cast<Int64>);
     tkDynArray: ;
     tkClassRef: ;
     tkPointer: ;
     tkProcedure: ;
-    tkMRecord: ;
     else
       aProperty.SetValue(Pointer(aEntity), aValue);
   end;
@@ -441,7 +439,6 @@ begin
                 tkMethod: ;
                 tkVariant: ;
                 tkArray: ;
-                tkRecord: ;
                 tkInterface: ;
                 tkDynArray: ;
                 tkClassRef: ;
@@ -501,7 +498,6 @@ begin
               tkMethod: ;
               tkVariant: ;
               tkArray: ;
-              tkRecord: ;
               tkInterface: ;
               tkDynArray: ;
               tkClassRef: ;
