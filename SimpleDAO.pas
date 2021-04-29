@@ -37,6 +37,7 @@ Type
       function Update(aValue : T) : iSimpleDAO<T>; overload;
       function Delete(aValue : T) : iSimpleDAO<T>; overload;
       function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
+      function Filter(aField : String; aValue : String) : iSimpleDAO<T>;
       function LastID : iSimpleDAO<T>;
       function LastRecord : iSimpleDAO<T>;
       {$IFNDEF CONSOLE}
@@ -338,6 +339,19 @@ begin
     FreeAndNil(ListFields);
   end;
 end;
+
+function TSimpleDAO<T>.Filter(aField, aValue: String): iSimpleDAO<T>;
+var
+  aSQL : String;
+begin
+  Result := Self;
+  TSimpleSQL<T>.New(nil).Where('upper('+aField+') like ' + QuotedStr('%') + '||' + 'upper(:'+aField+')||'+QuotedStr('%')).Select(aSQL);
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(aSQL);
+  FQuery.Params.ParamByName(aField).Value := aValue;
+  FQuery.Open;
+end;
+
 function TSimpleDAO<T>.Find(aKey: String; aValue: Variant): iSimpleDAO<T>;
 var
   aSQL : String;

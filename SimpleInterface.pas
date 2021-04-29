@@ -29,6 +29,7 @@ type
     function Insert(aValue : T) : iSimpleDAO<T>; overload;
     function Update(aValue : T) : iSimpleDAO<T>; overload;
     function Delete(aValue : T) : iSimpleDAO<T>; overload;
+    function Filter(aField : String; aValue : String) : iSimpleDAO<T>;
     function LastID : iSimpleDAO<T>;
     function LastRecord : iSimpleDAO<T>;
     function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;

@@ -71,10 +71,9 @@ function TDataSetToJSON<T>.DataSetToJSONArray(DataSet : TDataSet) : TJSONArray;
 var
   bookMark: TBookmark;
 begin
-  Result := nil;
+  Result := TJSONArray.Create;
   if Assigned(dataSet) and (not dataSet.IsEmpty) then
     try
-      Result := TJSONArray.Create;
       bookMark := dataSet.Bookmark;
       dataSet.First;
       while not dataSet.Eof do
