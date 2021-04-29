@@ -89,7 +89,6 @@ uses
   Data.DB,
   TypInfo,
   {$IFNDEF CONSOLE}
-
     {$IFDEF FMX}
       FMX.Types, FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
     {$ELSE}
