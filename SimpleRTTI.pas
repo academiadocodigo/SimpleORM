@@ -432,7 +432,8 @@ begin
                 tkInteger, tkInt64:
                   Value := Field.AsInteger;
                 tkChar: ;
-                tkEnumeration: ;
+                tkEnumeration:
+                  Value := Field.AsBoolean;
                 tkFloat: Value := Field.AsFloat;
                 tkSet: ;
                 tkClass: ;
