@@ -13,6 +13,7 @@ Type
     FCLIENTE: String;
     FDATAPEDIDO: TDatetime;
     FVALORTOTAL: Currency;
+    FAtivo: Boolean;
     procedure SetID(const Value: Integer);
     procedure SetCLIENTE(const Value: String);
     procedure SetDATAPEDIDO(const Value: TDatetime);
@@ -29,6 +30,7 @@ Type
     property DATAPEDIDO: TDatetime read FDATAPEDIDO write SetDATAPEDIDO;
     [Campo('VALOR')]
     property VALORTOTAL: Currency read FVALORTOTAL write SetVALORTOTAL;
+    property Ativo: Boolean read FAtivo write FAtivo;
   end;
 
 implementation

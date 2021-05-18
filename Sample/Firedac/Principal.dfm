@@ -161,6 +161,14 @@ object Form9: TForm9
     TabOrder = 15
     OnClick = Button9Click
   end
+  object CheckBox1: TCheckBox
+    Left = 257
+    Top = 18
+    Width = 97
+    Height = 17
+    Caption = 'Ativo'
+    TabOrder = 16
+  end
   object DataSource1: TDataSource
     Left = 696
     Top = 88
