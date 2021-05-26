@@ -551,28 +551,69 @@ begin
                 aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
             end
             else
-              aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
+            begin
+              if prpRtti.GetValue(Pointer(FInstance)).AsInteger=0 then
+                aDictionary.Add(prpRtti.FieldName, Null)
+              else
+                aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
+            end;
           end;
         tkFloat       :
         begin
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDateTime) then
-            aDictionary.Add(prpRtti.FieldName, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+          begin
+            if prpRtti.GetValue(Pointer(FInstance)).ToString='' then
+              aDictionary.Add(prpRtti.FieldName, Null)
+            else
+              aDictionary.Add(prpRtti.FieldName, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString));
+          end
           else
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDate) then
-              aDictionary.Add(prpRtti.FieldName, StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString))
+          begin
+            if prpRtti.GetValue(Pointer(FInstance)).ToString='' then
+              aDictionary.Add(prpRtti.FieldName, Null)
+            else
+              aDictionary.Add(prpRtti.FieldName, StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString));
+          end
           else
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TTime) then
-            aDictionary.Add(prpRtti.FieldName, StrToTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+          begin
+            if prpRtti.GetValue(Pointer(FInstance)).ToString='' then
+              aDictionary.Add(prpRtti.FieldName, Null)
+            else
+              aDictionary.Add(prpRtti.FieldName, StrToTime(prpRtti.GetValue(Pointer(FInstance)).ToString));
+          end
           else
+          begin
+            if prpRtti.GetValue(Pointer(FInstance)).ToString='' then
+              aDictionary.Add(prpRtti.FieldName, Null)
+            else
             aDictionary.Add(prpRtti.FieldName, __FloatFormat(prpRtti.GetValue(Pointer(FInstance)).ToString));
+          end;
         end;
         tkWChar,
         tkLString,
         tkWString,
         tkUString,
-        tkString      : aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsString);
-        tkVariant     : aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsVariant);
+        tkString      :
+        begin
+          if prpRtti.GetValue(Pointer(FInstance)).AsString='' then
+            aDictionary.Add(prpRtti.FieldName, Null)
+          else
+            aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsString);
+        end;
+
+        tkVariant     :
+        begin
+          if prpRtti.GetValue(Pointer(FInstance)).AsVariant='' then
+            aDictionary.Add(prpRtti.FieldName, Null)
+          else
+            aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsVariant);
+        end;
       else
+        if prpRtti.GetValue(Pointer(FInstance)).AsString='' then
+          aDictionary.Add(prpRtti.FieldName, Null)
+        else
           aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsString);
       end;
     end;
