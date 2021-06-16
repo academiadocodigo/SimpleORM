@@ -30,6 +30,8 @@ type
     function Update(aValue : T) : iSimpleDAO<T>; overload;
     function Delete(aValue : T) : iSimpleDAO<T>; overload;
     function Filter(aField : String; aValue : String) : iSimpleDAO<T>;
+    function Paginate(aLimit, aPage: Integer) : iSimpleDAO<T>;
+    function RecordCount(var aRecCount : Integer) : iSimpleDAO<T>;
     function LastID : iSimpleDAO<T>;
     function LastRecord : iSimpleDAO<T>;
     function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
@@ -96,6 +98,7 @@ type
     function Join (aSQL : String) : iSimpleSQL<T>;
     function LastID (var aSQL : String) : iSimpleSQL<T>;
     function LastRecord (var aSQL : String) : iSimpleSQL<T>;
+    function Paginate (aLimit, aPage : Integer) : iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface

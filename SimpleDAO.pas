@@ -25,6 +25,8 @@ Type
       FForm : TForm;
       {$ENDIF}
       FList : TObjectList<T>;
+      FPage : Integer;
+      FLimit : Integer;
       function FillParameter(aInstance : T) : iSimpleDAO<T>; overload;
       function FillParameter(aInstance : T; aId : Variant) : iSimpleDAO<T>; overload;
       procedure OnDataChange(Sender : TObject; Field : TField);
@@ -38,6 +40,8 @@ Type
       function Delete(aValue : T) : iSimpleDAO<T>; overload;
       function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
       function Filter(aField : String; aValue : String) : iSimpleDAO<T>;
+      function Paginate(aLimit, aPage: Integer) : iSimpleDAO<T>;
+      function RecordCount(var aRecCount : Integer) : iSimpleDAO<T>;
       function LastID : iSimpleDAO<T>;
       function LastRecord : iSimpleDAO<T>;
       {$IFNDEF CONSOLE}
@@ -70,7 +74,10 @@ begin
   FQuery := aQuery;
   FSQLAttribute := TSimpleDAOSQLAttribute<T>.New(Self);
   FList := TObjectList<T>.Create;
+  FPage := 0;
+  FLimit := 0;
 end;
+
 function TSimpleDAO<T>.DataSource(aDataSource: TDataSource): iSimpleDAO<T>;
 begin
   Result := Self;
@@ -144,6 +151,7 @@ begin
   Result := Self;
   TSimpleSQL<T>
     .New(nil)
+    .Paginate(FLimit, FPage)
     .Fields(FSQLAttribute.Fields)
     .Join(FSQLAttribute.Join)
     .Where(FSQLAttribute.Where)
@@ -221,6 +229,7 @@ begin
   Result := Self;
   TSimpleSQL<T>
     .New(nil)
+    .Paginate(FLimit, FPage)
     .Fields(FSQLAttribute.Fields)
     .Join(FSQLAttribute.Join)
     .Where(FSQLAttribute.Where)
@@ -259,6 +268,30 @@ begin
     {$ENDIF}
   end;
 end;
+
+function TSimpleDAO<T>.Paginate(aLimit, aPage: Integer): iSimpleDAO<T>;
+begin
+  Result := Self;
+
+  FLimit := aLimit;
+  FPage := aPage;
+end;
+
+function TSimpleDAO<T>.RecordCount(var aRecCount: Integer): iSimpleDAO<T>;
+var
+  aSQL : String;
+begin
+  aSQL := FQuery.SQL.Text;
+
+  aSQL := Copy(aSQL, 0, 6) + ' count(*) as n ' + Copy(aSQL, Pos(' FROM ', aSQL), Length(aSQL));
+
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(aSQL);
+  FQuery.Open;
+
+  aRecCount := FQuery.DataSet.FieldByName('N').AsInteger;
+end;
+
 function TSimpleDAO<T>.SQL: iSimpleDAOSQLAttribute<T>;
 begin
   Result := FSQLAttribute;
@@ -345,7 +378,7 @@ var
   aSQL : String;
 begin
   Result := Self;
-  TSimpleSQL<T>.New(nil).Where('upper('+aField+') like ' + QuotedStr('%') + '||' + 'upper(:'+aField+')||'+QuotedStr('%')).Select(aSQL);
+  TSimpleSQL<T>.New(nil).Paginate(FLimit, FPage).Where('upper('+aField+') like ' + QuotedStr('%') + '||' + 'upper(:'+aField+')||'+QuotedStr('%')).Select(aSQL);
   FQuery.SQL.Clear;
   FQuery.SQL.Add(aSQL);
   FQuery.Params.ParamByName(aField).Value := aValue;
@@ -357,7 +390,7 @@ var
   aSQL : String;
 begin
   Result := Self;
-  TSimpleSQL<T>.New(nil).Where(aKey + ' = :' + aKey).Select(aSQL);
+  TSimpleSQL<T>.New(nil).Paginate(FLimit, FPage).Where(aKey + ' = :' + aKey).Select(aSQL);
   FQuery.SQL.Clear;
   FQuery.SQL.Add(aSQL);
   FQuery.Params.ParamByName(aKey).Value := aValue;

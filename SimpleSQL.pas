@@ -12,6 +12,8 @@ Type
       FOrderBy : String;
       FGroupBy : String;
       FJoin : String;
+      FLimit : Integer;
+      FPage : Integer;
     public
       constructor Create(aInstance : T);
       destructor Destroy; override;
@@ -29,6 +31,7 @@ Type
       function Join (aSQL : String) : iSimpleSQL<T>;
       function LastID (var aSQL : String) : iSimpleSQL<T>;
       function LastRecord (var aSQL : String) : iSimpleSQL<T>;
+      function Paginate(aLimit, aPage : Integer) : iSimpleSQL<T>;
   end;
 implementation
 
@@ -155,6 +158,14 @@ begin
   FOrderBy := aSQL;
 end;
 
+function TSimpleSQL<T>.Paginate(aLimit, aPage: Integer): iSimpleSQL<T>;
+begin
+  Result := Self;
+
+  FLimit := aLimit;
+  FPage := aPage;
+end;
+
 function TSimpleSQL<T>.Select (var aSQL : String) : iSimpleSQL<T>;
 var
   aFields, aClassName : String;
@@ -163,19 +174,34 @@ begin
   TSimpleRTTI<T>.New(nil)
     .Fields(aFields)
     .TableName(aClassName);
+
+  aSQL := aSQL + 'SELECT ';
+
+  if FLimit <> 0 then
+    case FSQLType of
+      Firebird: aSQL := aSQL + ' FIRST '+FLimit.ToString + ' SKIP ' + IntToStr((FPAGE - 1)*FLimit);
+    end;
+
   if Trim(FFields) <> '' then
-    aSQL := aSQL + ' SELECT ' + FFields
+    aSQL := aSQL + ' ' + FFields
   else
-    aSQL := aSQL + ' SELECT ' + aFields;
+    aSQL := aSQL + ' ' + aFields;
+
   aSQL := aSQL + ' FROM ' + aClassName;
+
   if Trim(FJoin) <> '' then
     aSQL := aSQL + ' ' + FJoin + ' ';
   if Trim(FWhere) <> '' then
     aSQL := aSQL + ' WHERE ' + FWhere;
   if Trim(FGroupBy) <> '' then
-    aSQL := aSQL + ' GROUP BY ' + FGroupBy;  
+    aSQL := aSQL + ' GROUP BY ' + FGroupBy;
   if Trim(FOrderBy) <> '' then
     aSQL := aSQL + ' ORDER BY ' + FOrderBy;
+
+  if FLimit <> 0 then
+    case FSQLType of
+      SQLite, MySQL: aSQL := aSQL + ' LIMIT '+FLimit.ToString + ' OFFSET ' + IntToStr((FPAGE - 1)*FLimit);
+    end;
 end;
 
 function TSimpleSQL<T>.SelectId(var aSQL: String): iSimpleSQL<T>;

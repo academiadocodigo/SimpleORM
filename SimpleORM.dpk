@@ -26,6 +26,7 @@ package SimpleORM;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$IMPLICITBUILD ON}
+
 requires
   rtl,
   vcl,
@@ -45,6 +46,7 @@ requires
   RESTComponents,
   dac260,
   unidac260;
+
 contains
   SimpleAttributes in 'SimpleAttributes.pas',
   SimpleDAO in 'SimpleDAO.pas',
@@ -60,7 +62,6 @@ contains
   SimpleEntity in 'SimpleEntity.pas',
   SimpleJSONUtil in 'SimpleJSONUtil.pas',
   SimpleJSON in 'SimpleJSON.pas',
-  SimpleQueryUnidac in 'SimpleQueryUnidac.pas',
-  SimpleDAO.DataSetToJSON in 'SimpleDAO.DataSetToJSON',
-  SimpleTypes in 'SimpleTypes';
+  SimpleQueryUnidac in 'SimpleQueryUnidac.pas';
+
 end.
