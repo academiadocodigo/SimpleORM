@@ -433,7 +433,8 @@ begin
                 tkInteger, tkInt64:
                   Value := Field.AsInteger;
                 tkChar: ;
-                tkEnumeration: ;
+                tkEnumeration:
+                  Value := Field.AsBoolean;
                 tkFloat: Value := Field.AsFloat;
                 tkSet: ;
                 tkClass: ;
@@ -491,7 +492,8 @@ begin
               tkInteger, tkInt64:
                 Value := Field.AsInteger;
               tkChar: ;
-              tkEnumeration: ;
+              tkEnumeration:
+                Value := Field.AsBoolean;
               tkFloat:
                 Value := Field.AsFloat;
               tkSet: ;
@@ -565,6 +567,8 @@ begin
         Continue;
 
       case prpRtti.PropertyType.TypeKind of
+        tkEnumeration:
+          aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsBoolean);
         tkInteger, tkInt64:
           begin
             if prpRtti.EhChaveEstrangeira then
