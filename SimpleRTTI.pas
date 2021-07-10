@@ -166,7 +166,7 @@ begin
     (aComponent as TEdit).Text := aValue;
 
   if aComponent is TComboBox then
-    (aComponent as TComboBox).ItemIndex := (aComponent as TComboBox).Items.IndexOf(aValue);
+    (aComponent as TComboBox).ItemIndex := (aComponent as TComboBox).Items.IndexOfObject(TObject(Integer(aValue)));
 
   {$IFDEF VCL}
   if aComponent is TRadioGroup then
@@ -256,7 +256,7 @@ begin
     Result := TValue.FromVariant((aComponent as TEdit).Text);
 
   if aComponent is TComboBox then
-    Result := TValue.FromVariant((aComponent as TComboBox).Items[(aComponent as TComboBox).ItemIndex]);
+    Result := Integer((aComponent as TComboBox).Items.Objects[(aComponent as TComboBox).ItemIndex]);
 
   {$IFDEF VCL}
   if aComponent is TRadioGroup then
