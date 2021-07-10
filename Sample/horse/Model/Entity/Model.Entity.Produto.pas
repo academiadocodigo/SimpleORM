@@ -9,9 +9,9 @@ type
   [Tabela('PRODUTO')]
   TPRODUTO = class
   private
-    FGUUID :String;
+    FID :Integer;
     FCODIGO :String;
-    FDESCRICAO :String;
+    FPRODUTO :String;
     FPRECO :Currency;
     FNCM :Integer;
     FALIQUOTA :Currency;
@@ -19,8 +19,8 @@ type
     FSTATUS :Integer;
     FDATAALTERACAO :TDateTime;
 
-    procedure SetGUUID (const Value :String);
-    function GetGUUID :String;
+    procedure SetGUUID (const Value :Integer);
+    function GetGUUID :Integer;
 
     procedure SetCODIGO (const Value :String);
     function GetCODIGO :String;
@@ -51,12 +51,12 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Limpar;
-    [Campo('GUUID'), PK]
-    property GUUID :String read GetGUUID write SetGUUID;
+    [Campo('GUUID'), PK, AutoInc]
+    property ID :Integer read GetGUUID write SetGUUID;
     [Campo('CODIGO')]
     property CODIGO :String read GetCODIGO write SetCODIGO;
     [Campo('DESCRICAO')]
-    property DESCRICAO :String read GetDESCRICAO write SetDESCRICAO;
+    property PRODUTO :String read GetDESCRICAO write SetDESCRICAO;
     [Campo('PRECO')]
     property PRECO :Currency read GetPRECO write SetPRECO;
     [Campo('NCM')]
@@ -85,14 +85,14 @@ begin
   inherited;
 end;
 
-procedure TPRODUTO.SetGUUID (const Value :String);
+procedure TPRODUTO.SetGUUID (const Value :Integer);
 begin
-  FGUUID := Value;
+  FID := Value;
 end;
 
-function TPRODUTO.GetGUUID :String;
+function TPRODUTO.GetGUUID : Integer;
 begin
-  Result := FGUUID;
+  Result := FID;
 end;
 
 procedure TPRODUTO.SetCODIGO (const Value :String);
@@ -107,12 +107,12 @@ end;
 
 procedure TPRODUTO.SetDESCRICAO (const Value :String);
 begin
-  FDESCRICAO := Value;
+  FPRODUTO := Value;
 end;
 
 function TPRODUTO.GetDESCRICAO :String;
 begin
-  Result := FDESCRICAO;
+  Result := FPRODUTO;
 end;
 
 procedure TPRODUTO.SetPRECO (const Value :Currency);
@@ -179,9 +179,9 @@ end;
 procedure TPRODUTO.Limpar;
 begin
 
-  Self.GUUID := '';
+  Self.ID := 0;
   Self.CODIGO := '';
-  Self.DESCRICAO := '';
+  Self.PRODUTO := '';
   Self.PRECO := 0;
   Self.NCM := 0;
   Self.ALIQUOTA := 0;

@@ -1,20 +1,24 @@
 unit SimpleSQL;
 interface
 uses
-  SimpleInterface;
+  SimpleInterface, SimpleTypes;
 Type
   TSimpleSQL<T : class, constructor> = class(TInterfacedObject, iSimpleSQL<T>)
     private
+      FSQLType : TSQLType;
       FInstance : T;
       FFields : String;
       FWhere : String;
       FOrderBy : String;
       FGroupBy : String;
       FJoin : String;
+      FLimit : Integer;
+      FPage : Integer;
     public
       constructor Create(aInstance : T);
       destructor Destroy; override;
       class function New(aInstance : T) : iSimpleSQL<T>;
+      function SQLType(SQLType : TSQLType) : iSimpleSQL<T>;
       function Insert (var aSQL : String) : iSimpleSQL<T>;
       function Update (var aSQL : String) : iSimpleSQL<T>;
       function Delete (var aSQL : String) : iSimpleSQL<T>;
@@ -27,6 +31,7 @@ Type
       function Join (aSQL : String) : iSimpleSQL<T>;
       function LastID (var aSQL : String) : iSimpleSQL<T>;
       function LastRecord (var aSQL : String) : iSimpleSQL<T>;
+      function Paginate(aLimit, aPage : Integer) : iSimpleSQL<T>;
   end;
 implementation
 
@@ -98,9 +103,22 @@ begin
   TSimpleRTTI<T>.New(FInstance)
     .TableName(aClassName)
     .PrimaryKey(aPK);
-  aSQL := aSQL + 'select first(1) ' + aPK;
-  aSQL := aSQL + ' from '+ aClassName;
-  aSQL := aSQL + ' order by ' + aPK + ' desc';
+
+  case FSQLType of
+    Firebird:
+    begin
+      aSQL := aSQL + 'select first(1) ' + aPK;
+      aSQL := aSQL + ' from '+ aClassName;
+      aSQL := aSQL + ' order by ' + aPK + ' desc';
+    end;
+    MySQL, SQLite:
+    begin
+      aSQL := aSQL + 'select ' + aPK;
+      aSQL := aSQL + ' from '+ aClassName;
+      aSQL := aSQL + ' order by ' + aPK + ' desc limit(1)';
+    end;
+  end;
+
 end;
 
 function TSimpleSQL<T>.LastRecord(var aSQL: String): iSimpleSQL<T>;
@@ -112,9 +130,21 @@ begin
     .TableName(aClassName)
     .Fields(aFields)
     .PrimaryKey(aPK);
-  aSQL := aSQL + 'select first(1) '+aFields;
-  aSQL := aSQL + ' from '+ aClassName;
-  aSQL := aSQL + ' order by ' + aPK + ' desc';
+
+  case FSQLType of
+    Firebird:
+    begin
+      aSQL := aSQL + 'select first(1) '+aFields;
+      aSQL := aSQL + ' from '+ aClassName;
+      aSQL := aSQL + ' order by ' + aPK + ' desc';
+    end;
+    MySQL, SQLite:
+    begin
+      aSQL := aSQL + 'select '+aFields;
+      aSQL := aSQL + ' from '+ aClassName;
+      aSQL := aSQL + ' order by ' + aPK + ' desc limit(1)';
+    end;
+  end;
 end;
 
 class function TSimpleSQL<T>.New(aInstance : T): iSimpleSQL<T>;
@@ -128,6 +158,14 @@ begin
   FOrderBy := aSQL;
 end;
 
+function TSimpleSQL<T>.Paginate(aLimit, aPage: Integer): iSimpleSQL<T>;
+begin
+  Result := Self;
+
+  FLimit := aLimit;
+  FPage := aPage;
+end;
+
 function TSimpleSQL<T>.Select (var aSQL : String) : iSimpleSQL<T>;
 var
   aFields, aClassName : String;
@@ -136,19 +174,34 @@ begin
   TSimpleRTTI<T>.New(nil)
     .Fields(aFields)
     .TableName(aClassName);
+
+  aSQL := aSQL + 'SELECT ';
+
+  if FLimit <> 0 then
+    case FSQLType of
+      Firebird: aSQL := aSQL + ' FIRST '+FLimit.ToString + ' SKIP ' + IntToStr((FPAGE - 1)*FLimit);
+    end;
+
   if Trim(FFields) <> '' then
-    aSQL := aSQL + ' SELECT ' + FFields
+    aSQL := aSQL + ' ' + FFields
   else
-    aSQL := aSQL + ' SELECT ' + aFields;
+    aSQL := aSQL + ' ' + aFields;
+
   aSQL := aSQL + ' FROM ' + aClassName;
+
   if Trim(FJoin) <> '' then
     aSQL := aSQL + ' ' + FJoin + ' ';
   if Trim(FWhere) <> '' then
     aSQL := aSQL + ' WHERE ' + FWhere;
   if Trim(FGroupBy) <> '' then
-    aSQL := aSQL + ' GROUP BY ' + FGroupBy;  
+    aSQL := aSQL + ' GROUP BY ' + FGroupBy;
   if Trim(FOrderBy) <> '' then
     aSQL := aSQL + ' ORDER BY ' + FOrderBy;
+
+  if FLimit <> 0 then
+    case FSQLType of
+      SQLite, MySQL: aSQL := aSQL + ' LIMIT '+FLimit.ToString + ' OFFSET ' + IntToStr((FPAGE - 1)*FLimit);
+    end;
 end;
 
 function TSimpleSQL<T>.SelectId(var aSQL: String): iSimpleSQL<T>;
@@ -166,6 +219,13 @@ begin
   aSQL := aSQL + ' SELECT ' + aFields;
   aSQL := aSQL + ' FROM ' + aClassName;
   aSQL := aSQL + ' WHERE ' + aWhere;
+end;
+
+function TSimpleSQL<T>.SQLType(SQLType: TSQLType): iSimpleSQL<T>;
+begin
+  Result := Self;
+
+  FSQLType := SQLType;
 end;
 
 function TSimpleSQL<T>.Update(var aSQL: String): iSimpleSQL<T>;

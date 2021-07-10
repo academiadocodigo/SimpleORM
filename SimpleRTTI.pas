@@ -117,9 +117,9 @@ Type
       constructor Create( aInstance : T );
       destructor Destroy; override;
       class function New( aInstance : T ) : iSimpleRTTI<T>;
+      class procedure DictionaryFieldClass(var aDictionary : TDictionary<string, string>);
       function TableName(var aTableName: String): ISimpleRTTI<T>;
 
-      
       function Fields (var aFields : String) : iSimpleRTTI<T>;
       function FieldsInsert (var aFields : String) : iSimpleRTTI<T>;
       function Param (var aParam : String) : iSimpleRTTI<T>;
@@ -127,6 +127,7 @@ Type
       function Update(var aUpdate : String) : iSimpleRTTI<T>;
       function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
       function ListFields (var List : TList<String>) : iSimpleRTTI<T>;
+      function ListBindFields (var List : TList<String>) : iSimpleRTTI<T>;
       function ClassName (var aClassName : String) : iSimpleRTTI<T>;
       function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
       function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
@@ -522,6 +523,29 @@ begin
   inherited;
 end;
 
+class procedure TSimpleRTTI<T>.DictionaryFieldClass(
+  var aDictionary: TDictionary<string, string>);
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
+begin
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+      begin
+        if prpRtti.IsIgnore then
+          Continue;
+        aDictionary.Add(prpRtti.FieldName, prpRtti.DisplayName);
+      end;
+  finally
+    ctxRtti.Free;
+  end;
+end;
+
 function TSimpleRTTI<T>.DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
 var
   ctxRtti   : TRttiContext;
@@ -628,6 +652,29 @@ begin
     end;
   finally
     aFields := Copy(aFields, 0, Length(aFields) - 2) + ' ';
+    ctxRtti.Free;
+  end;
+end;
+
+function TSimpleRTTI<T>.ListBindFields(var List: TList<String>): iSimpleRTTI<T>;
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
+begin
+  Result := Self;
+  if not Assigned(List) then
+    List := TList<string>.Create;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+    begin
+        List.Add(prpRtti.FieldName);
+    end;
+  finally
     ctxRtti.Free;
   end;
 end;
