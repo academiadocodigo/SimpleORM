@@ -6,23 +6,26 @@ uses
   System.Classes,
   Data.DB,
   Uni,
-  SimpleInterface;
+  SimpleInterface,
+  SimpleTypes;
 
 type
   TSimpleQueryUniDac = class(TInterfacedObject, iSimpleQuery)
   private
     FConnection : TUniConnection;
-    FQuery : TUniQuery;
-    FParams : TParams;
+    FQuery      : TUniQuery;
+    FParams     : TParams;
+    FSQLType    : TSQLType;
   public
     constructor Create(aConnection : TUniConnection);
     destructor Destroy; override;
     class function New(aConnection : TUniConnection) : iSimpleQuery;
-
     function SQL : TStrings;
     function Params : TParams;
     function ExecSQL : iSimpleQuery;
     function DataSet : TDataSet;
+    function SQLType(SQLType : TSQLType) : iSimpleQuery; overload;
+    function SQLType : TSQLType; overload;
     function Open(aSQL : String) : iSimpleQuery; overload;
     function Open : iSimpleQuery; overload;
   end;
@@ -108,6 +111,18 @@ end;
 function TSimpleQueryUniDac.SQL: TStrings;
 begin
   Result := FQuery.SQL;
+end;
+
+function TSimpleQueryUniDac.SQLType: TSQLType;
+begin
+  Result := FSQLType;
+end;
+
+function TSimpleQueryUniDac.SQLType(SQLType: TSQLType): iSimpleQuery;
+begin
+  Result := Self;
+
+  FSQLType := SQLType;
 end;
 
 end.

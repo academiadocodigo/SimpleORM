@@ -3,15 +3,45 @@ unit Principal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf,
-  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
-  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
-  FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, SimpleInterface, SimpleDAO, Entidade.Pedido, System.Generics.Collections, SimpleQueryFiredac,
-  {Entidade.DoublePK,}
-  SimpleAttributes, Vcl.ExtCtrls, Vcl.ComCtrls;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Data.DB,
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+  FireDAC.Stan.Param,
+  FireDAC.Stan.Error,
+  FireDAC.DatS,
+  FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf,
+  FireDAC.Stan.Async,
+  FireDAC.DApt,
+  FireDAC.UI.Intf,
+  FireDAC.Stan.Def,
+  FireDAC.Stan.Pool,
+  FireDAC.Phys,
+  FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef,
+  FireDAC.VCLUI.Wait,
+  FireDAC.Comp.Client,
+  FireDAC.Comp.DataSet,
+  Vcl.StdCtrls,
+  Vcl.Grids,
+  Vcl.DBGrids,
+  SimpleInterface,
+  SimpleDAO,
+  Entidade.Pedido,
+  System.Generics.Collections,
+  SimpleQueryFiredac,
+  SimpleAttributes,
+  Vcl.ExtCtrls,
+  Vcl.ComCtrls;
 
 type
   TForm9 = class(TForm)
@@ -25,21 +55,32 @@ type
     DataSource1: TDataSource;
     Memo1: TMemo;
     FDConnection1: TFDConnection;
-
-    [Bind('CLIENTE')]
-    Edit1: TEdit;
-    [Bind('ID')]
-    Edit2: TEdit;
-    [Bind('VALORTOTAL')]
-    Edit3: TEdit;
     Button2: TButton;
-    [Bind('DATAPEDIDO')]
-    DateTimePicker1: TDateTimePicker;
     Button5: TButton;
     Button8: TButton;
     Button9: TButton;
-    [Bind('ATIVO')]
-    CheckBox1: TCheckBox;
+    edtPwd: TEdit;
+    Label5: TLabel;
+    edtUser: TEdit;
+    Label4: TLabel;
+    edtPort: TEdit;
+    Label3: TLabel;
+    edtHost: TEdit;
+    Label2: TLabel;
+    edtDatabase: TEdit;
+    Label1: TLabel;
+
+    [Bind('NOME')]
+    Edit1: TEdit;
+
+    [Bind('ID')]
+    Edit2: TEdit;
+
+    [Bind('VALOR')]
+    Edit3: TEdit;
+
+    [Bind('DATA')]
+    DateTimePicker1: TDateTimePicker;
 
     procedure Button3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -55,6 +96,7 @@ type
   private
     { Private declarations }
     DAOPedido : iSimpleDAO<TPEDIDO>;
+    procedure SetDataBase;
   public
     { Public declarations }
   end;
@@ -73,10 +115,9 @@ begin
   Pedido := TPEDIDO.Create;
   try
     Pedido.ID := StrToInt(Edit2.Text);
-    Pedido.CLIENTE := Edit1.Text;
-    Pedido.DATAPEDIDO := now;
-    Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
-    Pedido.Ativo := CheckBox1.Checked;
+    Pedido.NOME := Edit1.Text;
+    Pedido.DATA := now;
+    Pedido.VALOR := StrToCurr(Edit3.Text);
     DAOPedido.Update(Pedido);
   finally
     Pedido.Free;
@@ -100,7 +141,7 @@ begin
   try
     for Pedido in Pedidos do
     begin
-      Memo1.Lines.Add(Pedido.CLIENTE + DateToStr(Pedido.DATAPEDIDO));
+      Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
     end;
   finally
     Pedidos.Free;
@@ -134,10 +175,9 @@ begin
   Pedido := TPEDIDO.Create;
   try
     Pedido.ID := StrToInt(Edit2.Text);
-    Pedido.CLIENTE := Edit1.Text;
-    Pedido.DATAPEDIDO := now;
-    Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
-    Pedido.ATIVO := CheckBox1.Checked;
+    Pedido.NOME := Edit1.Text;
+    Pedido.DATA := now;
+    Pedido.VALOR := StrToCurr(Edit3.Text);
     DAOPedido.Insert(Pedido);
   finally
     Pedido.Free;
@@ -161,7 +201,7 @@ var
 begin
   Pedido := DAOPedido.Find(StrToInt(Edit2.Text));
   try
-    Memo1.Lines.Add(Pedido.CLIENTE + DateToStr(Pedido.DATAPEDIDO));
+    Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
   finally
     Pedido.Free;
   end;
@@ -192,7 +232,7 @@ procedure TForm9.FormCreate(Sender: TObject);
 var
   Conn : iSimpleQuery;
 begin
-  ReportMemoryLeaksOnShutdown := true;
+  SetDataBase;
 
   Conn := TSimpleQueryFiredac.New(FDConnection1);
 
@@ -201,6 +241,23 @@ begin
                   .New(Conn)
                   .DataSource(DataSource1)
                   .BindForm(Self);
+end;
+
+procedure TForm9.SetDataBase;
+var
+ aux : string;
+begin
+  aux := ExtractFilePath(ParamStr(0));
+  edtDatabase.Text :=  Copy(aux, 1, ( Pos('\Sample',aux) )) + 'Sample\Database\PDVUPDATES.FDB';
+
+  with (FDConnection1.Params as TFDPhysFBConnectionDefParams) do
+    begin
+       Server   := edtHost.Text;
+       Port     := StrToIntDef(edtPort.Text, 3050);
+       UserName := edtUser.Text;
+       Password := edtPwd.Text;
+       Database := edtDatabase.Text;
+    end;
 end;
 
 end.

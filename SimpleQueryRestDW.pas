@@ -3,13 +3,19 @@ unit SimpleQueryRestDW;
 interface
 
 uses
-  SimpleInterface, System.Classes, Data.DB, uDWConstsData, uRESTDWPoolerDB;
+  SimpleInterface,
+  System.Classes,
+  Data.DB,
+  uDWConstsData,
+  uRESTDWPoolerDB,
+  SimpleTypes;
 
 Type
   TSimpleQueryRestDW<T : class, constructor> = class(TInterfacedObject, iSimpleQuery)
     private
       FConnection : TRESTDWDataBase;
-      FQuery : TRESTDWClientSQL;
+      FQuery      : TRESTDWClientSQL;
+      FSQLType    : TSQLType;
     public
       constructor Create(aConnection : TRESTDWDataBase);
       destructor Destroy; override;
@@ -18,6 +24,8 @@ Type
       function Params : TParams;
       function ExecSQL : iSimpleQuery;
       function DataSet : TDataSet;
+      function SQLType(SQLType : TSQLType) : iSimpleQuery; overload;
+      function SQLType : TSQLType; overload;
       function Open(aSQL : String) : iSimpleQuery; overload;
       function Open : iSimpleQuery; overload;
   end;
@@ -90,6 +98,18 @@ end;
 function TSimpleQueryRestDW<T>.SQL: TStrings;
 begin
   Result := FQuery.SQL;
+end;
+
+function TSimpleQueryRestDW<T>.SQLType: TSQLType;
+begin
+  Result := FSQLType;
+end;
+
+function TSimpleQueryRestDW<T>.SQLType(SQLType: TSQLType): iSimpleQuery;
+begin
+  Result := Self;
+
+  FSQLType := SQLType;
 end;
 
 end.

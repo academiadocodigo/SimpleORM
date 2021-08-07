@@ -23,6 +23,7 @@ uses
   Vcl.DBGrids,
   SimpleInterface,
   SimpleDAO,
+  SimpleAttributes,
   SimpleQueryUniDac,
   Entidade.Pedido;
 
@@ -40,19 +41,32 @@ type
     Button5: TButton;
     Button8: TButton;
     Button9: TButton;
-
-    [Bind('CLIENTE')]
-    Edit1: TEdit;
-    [Bind('ID')]
-    Edit2: TEdit;
-    [Bind('VALORTOTAL')]
-    Edit3: TEdit;
-    [Bind('DATAPEDIDO')]
-    DateTimePicker1: TDateTimePicker;
-
     UniDataSource1: TUniDataSource;
     UniConnection1: TUniConnection;
     InterBaseUniProvider1: TInterBaseUniProvider;
+    edtDatabase: TEdit;
+    Label1: TLabel;
+    edtHost: TEdit;
+    edtPort: TEdit;
+    Label2: TLabel;
+    Label3: TLabel;
+    edtUser: TEdit;
+    edtPwd: TEdit;
+    Label4: TLabel;
+    Label5: TLabel;
+
+    [Bind('NOME')]
+    Edit1: TEdit;
+
+    [Bind('ID')]
+    Edit2: TEdit;
+
+    [Bind('VALOR')]
+    Edit3: TEdit;
+
+    [Bind('DATA')]
+    DateTimePicker1: TDateTimePicker;
+
     procedure FormCreate(Sender: TObject);
     procedure btnFindClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -66,6 +80,7 @@ type
     procedure Button4Click(Sender: TObject);
   private
     DAOPedido : iSimpleDAO<TPEDIDO>;
+    procedure SetDataBase;
   public
   end;
 
@@ -95,9 +110,9 @@ begin
   Pedido := TPEDIDO.Create;
   try
     Pedido.ID := StrToInt(Edit2.Text);
-    Pedido.CLIENTE := Edit1.Text;
-    Pedido.DATAPEDIDO := now;
-    Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
+    Pedido.NOME := Edit1.Text;
+    Pedido.DATA := now;
+    Pedido.VALOR := StrToCurr(Edit3.Text);
     DAOPedido.Update(Pedido);
   finally
     Pedido.Free;
@@ -121,7 +136,7 @@ begin
   try
     for Pedido in Pedidos do
     begin
-      Memo1.Lines.Add(Pedido.CLIENTE + DateToStr(Pedido.DATAPEDIDO));
+      Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
     end;
   finally
     Pedidos.Free;
@@ -155,9 +170,9 @@ begin
   Pedido := TPEDIDO.Create;
   try
     Pedido.ID := StrToInt(Edit2.Text);
-    Pedido.CLIENTE := Edit1.Text;
-    Pedido.DATAPEDIDO := now;
-    Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
+    Pedido.NOME := Edit1.Text;
+    Pedido.DATA := now;
+    Pedido.VALOR := StrToCurr(Edit3.Text);
     DAOPedido.Insert(Pedido);
   finally
     Pedido.Free;
@@ -171,7 +186,7 @@ var
 begin
   Pedido := DAOPedido.Find(StrToInt(Edit2.Text));
   try
-    Memo1.Lines.Add(Pedido.CLIENTE + DateToStr(Pedido.DATAPEDIDO));
+    Memo1.Lines.Add(Pedido.NOME + DateToStr(Pedido.DATA));
   finally
     Pedido.Free;
   end;
@@ -202,7 +217,7 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   Conn : iSimpleQuery;
 begin
-  ReportMemoryLeaksOnShutdown := true;
+  SetDataBase;
 
   Conn := TSimpleQueryUniDac.New(UniConnection1);
 
@@ -211,6 +226,19 @@ begin
                   .New(Conn)
                   .DataSource(UniDataSource1)
                   .BindForm(Self);
+end;
+
+procedure TForm1.SetDataBase;
+var
+ aux : string;
+begin
+  UniConnection1.Port     := StrToIntDef(edtPort.Text, 3050);
+  UniConnection1.Server   := edtHost.Text;
+  UniConnection1.Username := edtUser.Text;
+  UniConnection1.Password := edtPwd.Text;
+  aux := ExtractFilePath(ParamStr(0));
+  edtDatabase.Text :=  Copy(aux, 1, ( Pos('\Sample',aux) )) + 'Sample\Database\PDVUPDATES.FDB';
+  UniConnection1.Database := edtDatabase.Text;
 end;
 
 end.

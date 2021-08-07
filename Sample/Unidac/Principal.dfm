@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'Form1'
   ClientHeight = 591
-  ClientWidth = 969
+  ClientWidth = 968
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,10 +13,45 @@ object Form1: TForm1
   OldCreateOrder = False
   OnCreate = FormCreate
   DesignSize = (
-    969
+    968
     591)
   PixelsPerInch = 96
   TextHeight = 13
+  object Label1: TLabel
+    Left = 192
+    Top = 437
+    Width = 46
+    Height = 13
+    Caption = 'DataBase'
+  end
+  object Label2: TLabel
+    Left = 192
+    Top = 485
+    Width = 22
+    Height = 13
+    Caption = 'Host'
+  end
+  object Label3: TLabel
+    Left = 328
+    Top = 485
+    Width = 20
+    Height = 13
+    Caption = 'Port'
+  end
+  object Label4: TLabel
+    Left = 464
+    Top = 485
+    Width = 22
+    Height = 13
+    Caption = 'User'
+  end
+  object Label5: TLabel
+    Left = 599
+    Top = 485
+    Width = 36
+    Height = 13
+    Caption = 'Passwd'
+  end
   object Button3: TButton
     Left = 8
     Top = 8
@@ -88,7 +123,7 @@ object Form1: TForm1
   object DBGrid1: TDBGrid
     Left = 192
     Top = 68
-    Width = 549
+    Width = 548
     Height = 273
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = UniDataSource1
@@ -102,12 +137,13 @@ object Form1: TForm1
   object Memo1: TMemo
     Left = 192
     Top = 356
-    Width = 549
+    Width = 548
     Height = 66
     Anchors = [akLeft, akRight, akBottom]
     Lines.Strings = (
       'Memo1')
     TabOrder = 9
+    ExplicitWidth = 549
   end
   object Edit3: TEdit
     Left = 439
@@ -161,17 +197,59 @@ object Form1: TForm1
     TabOrder = 15
     OnClick = Button9Click
   end
+  object edtDatabase: TEdit
+    Left = 192
+    Top = 456
+    Width = 516
+    Height = 21
+    TabOrder = 16
+  end
+  object edtHost: TEdit
+    Left = 192
+    Top = 504
+    Width = 121
+    Height = 21
+    TabOrder = 17
+    Text = '127.0.0.1'
+  end
+  object edtPort: TEdit
+    Left = 328
+    Top = 504
+    Width = 121
+    Height = 21
+    TabOrder = 18
+    Text = '3050'
+  end
+  object edtUser: TEdit
+    Left = 464
+    Top = 504
+    Width = 121
+    Height = 21
+    TabOrder = 19
+    Text = 'SYSDBA'
+  end
+  object edtPwd: TEdit
+    Left = 599
+    Top = 504
+    Width = 109
+    Height = 20
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Wingdings'
+    Font.Style = []
+    ParentFont = False
+    PasswordChar = 'l'
+    TabOrder = 20
+    Text = 'masterkey'
+  end
   object UniDataSource1: TUniDataSource
     Left = 688
     Top = 88
   end
   object UniConnection1: TUniConnection
     ProviderName = 'InterBase'
-    Port = 3051
-    Database = '/firebird/data/PDVUPDATES.FDB'
-    Username = 'SYSDBA'
-    Server = 'localhost'
-    Connected = True
+    Port = 3050
     LoginPrompt = False
     Left = 616
     Top = 88

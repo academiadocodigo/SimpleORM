@@ -2,8 +2,8 @@ object Form9: TForm9
   Left = 0
   Top = 0
   Caption = 'Form9'
-  ClientHeight = 438
-  ClientWidth = 758
+  ClientHeight = 571
+  ClientWidth = 919
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,10 +13,45 @@ object Form9: TForm9
   OldCreateOrder = False
   OnCreate = FormCreate
   DesignSize = (
-    758
-    438)
+    919
+    571)
   PixelsPerInch = 96
   TextHeight = 13
+  object Label5: TLabel
+    Left = 599
+    Top = 485
+    Width = 36
+    Height = 13
+    Caption = 'Passwd'
+  end
+  object Label4: TLabel
+    Left = 464
+    Top = 485
+    Width = 22
+    Height = 13
+    Caption = 'User'
+  end
+  object Label3: TLabel
+    Left = 328
+    Top = 485
+    Width = 20
+    Height = 13
+    Caption = 'Port'
+  end
+  object Label2: TLabel
+    Left = 192
+    Top = 485
+    Width = 22
+    Height = 13
+    Caption = 'Host'
+  end
+  object Label1: TLabel
+    Left = 192
+    Top = 437
+    Width = 46
+    Height = 13
+    Caption = 'DataBase'
+  end
   object Button3: TButton
     Left = 8
     Top = 8
@@ -88,9 +123,9 @@ object Form9: TForm9
   object DBGrid1: TDBGrid
     Left = 192
     Top = 68
-    Width = 549
-    Height = 273
-    Anchors = [akLeft, akTop, akRight, akBottom]
+    Width = 710
+    Height = 266
+    Anchors = [akLeft, akTop, akRight]
     DataSource = DataSource1
     TabOrder = 8
     TitleFont.Charset = DEFAULT_CHARSET
@@ -101,13 +136,15 @@ object Form9: TForm9
   end
   object Memo1: TMemo
     Left = 192
-    Top = 356
-    Width = 549
+    Top = 343
+    Width = 710
     Height = 66
-    Anchors = [akLeft, akRight, akBottom]
+    Anchors = [akLeft, akRight]
     Lines.Strings = (
       'Memo1')
     TabOrder = 9
+    ExplicitTop = 354
+    ExplicitWidth = 549
   end
   object Edit3: TEdit
     Left = 439
@@ -161,13 +198,51 @@ object Form9: TForm9
     TabOrder = 15
     OnClick = Button9Click
   end
-  object CheckBox1: TCheckBox
-    Left = 257
-    Top = 18
-    Width = 97
-    Height = 17
-    Caption = 'Ativo'
+  object edtPwd: TEdit
+    Left = 599
+    Top = 504
+    Width = 109
+    Height = 20
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Wingdings'
+    Font.Style = []
+    ParentFont = False
+    PasswordChar = 'l'
     TabOrder = 16
+    Text = 'masterkey'
+  end
+  object edtUser: TEdit
+    Left = 464
+    Top = 504
+    Width = 121
+    Height = 21
+    TabOrder = 17
+    Text = 'SYSDBA'
+  end
+  object edtPort: TEdit
+    Left = 328
+    Top = 504
+    Width = 121
+    Height = 21
+    TabOrder = 18
+    Text = '3050'
+  end
+  object edtHost: TEdit
+    Left = 192
+    Top = 504
+    Width = 121
+    Height = 21
+    TabOrder = 19
+    Text = '127.0.0.1'
+  end
+  object edtDatabase: TEdit
+    Left = 192
+    Top = 456
+    Width = 516
+    Height = 21
+    TabOrder = 20
   end
   object DataSource1: TDataSource
     Left = 696

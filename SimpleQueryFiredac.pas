@@ -3,17 +3,24 @@ unit SimpleQueryFiredac;
 interface
 
 uses
-  SimpleInterface, FireDAC.Comp.Client, System.Classes, Data.DB,
-  FireDAC.Stan.Param, FireDAC.DatS, SimpleTypes,
-  FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet;
+  SimpleInterface,
+  FireDAC.Comp.Client,
+  System.Classes,
+  Data.DB,
+  FireDAC.Stan.Param,
+  FireDAC.DatS,
+  SimpleTypes,
+  FireDAC.DApt.Intf,
+  FireDAC.DApt,
+  FireDAC.Comp.DataSet;
 
 Type
   TSimpleQueryFiredac = class(TInterfacedObject, iSimpleQuery)
     private
       FConnection : TFDConnection;
-      FQuery : TFDQuery;
-      FParams : TParams;
-      FSQLType : TSQLType;
+      FQuery      : TFDQuery;
+      FParams     : TParams;
+      FSQLType    : TSQLType;
     public
       constructor Create(aConnection : TFDConnection);
       destructor Destroy; override;
