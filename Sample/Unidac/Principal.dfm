@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'Form1'
   ClientHeight = 591
-  ClientWidth = 968
+  ClientWidth = 770
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object Form1: TForm1
   OldCreateOrder = False
   OnCreate = FormCreate
   DesignSize = (
-    968
+    770
     591)
   PixelsPerInch = 96
   TextHeight = 13
@@ -123,9 +123,9 @@ object Form1: TForm1
   object DBGrid1: TDBGrid
     Left = 192
     Top = 68
-    Width = 548
+    Width = 552
     Height = 273
-    Anchors = [akLeft, akTop, akRight, akBottom]
+    Anchors = [akLeft, akTop, akBottom]
     DataSource = UniDataSource1
     TabOrder = 8
     TitleFont.Charset = DEFAULT_CHARSET
@@ -137,13 +137,12 @@ object Form1: TForm1
   object Memo1: TMemo
     Left = 192
     Top = 356
-    Width = 548
+    Width = 552
     Height = 66
-    Anchors = [akLeft, akRight, akBottom]
+    Anchors = [akLeft, akBottom]
     Lines.Strings = (
       'Memo1')
     TabOrder = 9
-    ExplicitWidth = 549
   end
   object Edit3: TEdit
     Left = 439
@@ -244,21 +243,21 @@ object Form1: TForm1
     Text = 'masterkey'
   end
   object UniDataSource1: TUniDataSource
-    Left = 688
-    Top = 88
+    Left = 56
+    Top = 384
   end
   object UniConnection1: TUniConnection
     ProviderName = 'InterBase'
     Port = 3050
     LoginPrompt = False
-    Left = 616
-    Top = 88
+    Left = 56
+    Top = 256
     EncryptedPassword = 
       'CEFFC7FFCBFF9CFFC6FFC9FF9BFFC8FF9DFFCDFFC8FF9CFFC9FF99FFC8FF9BFF' +
       'C9FF9DFF9EFF9EFF'
   end
   object InterBaseUniProvider1: TInterBaseUniProvider
-    Left = 784
-    Top = 88
+    Left = 56
+    Top = 320
   end
 end
