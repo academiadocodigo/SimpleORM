@@ -319,7 +319,6 @@ begin
     FQuery.SQL.Add(aSQL);
     Self.FillParameter(aValue);
     FQuery.ExecSQL;
-    FilledObject(aValue, aSQL);
 end;
 
 function TSimpleDAO<T>.FillParameter(aInstance: T): iSimpleDAO<T>;
@@ -362,15 +361,15 @@ end;
 
 function TSimpleDAO<T>.FillParameterWhere(aInstance: T; var aWhere : String): iSimpleDAO<T>;
 var
-    Key: String;
+    Key, PK: String;
     DictionaryFields: TDictionary<String, Variant>;
     P: TParams;
 begin
     DictionaryFields := TDictionary<String, Variant>.Create;
-    TSimpleRTTI<T>.New(aInstance).DictionaryFields(DictionaryFields);
+    TSimpleRTTI<T>.New(aInstance).DictionaryFields(DictionaryFields).PrimaryKey(PK);
     try
         for Key in DictionaryFields.Keys do begin
-            if key<>'ID' then begin
+            if key<>PK then begin
                 if not aWhere.IsEmpty then
                     aWhere := aWhere + ' and '+key +'=:'+key
                 else
