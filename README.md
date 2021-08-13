@@ -1,20 +1,3 @@
-<p align="center">
-  <a href="https://github.com/bittencourtthulio/SimpleORM/blob/master/assets/logo.fw.png">
-    <img alt="router4d" src="https://github.com/bittencourtthulio/SimpleORM/blob/master/assets/logo.fw.png">
-  </a>  
-</p>
-<br>
-<p align="center">
-  <img src="https://img.shields.io/github/v/release/bittencourtthulio/SimpleORM?style=flat-square">
-  <img src="https://img.shields.io/github/stars/bittencourtthulio/SimpleORM?style=flat-square">
-  <img src="https://img.shields.io/github/contributors/bittencourtthulio/SimpleORM?color=orange&style=flat-square">
-  <img src="https://img.shields.io/github/forks/bittencourtthulio/SimpleORM?style=flat-square">
-   <img src="https://tokei.rs/b1/github/bittencourtthulio/SimpleORM?color=red&category=lines">
-  <img src="https://tokei.rs/b1/github/bittencourtthulio/SimpleORM?color=green&category=code">
-  <img src="https://tokei.rs/b1/github/bittencourtthulio/SimpleORM?color=yellow&category=files">
-</p>
-
-
 # SimpleORM
 ORM Simples para Aplicações Delphi
 
@@ -27,7 +10,6 @@ Homologado para os drivers de Conexão Firedac e RestDataware.
 
 #### Gerador de Classes para o SimpleORM criados pela Comunidade
 
-[davisouzatb](https://github.com/davisouzatb/SimpleORMrClassGenerator)</br>
 [andersonlugarinhoramos](https://github.com/andersonlugarinhoramos/geradorsimpleorm)</br>
 [alan-petry](https://github.com/alan-petry/GeraClassesSimpleORM)</br>
 [Douglas09](https://github.com/Douglas09/GeradorDeClasses_SimpleORM_MySql)</br>
@@ -95,10 +77,6 @@ Obs.: Em casos como o "Campo('ID')" a anotação é opcional, pois a `property` 
 
 ## Instalação
 Basta adicionar ao LibraryPatch o Caminho do SimpleORM ou via [Boss](https://github.com/HashLoad/boss) com o comando `boss install bittencourtthulio/SimpleORM`, não precisa realizar a instalação de nenhum componente.
-
-## Dependências
-  - DataSetConverter4Delphi
-  - Rest Dataware CORE
 
 ## Uses Necessárias
 

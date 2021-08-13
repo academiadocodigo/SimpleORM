@@ -38,8 +38,6 @@ type
     Button5: TButton;
     Button8: TButton;
     Button9: TButton;
-    [Bind('ATIVO')]
-    CheckBox1: TCheckBox;
 
     procedure Button3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -76,7 +74,6 @@ begin
     Pedido.CLIENTE := Edit1.Text;
     Pedido.DATAPEDIDO := now;
     Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
-    Pedido.Ativo := CheckBox1.Checked;
     DAOPedido.Update(Pedido);
   finally
     Pedido.Free;
@@ -137,7 +134,6 @@ begin
     Pedido.CLIENTE := Edit1.Text;
     Pedido.DATAPEDIDO := now;
     Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
-    Pedido.ATIVO := CheckBox1.Checked;
     DAOPedido.Insert(Pedido);
   finally
     Pedido.Free;

@@ -6,7 +6,6 @@ uses
   System.Classes,
   System.Generics.Collections,
   Data.DB,
-  SimpleTypes,
   System.TypInfo,
   {$IFNDEF CONSOLE}
     {$IFDEF FMX}
@@ -26,12 +25,9 @@ type
     function Update : iSimpleDAO<T>; overload;
     function Delete : iSimpleDAO<T>; overload;
     {$ENDIF}
-    function Insert(aValue : T) : iSimpleDAO<T>; overload;
-    function Update(aValue : T) : iSimpleDAO<T>; overload;
+    function Insert(var aValue : T) : iSimpleDAO<T>; overload;
+    function Update(var aValue : T) : iSimpleDAO<T>; overload;
     function Delete(aValue : T) : iSimpleDAO<T>; overload;
-    function Filter(aField : String; aValue : String) : iSimpleDAO<T>;
-    function Paginate(aLimit, aPage: Integer) : iSimpleDAO<T>;
-    function RecordCount(var aRecCount : Integer) : iSimpleDAO<T>;
     function LastID : iSimpleDAO<T>;
     function LastRecord : iSimpleDAO<T>;
     function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
@@ -68,7 +64,6 @@ type
     function ClassName (var aClassName : String) : iSimpleRTTI<T>;
     function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
     function ListFields (var List : TList<String>) : iSimpleRTTI<T>;
-    function ListBindFields (var List : TList<String>) : iSimpleRTTI<T>;
     function Update (var aUpdate : String) : iSimpleRTTI<T>;
     function Where (var aWhere : String) : iSimpleRTTI<T>;
     function Fields (var aFields : String) : iSimpleRTTI<T>;
@@ -85,7 +80,6 @@ type
 
   iSimpleSQL<T> = interface
     ['{1590A7C6-6E32-4579-9E60-38C966C1EB49}']
-    function SQLType(SQLType : TSQLType) : iSimpleSQL<T>;
     function Insert (var aSQL : String) : iSimpleSQL<T>;
     function Update (var aSQL : String) : iSimpleSQL<T>;
     function Delete (var aSQL : String) : iSimpleSQL<T>;
@@ -98,7 +92,6 @@ type
     function Join (aSQL : String) : iSimpleSQL<T>;
     function LastID (var aSQL : String) : iSimpleSQL<T>;
     function LastRecord (var aSQL : String) : iSimpleSQL<T>;
-    function Paginate (aLimit, aPage : Integer) : iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface
@@ -107,8 +100,6 @@ type
     function Params : TParams;
     function ExecSQL : iSimpleQuery;
     function DataSet : TDataSet;
-    function SQLType(SQLType : TSQLType) : iSimpleQuery; overload;
-    function SQLType : TSQLType; overload;
     function Open(aSQL : String) : iSimpleQuery; overload;
     function Open : iSimpleQuery; overload;
   end;

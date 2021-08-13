@@ -17,12 +17,11 @@ uses
   FireDAC.Comp.Client,
   Firedac.DApt,
   FireDAC.Phys.FB,
-  FireDAC.Phys.SQLite,
   FireDAC.Phys.FBDef,
   System.Generics.Collections;
 
 var
-  FDriver : TFDPhysSQLiteDriverLink;
+  FDriver : TFDPhysFBDriverLink;
   FConnList : TObjectList<TFDConnection>;
 
 function Connected : Integer;
@@ -37,8 +36,10 @@ begin
 
   FConnList.Add(TFDConnection.Create(nil));
   Result := Pred(FConnList.Count);
-  FConnList.Items[Result].Params.DriverID := 'SQLite';
-  FConnList.Items[Result].Params.Database := 'C:/Users/Willian Hubner/Desktop/SimpleORM-master/Sample/Database/DB.db';
+  FConnList.Items[Result].Params.DriverID := 'FB';
+  FConnList.Items[Result].Params.Database := 'D:\Projetos\Componentes\SimpleORM\SimpleORM.git\trunk\Sample\Database\PDVUPDATES.FDB';
+  FConnList.Items[Result].Params.UserName := 'SYSDBA';
+  FConnList.Items[Result].Params.Password := 'masterkey';
   FConnList.Items[Result].Connected;
 end;
 

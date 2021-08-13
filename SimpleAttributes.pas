@@ -44,7 +44,7 @@ type
   private
     FField: String;
     procedure SetField(const Value: String);
-  public
+  published
     constructor Create (aField : String);
     property Field : String read FField write SetField;
   end;
