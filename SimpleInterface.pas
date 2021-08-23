@@ -25,8 +25,8 @@ type
     function Update : iSimpleDAO<T>; overload;
     function Delete : iSimpleDAO<T>; overload;
     {$ENDIF}
-    function Insert(var aValue : T) : iSimpleDAO<T>; overload;
-    function Update(var aValue : T) : iSimpleDAO<T>; overload;
+    function Insert(aValue : T) : iSimpleDAO<T>; overload;
+    function Update(aValue : T) : iSimpleDAO<T>; overload;
     function Delete(aValue : T) : iSimpleDAO<T>; overload;
     function LastID : iSimpleDAO<T>;
     function LastRecord : iSimpleDAO<T>;

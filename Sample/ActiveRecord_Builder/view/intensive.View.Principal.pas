@@ -54,19 +54,19 @@ implementation
 
 procedure TfrmListarClientes.btnEditarClick(Sender: TObject);
 begin
-  try
-    frmEditar := TfrmEditar.Create(self, dsEndereco);
-    frmEditar.ShowModal;
-  finally
-    frmEditar.Destroy;
-  end;
+//  try
+//    frmEditar := TfrmEditar.Create(self, dsEndereco);
+//    frmEditar.ShowModal;
+//  finally
+//    frmEditar.Destroy;
+//  end;
 end;
 
 procedure TfrmListarClientes.btnListarClick(Sender: TObject);
 begin
   dsCliente.DataSet := FController.Cliente.Build.Listar;
-  dsEndereco.DataSet := FController.Endereco
-    .Build.ListarPorFiltro('ID_CLIENTE',dsCliente.DataSet.FieldByName('ID').AsInteger);
+//  dsEndereco.DataSet := FController.Endereco
+//    .Build.ListarPorFiltro('ID_CLIENTE',dsCliente.DataSet.FieldByName('ID').AsInteger);
 end;
 
 procedure TfrmListarClientes.btnNovoClick(Sender: TObject);

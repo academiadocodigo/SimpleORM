@@ -22,7 +22,7 @@ uses
   FireDAC.Comp.Client,
   intensive.Model.Entity.Cliente,
   intensive.Controller.DTO.Interfaces,
-  intensive.Services.Generic, intensive.Controller.DTO.Endereco;
+  intensive.Services.Generic;
 
 type
   TClienteDTO = class(TInterfacedObject, iClienteDTO)

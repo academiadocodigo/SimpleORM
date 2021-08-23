@@ -24,7 +24,6 @@ uses
 type
   iController = interface
     function Cliente : iClienteDTO;
-    function Endereco : iEnderecoDTO;
   end;
 
 implementation

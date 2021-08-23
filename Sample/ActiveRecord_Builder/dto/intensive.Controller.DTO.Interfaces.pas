@@ -4,7 +4,7 @@ interface
 
 uses
   intensive.Services.Generic,
-  intensive.Model.Entity.Cliente, intensive.Model.Entity.Endereco;
+  intensive.Model.Entity.Cliente;
 
 type
   iClienteDTO = interface

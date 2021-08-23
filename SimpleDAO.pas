@@ -31,16 +31,14 @@ Type
         function FillParameter(aInstance: T): iSimpleDAO<T>; overload;
         function FillParameter(aInstance: T; aId: Variant)
           : iSimpleDAO<T>; overload;
-        function FillParameterWhere(aInstance: T; var aWhere : String): iSimpleDAO<T>;
         procedure OnDataChange(Sender: TObject; Field: TField);
-        procedure FilledObject(var aValue: T; aSQL: string);
     public
         constructor Create(aQuery: iSimpleQuery);
         destructor Destroy; override;
         class function New(aQuery: iSimpleQuery): iSimpleDAO<T>; overload;
         function DataSource(aDataSource: TDataSource): iSimpleDAO<T>;
-        function Insert(var aValue: T): iSimpleDAO<T>; overload;
-        function Update(var aValue: T): iSimpleDAO<T>; overload;
+        function Insert(aValue: T): iSimpleDAO<T>; overload;
+        function Update(aValue: T): iSimpleDAO<T>; overload;
         function Delete(aValue: T): iSimpleDAO<T>; overload;
         function Delete(aField: String; aValue: String): iSimpleDAO<T>;
           overload;
@@ -249,7 +247,7 @@ begin
     FSQLAttribute.Clear;
 end;
 
-function TSimpleDAO<T>.Insert(var aValue: T): iSimpleDAO<T>;
+function TSimpleDAO<T>.Insert(aValue: T): iSimpleDAO<T>;
 var
     aSQL: String;
 begin
@@ -259,9 +257,6 @@ begin
     FQuery.SQL.Add(aSQL);
     Self.FillParameter(aValue);
     FQuery.ExecSQL;
-
-    aSQL := '';
-    FilledObject(aValue,aSQL);
 end;
 
 class function TSimpleDAO<T>.New(aQuery: iSimpleQuery): iSimpleDAO<T>;
@@ -307,7 +302,7 @@ begin
 end;
 {$ENDIF}
 
-function TSimpleDAO<T>.Update(var aValue: T): iSimpleDAO<T>;
+function TSimpleDAO<T>.Update(aValue: T): iSimpleDAO<T>;
 var
     aSQL: String;
     aPK: String;
@@ -356,32 +351,6 @@ begin
         end;
     finally
         FreeAndNil(ListFields);
-    end;
-end;
-
-function TSimpleDAO<T>.FillParameterWhere(aInstance: T; var aWhere : String): iSimpleDAO<T>;
-var
-    Key, PK: String;
-    DictionaryFields: TDictionary<String, Variant>;
-    P: TParams;
-begin
-    DictionaryFields := TDictionary<String, Variant>.Create;
-    TSimpleRTTI<T>.New(aInstance).DictionaryFields(DictionaryFields).PrimaryKey(PK);
-    try
-        for Key in DictionaryFields.Keys do begin
-            if key<>PK then begin
-                if not aWhere.IsEmpty then
-                    aWhere := aWhere + ' and '+key +'=:'+key
-                else
-                    aWhere := key +'=:'+key;
-                if FQuery.Params.FindParam(Key) <> nil then
-                FQuery.Params.ParamByName(Key).Value :=
-                  DictionaryFields.Items[Key];
-            end;
-        end;
-
-    finally
-        FreeAndNil(DictionaryFields);
     end;
 end;
 
