@@ -5,6 +5,15 @@ O SimpleORM tem o Objetivo de facilitar suas implementações de CRUD, agilizand
 
 Homologado para os drivers de Conexão Firedac e RestDataware.
 
+#### Link do Grupo no Telegram
+[Grupo SimpleORM](https://t.me/joinchat/Tv8fVFe_hdz0rJwq)
+
+#### Gerador de Classes para o SimpleORM criados pela Comunidade
+
+[andersonlugarinhoramos](https://github.com/andersonlugarinhoramos/geradorsimpleorm)</br>
+[alan-petry](https://github.com/alan-petry/GeraClassesSimpleORM)</br>
+[Douglas09](https://github.com/Douglas09/GeradorDeClasses_SimpleORM_MySql)</br>
+
 Entidade do Banco de Dados Mapeada
 
 ```delphi
@@ -38,6 +47,8 @@ Type
   end;
 ```
 
+Obs.: Em casos como o "Campo('ID')" a anotação é opcional, pois a `property` tem o mesmo nome do campo no banco de dados.
+
 ## Atributos
 `Tabela`  - Informa o Nome da Tabela no Banco em que a Classe faz o mapeamento.
 
@@ -45,16 +56,27 @@ Type
 
 `PK`      - Informa se o Campo é PrimaryKey.
 
-`AutoInc` - Informa se o Campo é AutoIncremento.
+`FK`      - Informa se o Campo é ForeignKey.
+
+`NotNull` - Informa se o Campo é NotNull.
 
 `Ignore`  - Ignorar o Campo nas Operações de CRUD.
 
+`AutoInc` - Informa se o Campo é AutoIncremento.
+
+`NumberOnly` - Informa se o Campo deve aceitar somente números.
+
+`Bind` - Informa o Nome do Campo no Banco de Dados ou a `property` que o componente visual está fazendo Referência.
+
+`Display` - Informa a descrição que deve aparecer no título de grids.
+
+`Format`  - Informa o formato que o campo deve ter, coisas como (tamanho, precisão, máscara e range).
 
 # Principais Operações
 
 
 ## Instalação
-Basta adicionar ao LibraryPatch o Caminho do SimpleORM, não precisa realizar a instalação de nenhum componente.
+Basta adicionar ao LibraryPatch o Caminho do SimpleORM ou via [Boss](https://github.com/HashLoad/boss) com o comando `boss install bittencourtthulio/SimpleORM`, não precisa realizar a instalação de nenhum componente.
 
 ## Uses Necessárias
 
@@ -93,8 +115,7 @@ end;
 
 
 ## MAPEAMENTO DO BIND DO FORMULÁRIO
-Quando você fizer o mapeamento Bind do Formulário, não precisará ligar manualmente os campos da classe ao Edits, o SimpleORM faz isso
-automáticamente, basta você realizar o mapeamento correto conforme abaixo.
+Quando você fizer o mapeamento Bind do Formulário, não precisará ligar manualmente os campos da classe ao Edits, o SimpleORM faz isso automáticamente, basta você realizar o mapeamento correto conforme abaixo.
 
 ```delphi
 type
@@ -110,8 +131,7 @@ type
     DateTimePicker1: TDateTimePicker;
 ```
 
-No atributo Bind de cada campo, você deve informar o nome da Property correspondente na Classe Mapeada do Banco de Dados, ATENÇÃO é o nome
-que você deu para a property da classe e não o nome do campo na tabela do banco de dados.
+No atributo Bind de cada campo, você deve informar o nome da Property correspondente na Classe Mapeada do banco de dados ou o nome do campo na tabela do banco de dados, ATENÇÃO de qualquer forma a Classe deve estar mapeada corretamente.
 
 ## INSERT COM BIND
 
@@ -139,6 +159,27 @@ begin
 end;
 ```
 
+## INSERT COM OBJETO HERDADO DE `TSimpleEntity` E COM VALIDAÇÃO
+```delphi
+var
+  Cliente: TCliente;
+begin
+  Cliente := TCliente.Create;
+  try
+    // PEGA OS VALORES DA TELA E PREENCHE O OBJETO VIA BIND
+    Cliente.Parse(Self); 
+
+    // VALIDA SEGUNDO ANOTAÇÕES DO OBJETO
+    TSimpleValidator.Validate(Cliente); 
+    
+    // INSERE "CLIENTE" NO BANCO DE DADOS
+    DAOCliente.Insert(Cliente);
+  finally
+    Cliente.Free;
+  end;
+end;
+```
+
 ## UPDATE COM BIND
 ```delphi
 begin
@@ -160,6 +201,22 @@ begin
     DAOPedido.Update(Pedido);
   finally
     Pedido.Free;
+  end;
+end;
+```
+
+## UPDATE COM OBJETO HERDADO DE `TSimpleEntity` E COM VALIDAÇÃO
+```delphi
+var
+  Cliente: TCliente;
+begin
+  Cliente := TCliente.Create;
+  try
+    Cliente.Parse(Self); 
+    TSimpleValidator.Validate(Cliente); 
+    DAOCliente.Update(Cliente);
+  finally
+    Cliente.Free;
   end;
 end;
 ```
@@ -228,3 +285,6 @@ begin
 end;
 ```
 
+## Grupo do telegram
+Esse grupo tem como objetivo ajudar seus integrantes em assuntos diversos ao uso do componente, e colaboração para a evolução desse maravilhoso ORM ([Object-relational mapping](https://pt.wikipedia.org/wiki/Mapeamento_objeto-relacional)).
+Acesse com esse link para participar do [Grupo SimpleORM](https://t.me/joinchat/Tv8fVFe_hdz0rJwq)

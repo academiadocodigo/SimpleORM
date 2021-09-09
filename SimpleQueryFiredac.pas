@@ -53,11 +53,11 @@ begin
 end;
 
 function TSimpleQueryFiredac.ExecSQL: iSimpleQuery;
-var
-  a: string;
 begin
   Result := Self;
-  FQuery.Params.Assign(FParams);
+  if Assigned(FParams) then
+    FQuery.Params.Assign(FParams);
+
   FQuery.Prepare;
   FQuery.ExecSQL;
 
