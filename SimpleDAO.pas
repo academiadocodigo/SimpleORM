@@ -76,18 +76,6 @@ begin
     FForm := aForm;
 end;
 
-procedure TSimpleDAO<T>.FilledObject(var aValue: T; aSQL: string);
-var
-  aWhere: string;
-begin
-  Self.FillParameterWhere(aValue, aWhere);
-  TSimpleSQL<T>.New(nil).Where(aWhere).Select(aSQL);
-  FQuery.SQL.Clear;
-  FQuery.SQL.Add(aSQL);
-  FQuery.Open;
-  TSimpleRTTI<T>.New(nil).DataSetToEntity(FQuery.DataSet, aValue);
-  FSQLAttribute.Clear;
-end;
 {$ENDIF}
 
 constructor TSimpleDAO<T>.Create(aQuery: iSimpleQuery);
