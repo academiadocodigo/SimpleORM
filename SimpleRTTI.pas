@@ -229,7 +229,9 @@ begin
     tkClassRef: ;
     tkPointer: ;
     tkProcedure: ;
+    {$IF RTLVERSION > 31.0} 
     tkMRecord: ;
+    {$ENDIF} 
     else
       aProperty.SetValue(Pointer(aEntity), aValue);
   end;
