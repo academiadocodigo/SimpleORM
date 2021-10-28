@@ -120,13 +120,13 @@ Type
       class function New( aInstance : T ) : iSimpleRTTI<T>;
       function TableName(var aTableName: String): ISimpleRTTI<T>;
 
-      
       function Fields (var aFields : String) : iSimpleRTTI<T>;
       function FieldsInsert (var aFields : String) : iSimpleRTTI<T>;
       function Param (var aParam : String) : iSimpleRTTI<T>;
       function Where (var aWhere : String) : iSimpleRTTI<T>;
       function Update(var aUpdate : String) : iSimpleRTTI<T>;
       function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
+      function DictionaryTypeFields(var aDictionary: TDictionary<string, TFieldType>): iSimpleRTTI<T>;
       function ListFields (var List : TList<String>) : iSimpleRTTI<T>;
       function ClassName (var aClassName : String) : iSimpleRTTI<T>;
       function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
@@ -561,7 +561,12 @@ begin
         tkFloat       :
         begin
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDateTime) then
-            aDictionary.Add(prpRtti.FieldName, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+          begin
+            if prpRtti.GetValue(Pointer(FInstance)).AsExtended = 0 then
+              aDictionary.Add(prpRtti.FieldName, Null)
+            else
+              aDictionary.Add(prpRtti.FieldName, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString ));
+          end
           else
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDate) then
               aDictionary.Add(prpRtti.FieldName, StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString))
@@ -579,6 +584,50 @@ begin
         tkVariant     : aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsVariant);
       else
           aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsString);
+      end;
+    end;
+  finally
+    ctxRtti.Free;
+  end;
+end;
+
+function TSimpleRTTI<T>.DictionaryTypeFields(var aDictionary : TDictionary<string, TFieldType>) : iSimpleRTTI<T>;
+var
+  ctxRtti   : TRttiContext;
+  typRtti   : TRttiType;
+  prpRtti   : TRttiProperty;
+  Info     : PTypeInfo;
+  Aux : String;
+begin
+  Result := Self;
+  Info := System.TypeInfo(T);
+  ctxRtti := TRttiContext.Create;
+  try
+    typRtti := ctxRtti.GetType(Info);
+    for prpRtti in typRtti.GetProperties do
+    begin
+      if prpRtti.IsIgnore then
+        Continue;
+
+      case prpRtti.PropertyType.TypeKind of
+        tkInteger, tkInt64:
+          begin
+          end;
+        tkFloat       :
+        begin
+          if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDateTime) then
+            aDictionary.Add(prpRtti.FieldName, TFieldType.ftDateTime)
+          else
+          if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDate) then
+              aDictionary.Add(prpRtti.FieldName, TFieldType.ftDate)
+          else
+          if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TTime) then
+            aDictionary.Add(prpRtti.FieldName, TFieldType.ftTime)
+        end;
+        tkWChar,
+        tkLString,
+        tkWString,
+        tkUString : ;
       end;
     end;
   finally

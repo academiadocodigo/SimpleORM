@@ -66,7 +66,8 @@ uses
     SimpleAttributes,
     System.TypInfo,
     SimpleRTTI,
-    SimpleSQL;
+    SimpleSQL,
+    Variants;
 { TGenericDAO }
 {$IFNDEF CONSOLE}
 
@@ -308,16 +309,23 @@ function TSimpleDAO<T>.FillParameter(aInstance: T): iSimpleDAO<T>;
 var
     Key: String;
     DictionaryFields: TDictionary<String, Variant>;
+    DictionaryTypeFields: TDictionary<String, TFieldType>;
     P: TParams;
+    FieldType: TFieldType;
 begin
     DictionaryFields := TDictionary<String, Variant>.Create;
+    DictionaryTypeFields := TDictionary<String, TFieldType>.Create;
     TSimpleRTTI<T>.New(aInstance).DictionaryFields(DictionaryFields);
+    TSimpleRTTI<T>.New(aInstance).DictionaryTypeFields(DictionaryTypeFields);
     try
         for Key in DictionaryFields.Keys do
         begin
             if FQuery.Params.FindParam(Key) <> nil then
-                FQuery.Params.ParamByName(Key).Value :=
-                  DictionaryFields.Items[Key];
+            begin
+                if DictionaryTypeFields.TryGetValue(Key, FieldType ) then
+                  FQuery.Params.ParamByName(Key).DataType := FieldType;
+                FQuery.Params.ParamByName(Key).Value := DictionaryFields.Items[Key];
+            end;
         end;
     finally
         FreeAndNil(DictionaryFields);
