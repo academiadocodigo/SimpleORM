@@ -329,6 +329,7 @@ begin
         end;
     finally
         FreeAndNil(DictionaryFields);
+        FreeAndNil(DictionaryTypeFields);
     end;
 end;
 

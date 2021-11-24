@@ -2,7 +2,7 @@
 {$MINSTACKSIZE $00004000}
 {$MAXSTACKSIZE $00100000}
 {$IMAGEBASE $00400000}
-{$APPTYPE GUI}
+
 {$WARN SYMBOL_DEPRECATED ON}
 {$WARN SYMBOL_LIBRARY ON}
 {$WARN SYMBOL_PLATFORM ON}
@@ -104,16 +104,15 @@ Type
   TSimpleRTTI<T : class, constructor> = class(TInterfacedObject, iSimpleRTTI<T>)
     private
       FInstance : T;
-      function __findRTTIField(ctxRtti : TRttiContext; classe: TClass; const Field: String): TRttiField;
+//      function __findRTTIField(ctxRtti : TRttiContext; classe: TClass; const Field: String): TRttiField;
       function __FloatFormat( aValue : String ) : Currency;
       {$IFNDEF CONSOLE}
       function __BindValueToComponent( aComponent : TComponent; aValue : Variant) : iSimpleRTTI<T>;
       function __GetComponentToValue( aComponent : TComponent) : TValue;
-      {$ENDIF}
       function __BindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : iSimpleRTTI<T>;
-
       function __GetRTTIPropertyValue(aEntity : T; aPropertyName : String) : Variant;
       function __GetRTTIProperty(aEntity : T; aPropertyName : String) : TRttiProperty;
+      {$ENDIF}
     public
       constructor Create( aInstance : T );
       destructor Destroy; override;
@@ -198,7 +197,7 @@ begin
 
 
 end;
-{$ENDIF}
+
 
 function TSimpleRTTI<T>.__BindValueToProperty( aEntity : T; aProperty : TRttiProperty; aValue : TValue) : iSimpleRTTI<T>;
 begin
@@ -235,15 +234,16 @@ begin
   end;
 
 end;
+{$ENDIF}
 
-function TSimpleRTTI<T>.__findRTTIField(ctxRtti: TRttiContext; classe: TClass;
-  const Field: String): TRttiField;
-var
-  typRtti : TRttiType;
-begin
-  typRtti := ctxRtti.GetType(classe.ClassInfo);
-  Result  := typRtti.GetField(Field);
-end;
+//function TSimpleRTTI<T>.__findRTTIField(ctxRtti: TRttiContext; classe: TClass;
+//  const Field: String): TRttiField;
+//var
+//  typRtti : TRttiType;
+//begin
+//  typRtti := ctxRtti.GetType(classe.ClassInfo);
+//  Result  := typRtti.GetField(Field);
+//end;
 
 function TSimpleRTTI<T>.__FloatFormat( aValue : String ) : Currency;
 begin
@@ -295,7 +295,6 @@ begin
 
   a := Result.TOString;
 end;
-{$ENDIF}
 
 function TSimpleRTTI<T>.__GetRTTIProperty(aEntity: T;
   aPropertyName: String): TRttiProperty;
@@ -324,7 +323,6 @@ begin
   Result := __GetRTTIProperty(aEntity, aPropertyName).GetValue(Pointer(aEntity)).AsVariant;
 end;
 
-{$IFNDEF CONSOLE}
 function TSimpleRTTI<T>.BindClassToForm(aForm: TForm;
   const aEntity: T): iSimpleRTTI<T>;
 var
