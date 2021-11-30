@@ -89,15 +89,15 @@ uses
   Data.DB,
   TypInfo,
   {$IFNDEF CONSOLE}
-    FMX.Types,
     {$IFDEF FMX}
-      FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
+      FMX.Types,FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
     {$ELSE}
       Vcl.Forms, VCL.StdCtrls, Vcl.ExtCtrls,
     {$ENDIF}
   {$ENDIF}
   System.Classes,
-  System.SysUtils;
+  System.SysUtils,
+  System.DateUtils;
 
 Type
   ESimpleRTTI = Exception;
@@ -561,11 +561,19 @@ begin
           end;
         tkFloat       :
         begin
-          if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDateTime) then
-            aDictionary.Add(prpRtti.FieldName, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
+          if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDateTime) then begin
+            if YearOf(StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString))<1900 then
+              aDictionary.Add(prpRtti.FieldName, 'null')
+            else
+              aDictionary.Add(prpRtti.FieldName, StrToDateTime(prpRtti.GetValue(Pointer(FInstance)).ToString));
+          end
           else
-          if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDate) then
-              aDictionary.Add(prpRtti.FieldName, StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString))
+          if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDate) then begin
+            if YearOf(StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString))<1900 then
+              aDictionary.Add(prpRtti.FieldName, 'null')
+            else
+              aDictionary.Add(prpRtti.FieldName, StrToDate(prpRtti.GetValue(Pointer(FInstance)).ToString));
+          end
           else
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TTime) then
             aDictionary.Add(prpRtti.FieldName, StrToTime(prpRtti.GetValue(Pointer(FInstance)).ToString))
