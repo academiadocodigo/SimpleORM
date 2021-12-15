@@ -1,0 +1,14 @@
+{
+	"hash": "bdfab74a412f12cca3751da9a4bbae0d",
+	"updated": "2021-12-14T10:00:30.658717-03:00",
+	"installedModules": {
+		"https://github.com/bittencourtthulio/simpleorm": {
+			"name": "simpleorm",
+			"version": "2.02.08",
+			"hash": "e2794352578b467201834aff6bee57a2",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
+}

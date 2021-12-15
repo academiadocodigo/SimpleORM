@@ -14,6 +14,8 @@ type
     function Nome : String; overload;
     function Telefone(Value : String) : iClienteDTO; overload;
     function Telefone : String; overload;
+    function CpfCnpj(Value : String) : iClienteDTO; overload;
+    function CpfCnpj : String; overload;
     function Build : iService<TCliente>;
   end;
 

@@ -343,19 +343,20 @@ end;
 
 function TSimpleDAO<T>.FillParameter(aInstance: T; aId: Variant): iSimpleDAO<T>;
 var
-    I: Integer;
-    ListFields: TList<String>;
+    Key: String;
+    DictionaryFields: TDictionary<String, Variant>;
+    P: TParams;
 begin
-    ListFields := TList<String>.Create;
-    TSimpleRTTI<T>.New(aInstance).ListFields(ListFields);
+    DictionaryFields := TDictionary<String, Variant>.Create;
+    TSimpleRTTI<T>.New(aInstance).DictionaryFields(DictionaryFields);
     try
-        for I := 0 to Pred(ListFields.Count) do
+        for Key in DictionaryFields.Keys do
         begin
-            if FQuery.Params.FindParam(ListFields[I]) <> nil then
-                FQuery.Params.ParamByName(ListFields[I]).Value := aId;
+            if FQuery.Params.FindParam(Key) <> nil then
+                FQuery.Params.ParamByName(Key).Value := aId;
         end;
     finally
-        FreeAndNil(ListFields);
+        FreeAndNil(DictionaryFields);
     end;
 end;
 
