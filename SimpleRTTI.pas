@@ -92,7 +92,7 @@ uses
     {$IFDEF FMX}
       FMX.Types,FMX.Forms, FMX.Edit, FMX.ListBox, FMX.StdCtrls, FMX.DateTimeCtrls,
     {$ELSE}
-      Vcl.Forms, VCL.StdCtrls, Vcl.ExtCtrls,
+        Vcl.ComCtrls, Vcl.Graphics, Vcl.Forms, VCL.StdCtrls, Vcl.ExtCtrls,
     {$ENDIF}
   {$ENDIF}
   System.Classes,
@@ -142,12 +142,6 @@ implementation
 
 uses
   SimpleAttributes,
-
-
-  {$IFNDEF CONSOLE}
-  Vcl.ComCtrls,
-  Vcl.Graphics,
-  {$ENDIF}
   Variants,
   SimpleRTTIHelper,
   System.UITypes;
@@ -192,8 +186,9 @@ begin
   {$ENDIF}
 
   if aComponent is TTrackBar then
+  {$IFDEF VCL}
     (aComponent as TTrackBar).Position := aValue;
-
+  {$ENDIF}
 
 
 
@@ -281,9 +276,10 @@ begin
       Result := TValue.FromVariant((aComponent as TCheckBox).IsChecked);
   {$ENDIF}
 
-
+  {$IFDEF VCL}
   if aComponent is TTrackBar then
     Result := TValue.FromVariant((aComponent as TTrackBar).Position);
+  {$ENDIF}
 
   {$IFDEF VCL}
   if aComponent is TDateTimePicker then
