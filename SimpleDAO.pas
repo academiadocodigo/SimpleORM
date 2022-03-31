@@ -316,8 +316,12 @@ begin
         for Key in DictionaryFields.Keys do
         begin
             if FQuery.Params.FindParam(Key) <> nil then
-                FQuery.Params.ParamByName(Key).Value :=
-                  DictionaryFields.Items[Key];
+            begin
+              if Length(DictionaryFields.Items[Key]) > 4000 then
+                FQuery.Params.ParamByName(Key).AsMemo := DictionaryFields.Items[Key]
+              else
+                FQuery.Params.ParamByName(Key).Value := DictionaryFields.Items[Key];
+            end;
         end;
     finally
         FreeAndNil(DictionaryFields);
