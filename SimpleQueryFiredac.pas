@@ -58,11 +58,22 @@ begin
   if Assigned(FParams) then
     FQuery.Params.Assign(FParams);
 
-  FQuery.Prepare;
-  FQuery.ExecSQL;
-
-  if Assigned(FParams) then
-    FreeAndNil(FParams);
+  if not FConnection.InTransaction then
+    FConnection.StartTransaction;
+  try
+    try
+      FQuery.Prepare;
+      FQuery.ExecSQL;
+    finally
+      if Assigned(FParams) then FreeAndNil(FParams);
+    end;
+  except
+    on E: Exception do
+    begin
+      if FConnection.InTransaction then FConnection.Rollback;
+      raise Exception.Create(E.Message);
+    end;
+  end;
 end;
 
 class function TSimpleQueryFiredac.New(aConnection : TFDConnection): iSimpleQuery;
