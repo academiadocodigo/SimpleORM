@@ -207,7 +207,7 @@ begin
     tkUnknown: ;
     tkInteger: aProperty.SetValue(Pointer(aEntity), StrToInt(aValue.ToString));
     tkChar: ;
-    tkEnumeration: ;
+    tkEnumeration: aProperty.SetValue(Pointer(aEntity), StrToBool(aValue.ToString));
     tkFloat:
     begin
       if (aValue.TypeInfo = TypeInfo(TDate))
@@ -436,7 +436,7 @@ begin
                 tkInteger, tkInt64:
                   Value := Field.AsInteger;
                 tkChar: ;
-                tkEnumeration: ;
+                tkEnumeration: Value := Field.AsBoolean;
                 tkFloat: Value := Field.AsFloat;
                 tkSet: ;
                 tkClass: ;
@@ -495,7 +495,7 @@ begin
               tkInteger, tkInt64:
                 Value := Field.AsInteger;
               tkChar: ;
-              tkEnumeration: ;
+              tkEnumeration: Value := Field.AsBoolean;
               tkFloat:
                 Value := Field.AsFloat;
               tkSet: ;
