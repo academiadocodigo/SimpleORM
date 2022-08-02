@@ -609,8 +609,13 @@ begin
     typRtti := ctxRtti.GetType(Info);
     for prpRtti in typRtti.GetProperties do
     begin
-      if not prpRtti.IsIgnore then
-        aFields := aFields + prpRtti.FieldName + ', ';
+      if prpRtti.FieldName = 'RefCount' then
+        Continue;
+
+      if prpRtti.IsIgnore then
+        Continue;
+
+      aFields := aFields + prpRtti.FieldName + ', ';
     end;
   finally
     aFields := Copy(aFields, 0, Length(aFields) - 2) + ' ';
