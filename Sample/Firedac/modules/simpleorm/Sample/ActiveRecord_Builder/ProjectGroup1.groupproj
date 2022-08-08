@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{E28206FD-740A-41A1-BC73-8405921ED818}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="SimpleORM_Intensive.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\intensivepkg\model.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Nova pasta (2)\Project1.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="SimpleORM_Intensive">
+        <MSBuild Projects="SimpleORM_Intensive.dproj"/>
+    </Target>
+    <Target Name="SimpleORM_Intensive:Clean">
+        <MSBuild Projects="SimpleORM_Intensive.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORM_Intensive:Make">
+        <MSBuild Projects="SimpleORM_Intensive.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="model">
+        <MSBuild Projects="..\intensivepkg\model.dproj"/>
+    </Target>
+    <Target Name="model:Clean">
+        <MSBuild Projects="..\intensivepkg\model.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="model:Make">
+        <MSBuild Projects="..\intensivepkg\model.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Project1">
+        <MSBuild Projects="..\..\Nova pasta (2)\Project1.dproj"/>
+    </Target>
+    <Target Name="Project1:Clean">
+        <MSBuild Projects="..\..\Nova pasta (2)\Project1.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project1:Make">
+        <MSBuild Projects="..\..\Nova pasta (2)\Project1.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="SimpleORM_Intensive;model;Project1"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="SimpleORM_Intensive:Clean;model:Clean;Project1:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="SimpleORM_Intensive:Make;model:Make;Project1:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

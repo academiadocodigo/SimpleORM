@@ -1,0 +1,11 @@
+{
+	"name": "BoasPraticasCRUDNivel3",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./",
+	"projects": [],
+	"dependencies": {
+		"https://github.com/bittencourtthulio/simpleorm": "^2.02.04"
+	}
+}

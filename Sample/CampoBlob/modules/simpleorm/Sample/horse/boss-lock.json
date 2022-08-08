@@ -1,0 +1,54 @@
+{
+	"hash": "d41d8cd98f00b204e9800998ecf8427e",
+	"updated": "2020-08-28T14:32:10.0686541-03:00",
+	"installedModules": {
+		"github.com/hashload/horse": {
+			"name": "horse",
+			"version": "1.7.8",
+			"hash": "533f53d4f7f3f64544271a4dda9c227c",
+			"artifacts": {},
+			"failed": false,
+			"changed": true
+		},
+		"https://github.com/bittencourtthulio/simpleorm": {
+			"name": "simpleorm",
+			"version": "master",
+			"hash": "d6f21ea61cbbb8aebf2ca83b9f7a9835",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/ezequieljuliano/datasetconverter4delphi": {
+			"name": "datasetconverter4delphi",
+			"version": "master",
+			"hash": "5d030308c84a928e3767ae9d9f8a317f",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/hashload/horse": {
+			"name": "horse",
+			"version": "v2.0-alpha.1",
+			"hash": "533f53d4f7f3f64544271a4dda9c227c",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/hashload/horse-cors": {
+			"name": "horse-cors",
+			"version": "1.0.2",
+			"hash": "f1fd91acb4d43c9a778249d447027f16",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
+		"https://github.com/hashload/jhonson": {
+			"name": "jhonson",
+			"version": "1.0.5",
+			"hash": "34d01183ef1b6af802c7e132adedeae5",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
+}

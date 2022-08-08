@@ -3,15 +3,48 @@ unit Principal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf,
-  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
-  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
-  FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  FireDAC.Comp.DataSet, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, SimpleInterface, SimpleDAO, Entidade.Pedido, System.Generics.Collections, SimpleQueryFiredac,
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Data.DB,
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+  FireDAC.Stan.Param,
+  FireDAC.Stan.Error,
+  FireDAC.DatS,
+  FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf,
+  FireDAC.Stan.Async,
+  FireDAC.DApt,
+  FireDAC.UI.Intf,
+  FireDAC.Stan.Def,
+  FireDAC.Stan.Pool,
+  FireDAC.Phys,
+  FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef,
+  FireDAC.VCLUI.Wait,
+  FireDAC.Comp.Client,
+  FireDAC.Comp.DataSet,
+  Vcl.StdCtrls,
+  Vcl.Grids,
+  Vcl.DBGrids,
+  SimpleInterface,
+  SimpleDAO,
+  Entidade.Pedido,
+  System.Generics.Collections,
+  SimpleQueryFiredac,
   {Entidade.DoublePK,}
-  SimpleAttributes, Vcl.ExtCtrls, Vcl.ComCtrls;
+  SimpleAttributes,
+  Vcl.ExtCtrls,
+  Vcl.ComCtrls,
+  Vcl.Imaging.jpeg,
+  Vcl.Imaging.pngimage;
 
 type
   TForm9 = class(TForm)
@@ -38,6 +71,10 @@ type
     Button5: TButton;
     Button8: TButton;
     Button9: TButton;
+    [Bind('FOTO')]
+    imgfoto: TImage;
+    Button10: TButton;
+    OpenDialog1: TOpenDialog;
 
     procedure Button3Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -50,9 +87,10 @@ type
     procedure Button5Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
   private
     { Private declarations }
-    DAOPedido : iSimpleDAO<TPEDIDO>;
+    DAOPedido: iSimpleDAO<TPEDIDO>;
   public
     { Public declarations }
   end;
@@ -64,35 +102,42 @@ implementation
 
 {$R *.dfm}
 
+procedure TForm9.Button10Click(Sender: TObject);
+begin
+  imgfoto.Picture := nil;
+  if OpenDialog1.Execute then
+    imgfoto.Picture.LoadFromFile(OpenDialog1.FileName);
+end;
+
 procedure TForm9.Button1Click(Sender: TObject);
 var
-  Pedido : TPEDIDO;
+  Pedido: TPEDIDO;
+  lStream: TMemoryStream;
 begin
   Pedido := TPEDIDO.Create;
+  lStream:= TMemoryStream.Create;
   try
+    imgfoto.Picture.SaveToStream(lStream);
     Pedido.ID := StrToInt(Edit2.Text);
     Pedido.CLIENTE := Edit1.Text;
     Pedido.DATAPEDIDO := now;
     Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
+    Pedido.Foto := lStream;
     DAOPedido.Update(Pedido);
   finally
     Pedido.Free;
-    btnFindClick(nil);
+//    btnFindClick(nil);
   end;
 end;
 
 procedure TForm9.Button2Click(Sender: TObject);
 var
-  Pedidos : TObjectList<TPEDIDO>;
-  Pedido : TPEDIDO;
+  Pedidos: TObjectList<TPEDIDO>;
+  Pedido: TPEDIDO;
 begin
   Pedidos := TObjectList<TPEDIDO>.Create;
 
-  DAOPedido
-    .SQL
-      .OrderBy('ID')
-    .&End
-  .Find(Pedidos);
+  DAOPedido.SQL.OrderBy('ID').&End.Find(Pedidos);
 
   try
     for Pedido in Pedidos do
@@ -112,7 +157,7 @@ end;
 
 procedure TForm9.Button4Click(Sender: TObject);
 var
-  Pedido : TPEDIDO;
+  Pedido: TPEDIDO;
 begin
   Pedido := TPEDIDO.Create;
   try
@@ -126,17 +171,22 @@ end;
 
 procedure TForm9.Button5Click(Sender: TObject);
 var
-  Pedido : TPEDIDO;
+  Pedido: TPEDIDO;
+  lFoto : TMemoryStream;
 begin
   Pedido := TPEDIDO.Create;
+  lFoto := TMemoryStream.Create;
   try
+    imgfoto.Picture.SaveToStream(lFoto);
     Pedido.ID := StrToInt(Edit2.Text);
     Pedido.CLIENTE := Edit1.Text;
     Pedido.DATAPEDIDO := now;
     Pedido.VALORTOTAL := StrToCurr(Edit3.Text);
+    Pedido.Foto := lFoto;
     DAOPedido.Insert(Pedido);
   finally
     Pedido.Free;
+    lFoto.DisposeOf;
     btnFindClick(nil);
   end;
 end;
@@ -150,14 +200,15 @@ begin
   .Find;
 end;
 
-
 procedure TForm9.Button6Click(Sender: TObject);
 var
-  Pedido : TPEDIDO;
+  Pedido: TPEDIDO;
 begin
   Pedido := DAOPedido.Find(StrToInt(Edit2.Text));
   try
+    Memo1.Clear;
     Memo1.Lines.Add(Pedido.CLIENTE + DateToStr(Pedido.DATAPEDIDO));
+    imgfoto.Picture.LoadFromStream(Pedido.Foto);
   finally
     Pedido.Free;
   end;
@@ -175,28 +226,34 @@ end;
 procedure TForm9.Button8Click(Sender: TObject);
 begin
   DAOPedido.Update;
-  DAOPedido.SQL.OrderBy('ID').&End.Find;
+  DAOPedido
+    .SQL
+      .OrderBy('ID')
+    .&End
+  .Find;
 end;
 
 procedure TForm9.Button9Click(Sender: TObject);
 begin
   DAOPedido.Delete;
-  DAOPedido.SQL.OrderBy('ID').&End.Find;
+  DAOPedido
+    .SQL
+      .OrderBy('ID')
+    .&End
+  .Find;
 end;
 
 procedure TForm9.FormCreate(Sender: TObject);
 var
-  Conn : iSimpleQuery;
+  Conn: iSimpleQuery;
 begin
   ReportMemoryLeaksOnShutdown := true;
 
   Conn := TSimpleQueryFiredac.New(FDConnection1);
 
-
-  DAOPedido := TSimpleDAO<TPEDIDO>
-                  .New(Conn)
+  DAOPedido := TSimpleDAO<TPEDIDO>.New(Conn)
                   .DataSource(DataSource1)
-                  .BindForm(Self);
+        .BindForm(Self);
 end;
 
 end.
