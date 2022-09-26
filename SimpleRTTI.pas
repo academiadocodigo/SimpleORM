@@ -445,7 +445,7 @@ begin
                 Value := Field.AsInteger;
               tkChar:
                 ;
-              tkEnumeration:
+              tkEnumeration: Value := Field.AsBoolean
                 ;
               tkFloat:
                 Value := Field.AsFloat;
@@ -533,7 +533,7 @@ begin
                 Value := Field.AsInteger;
               tkChar:
                 ;
-              tkEnumeration:
+              tkEnumeration: Value := Field.AsBoolean
                 ;
               tkFloat:
                 Value := Field.AsFloat;
@@ -647,6 +647,9 @@ begin
         tkVariant:
           aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)
             ).AsVariant);
+        tkEnumeration :
+          aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)
+          ).AsBoolean);
         tkClass:
           begin
             if (prpRtti.GetValue(Pointer(FInstance)).AsObject is TStream) then
