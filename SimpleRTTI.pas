@@ -611,16 +611,20 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
+  aTableName: string;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
   ctxRtti := TRttiContext.Create;
   try
     typRtti := ctxRtti.GetType(Info);
+    if typRtti.Tem<Tabela> then
+      aTableName := typRtti.GetAttribute<Tabela>.Name;
+
     for prpRtti in typRtti.GetProperties do
     begin
-      if not prpRtti.IsIgnore then
-        aFields := aFields + prpRtti.FieldName + ', ';
+      if prpRtti.EhCampo then
+        aFields := aFields + aTableName + '.' + prpRtti.FieldName + ', ';
     end;
   finally
     aFields := Copy(aFields, 0, Length(aFields) - 2) + ' ';

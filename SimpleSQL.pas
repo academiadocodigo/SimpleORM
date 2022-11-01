@@ -142,7 +142,7 @@ begin
     begin
       aSQL := aSQL + 'select '+aFields;
       aSQL := aSQL + ' from '+ aClassName;
-      aSQL := aSQL + ' order by ' + aPK + ' desc limit 1';
+      aSQL := aSQL + ' order by ' + aPK + ' desc limit(1)';
     end;
   end;
 end;
@@ -171,6 +171,7 @@ var
   aFields, aClassName : String;
 begin
   Result := Self;
+
   TSimpleRTTI<T>.New(nil)
     .Fields(aFields)
     .TableName(aClassName);
