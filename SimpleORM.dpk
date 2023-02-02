@@ -43,7 +43,7 @@ requires
   DbxCommonDriver,
   bindengine,
   bindcomp,
-  RESTComponents,
+  RESTComponents;
   dac260,
   unidac260;
 

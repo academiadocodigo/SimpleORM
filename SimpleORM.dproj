@@ -144,23 +144,6 @@
         <DCCReference Include="bindengine.dcp"/>
         <DCCReference Include="bindcomp.dcp"/>
         <DCCReference Include="RESTComponents.dcp"/>
-        <DCCReference Include="dac260.dcp"/>
-        <DCCReference Include="unidac260.dcp"/>
-        <DCCReference Include="SimpleAttributes.pas"/>
-        <DCCReference Include="SimpleDAO.pas"/>
-        <DCCReference Include="SimpleInterface.pas"/>
-        <DCCReference Include="SimpleQueryFiredac.pas"/>
-        <DCCReference Include="SimpleQueryRestDW.pas"/>
-        <DCCReference Include="SimpleRTTI.pas"/>
-        <DCCReference Include="SimpleSQL.pas"/>
-        <DCCReference Include="SimpleDAOSQLAttribute.pas"/>
-        <DCCReference Include="SimpleRTTIHelper.pas"/>
-        <DCCReference Include="SimpleValidator.pas"/>
-        <DCCReference Include="SimpleUtil.pas"/>
-        <DCCReference Include="SimpleEntity.pas"/>
-        <DCCReference Include="SimpleJSONUtil.pas"/>
-        <DCCReference Include="SimpleJSON.pas"/>
-        <DCCReference Include="SimpleQueryUnidac.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

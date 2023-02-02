@@ -64,6 +64,7 @@ type
     function TableName(var aTableName: String): ISimpleRTTI<T>;
     function ClassName (var aClassName : String) : iSimpleRTTI<T>;
     function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
+    function DictionaryTypeFields(var aDictionary: TDictionary<string, TFieldType>): iSimpleRTTI<T>;
     function ListFields (var List : TList<String>) : iSimpleRTTI<T>;
     function Update (var aUpdate : String) : iSimpleRTTI<T>;
     function Where (var aWhere : String) : iSimpleRTTI<T>;
