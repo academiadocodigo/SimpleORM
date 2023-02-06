@@ -3,9 +3,7 @@ unit SimpleAttributes;
 interface
 
 uses
-  System.RTTI,
-  System.Variants,
-  System.Classes;
+  System.RTTI, System.Variants, System.Classes;
 
 type
   Tabela = class(TCustomAttribute)
@@ -19,11 +17,9 @@ type
   Campo = class(TCustomAttribute)
   private
     FName: string;
-    FTipo: String;
   public
-    Constructor Create(aName: string; aTipo: String = '');
+    Constructor Create(aName: string);
     property Name: string read FName;
-    property Tipo: String read FTipo write FTipo;
   end;
 
   PK = class(TCustomAttribute)
@@ -49,8 +45,8 @@ type
     FField: String;
     procedure SetField(const Value: String);
   published
-    constructor Create(aField: String);
-    property Field: String read FField write SetField;
+    constructor Create (aField : String);
+    property Field : String read FField write SetField;
   end;
 
   Display = class(TCustomAttribute)
@@ -73,10 +69,9 @@ type
     property Precision: integer read FPrecision write FPrecision;
     property Mask: string read FMask write FMask;
     function GetNumericMask: string;
-    constructor Create(const aSize: integer;
-      const aPrecision: integer = 0); overload;
+    constructor Create(const aSize: Integer; const aPrecision: integer = 0); overload;
     constructor Create(const aMask: string); overload;
-    constructor Create(const aRange: array of integer); overload;
+    constructor Create(const aRange: array of Integer); overload;
   end;
 
   Relationship = class abstract(TCustomAttribute)
@@ -92,7 +87,7 @@ type
 
   BelongsTo = class(Relationship)
   end;
-
+  
   HasMany = class(Relationship)
   end;
 
@@ -101,7 +96,9 @@ type
 
 implementation
 
+
 { Bind }
+
 constructor Bind.Create(aField: String);
 begin
   FField := aField;
@@ -113,25 +110,28 @@ begin
 end;
 
 { Tabela }
+
 constructor Tabela.Create(aName: string);
 begin
   FName := aName;
 end;
 
 { Campo }
-constructor Campo.Create(aName: string; aTipo: String = '');
+
+constructor Campo.Create(aName: string);
 begin
   FName := aName;
-  FTipo := aTipo;
 end;
 
 { Display }
+
 constructor Display.Create(const aName: string);
 begin
   FName := aName;
 end;
 
 { Formato }
+
 constructor Format.Create(const aSize, aPrecision: integer);
 begin
   FMaxSize := aSize;
@@ -143,7 +143,7 @@ begin
   FMask := aMask;
 end;
 
-constructor Format.Create(const aRange: array of integer);
+constructor Format.Create(const aRange: array of Integer);
 begin
   FMinSize := aRange[0];
   FMaxSize := aRange[High(aRange)];
@@ -155,10 +155,12 @@ var
 begin
   sTamanho := StringOfChar('0', FMaxSize - FPrecision);
   sPrecisao := StringOfChar('0', FPrecision);
+
   Result := sTamanho + '.' + sPrecisao;
 end;
 
 { Relationship }
+
 constructor Relationship.Create(const aEntityName: string);
 begin
   FEntityName := aEntityName;

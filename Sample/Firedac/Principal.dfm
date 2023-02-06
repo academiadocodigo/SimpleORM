@@ -17,13 +17,6 @@ object Form9: TForm9
     438)
   PixelsPerInch = 96
   TextHeight = 13
-  object imgfoto: TImage
-    Left = 8
-    Top = 225
-    Width = 178
-    Height = 176
-    Stretch = True
-  end
   object Button3: TButton
     Left = 8
     Top = 8
@@ -168,34 +161,18 @@ object Form9: TForm9
     TabOrder = 15
     OnClick = Button9Click
   end
-  object Button10: TButton
-    Left = 8
-    Top = 407
-    Width = 75
-    Height = 25
-    Caption = 'Carregar'
-    TabOrder = 16
-    OnClick = Button10Click
-  end
   object DataSource1: TDataSource
     Left = 696
     Top = 88
   end
   object FDConnection1: TFDConnection
     Params.Strings = (
-      
-        'Database=C:\MyRepository\SimpleORM\Sample\Database\PDVUPDATES.FD' +
-        'B'
+      'Database=C:\lixo\PDVUPDATES.FDB'
       'User_Name=SYSDBA'
       'Password=masterkey'
       'DriverID=FB')
-    Connected = True
     LoginPrompt = False
     Left = 552
     Top = 88
-  end
-  object OpenDialog1: TOpenDialog
-    Left = 376
-    Top = 224
   end
 end

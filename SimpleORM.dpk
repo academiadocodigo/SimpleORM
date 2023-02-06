@@ -27,7 +27,7 @@ package SimpleORM;
 {$ENDIF IMPLICITBUILDING}
 {$IMPLICITBUILD ON}
 
-rrequires
+requires
   rtl,
   vcl,
   soaprtl,
@@ -47,7 +47,7 @@ rrequires
   dac260,
   unidac260;
 
-ocontains
+contains
   SimpleAttributes in 'SimpleAttributes.pas',
   SimpleDAO in 'SimpleDAO.pas',
   SimpleInterface in 'SimpleInterface.pas',
@@ -62,7 +62,6 @@ ocontains
   SimpleEntity in 'SimpleEntity.pas',
   SimpleJSONUtil in 'SimpleJSONUtil.pas',
   SimpleJSON in 'SimpleJSON.pas',
-  SimpleQueryUnidac in 'SimpleQueryUnidac.pas',
-  Unit2 in 'Unit2.pas';
+  SimpleQueryUnidac in 'SimpleQueryUnidac.pas';
 
-d.
+end.

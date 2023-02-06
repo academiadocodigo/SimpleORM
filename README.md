@@ -76,7 +76,7 @@ Obs.: Em casos como o "Campo('ID')" a anotação é opcional, pois a `property` 
 
 
 ## Instalação
-Basta adicionar ao LibraryPatch o Caminho do SimpleORM ou via [Boss](https://github.com/HashLoad/boss) com o comando `boss install academiadocodigo/SimpleORM`, não precisa realizar a instalação de nenhum componente.
+Basta adicionar ao LibraryPatch o Caminho do SimpleORM ou via [Boss](https://github.com/HashLoad/boss) com o comando `boss install bittencourtthulio/SimpleORM`, não precisa realizar a instalação de nenhum componente.
 
 ## Uses Necessárias
 
