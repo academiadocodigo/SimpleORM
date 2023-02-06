@@ -3,7 +3,9 @@ unit Entidade.Pedido;
 interface
 
 uses
-  SimpleAttributes;
+  System.Classes,
+  Data.DB,
+  SimpleAttributes, System.SysUtils;
 
 Type
   [Tabela('PEDIDO')]
@@ -13,6 +15,7 @@ Type
     FCLIENTE: String;
     FDATAPEDIDO: TDatetime;
     FVALORTOTAL: Currency;
+    FFoto: TStream;
     procedure SetID(const Value: Integer);
     procedure SetCLIENTE(const Value: String);
     procedure SetDATAPEDIDO(const Value: TDatetime);
@@ -21,14 +24,16 @@ Type
     constructor Create;
     destructor Destroy; override;
   published
-    [Campo('ID'), Pk, AutoInc]
+    [Campo('ID', ftInteger), Pk, AutoInc]
     property ID: Integer read FID write SetID;
-    [Campo('NOME')]
+    [Campo('NOME', ftString)]
     property CLIENTE: String read FCLIENTE write SetCLIENTE;
-    [Campo('DATA')]
+    [Campo('DATA', ftDateTime)]
     property DATAPEDIDO: TDatetime read FDATAPEDIDO write SetDATAPEDIDO;
-    [Campo('VALOR')]
+    [Campo('VALOR', ftFloat)]
     property VALORTOTAL: Currency read FVALORTOTAL write SetVALORTOTAL;
+    [Campo('FOTO', ftBlob)]
+    property Foto: TStream read FFoto write FFoto;
   end;
 
 implementation
@@ -37,12 +42,12 @@ implementation
 
 constructor TPEDIDO.Create;
 begin
-
+  FFoto := TMemoryStream.Create;
 end;
 
 destructor TPEDIDO.Destroy;
 begin
-
+//    FreeAndNil(FFoto);
   inherited;
 end;
 
