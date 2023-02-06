@@ -7,114 +7,104 @@ uses
   System.Generics.Collections,
   Data.DB,
   System.TypInfo,
-{$IFNDEF CONSOLE}
-{$IFDEF FMX}
-  FMX.Forms,
-{$ELSE}
-  Vcl.Forms,
-{$ENDIF}
-{$ENDIF}
+  {$IFNDEF CONSOLE}
+    {$IFDEF FMX}
+      FMX.Forms,
+    {$ELSE}
+      Vcl.Forms,
+    {$ENDIF}
+  {$ENDIF}
   System.SysUtils;
-
 type
-  iSimpleDAOSQLAttribute<T: class> = interface;
+  iSimpleDAOSQLAttribute<T : class> = interface;
 
-  iSimpleDAO<T: class> = interface
+  iSimpleDAO<T : class> = interface
     ['{19261B52-6122-4C41-9DDE-D3A1247CC461}']
-{$IFNDEF CONSOLE}
+    {$IFNDEF CONSOLE}
     function Insert: iSimpleDAO<T>; overload;
-    function Update: iSimpleDAO<T>; overload;
-    function Delete: iSimpleDAO<T>; overload;
-{$ENDIF}
-    function Insert(aValue: T): iSimpleDAO<T>; overload;
-    function Update(aValue: T): iSimpleDAO<T>; overload;
-    function Delete(aValue: T): iSimpleDAO<T>; overload;
-    function LastID: iSimpleDAO<T>;
-    function LastRecord: iSimpleDAO<T>;
-    function Delete(aField: String; aValue: String): iSimpleDAO<T>; overload;
-    function DataSource(aDataSource: TDataSource): iSimpleDAO<T>;
-    function Find(aBindList: Boolean = True): iSimpleDAO<T>; overload;
-    function Find(var aList: TObjectList<T>): iSimpleDAO<T>; overload;
-    function Find(aId: Integer): T; overload;
-    function Find(aKey: String; aValue: Variant): iSimpleDAO<T>; overload;
-    function Find(var obj: T; Key: String; Value: Variant)
-      : iSimpleDAO<T>; overload;
-    function SQL: iSimpleDAOSQLAttribute<T>;
-{$IFNDEF CONSOLE}
-    function BindForm(aForm: TForm): iSimpleDAO<T>;
-{$ENDIF}
+    function Update : iSimpleDAO<T>; overload;
+    function Delete : iSimpleDAO<T>; overload;
+    {$ENDIF}
+    function Insert(var aValue : T) : iSimpleDAO<T>; overload;
+    function Update(var aValue : T) : iSimpleDAO<T>; overload;
+    function Delete(aValue : T) : iSimpleDAO<T>; overload;
+    function LastID : iSimpleDAO<T>;
+    function LastRecord : iSimpleDAO<T>;
+    function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
+    function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
+    function Find(aBindList : Boolean = True) : iSimpleDAO<T>; overload;
+    function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
+    function Find(aId : Integer) : T; overload;
+    function Find(aKey : String; aValue : Variant) : iSimpleDAO<T>; overload;
+    function SQL : iSimpleDAOSQLAttribute<T>;
+    {$IFNDEF CONSOLE}
+    function BindForm(aForm : TForm)  : iSimpleDAO<T>;
+    {$ENDIF}
   end;
 
-  iSimpleDAOSQLAttribute<T: class> = interface
+  iSimpleDAOSQLAttribute<T : class> = interface
     ['{5DE6F977-336B-4142-ABD1-EB0173FFF71F}']
-    function Fields(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
-    function Where(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
-    function OrderBy(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
-    function GroupBy(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
-    function Join(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
-    function Join: String; overload;
-    function Fields: String; overload;
-    function Where: String; overload;
-    function OrderBy: String; overload;
-    function GroupBy: String; overload;
-    function Clear: iSimpleDAOSQLAttribute<T>;
-    function &End: iSimpleDAO<T>;
+    function Fields (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Where (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function OrderBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function GroupBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Join (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Join : String; overload;
+    function Fields : String; overload;
+    function Where : String; overload;
+    function OrderBy : String; overload;
+    function GroupBy : String; overload;
+    function Clear : iSimpleDAOSQLAttribute<T>;
+    function &End : iSimpleDAO<T>;
   end;
 
-  iSimpleRTTI<T: class> = interface
+  iSimpleRTTI<T : class> = interface
     ['{EEC49F47-24AC-4D82-9BEE-C259330A8993}']
-    function TableName(var aTableName: String): iSimpleRTTI<T>;
-    function ClassName(var aClassName: String): iSimpleRTTI<T>;
-    function DictionaryFields(var aDictionary: TDictionary<string, Variant>)
-      : iSimpleRTTI<T>;
-    function ListFields(var List: TList<String>): iSimpleRTTI<T>;
-    function Update(var aUpdate: String): iSimpleRTTI<T>;
-    function Where(var aWhere: String): iSimpleRTTI<T>;
-    function Fields(var aFields: String): iSimpleRTTI<T>;
-    function FieldsInsert(var aFields: String): iSimpleRTTI<T>;
-    function Param(var aParam: String): iSimpleRTTI<T>;
-    function DataSetToEntityList(aDataSet: TDataSet; var aList: TObjectList<T>)
-      : iSimpleRTTI<T>;
-    function DataSetToEntity(aDataSet: TDataSet; var aEntity: T)
-      : iSimpleRTTI<T>;
-    function PrimaryKey(var aPK: String): iSimpleRTTI<T>;
-    function GetDateType(aCampo: String; var aType: TFieldType): iSimpleRTTI<T>;
-{$IFNDEF CONSOLE}
-    function BindClassToForm(aForm: TForm; const aEntity: T): iSimpleRTTI<T>;
-    function BindFormToClass(aForm: TForm; var aEntity: T): iSimpleRTTI<T>;
-{$ENDIF}
+    function TableName(var aTableName: String): ISimpleRTTI<T>;
+    function ClassName (var aClassName : String) : iSimpleRTTI<T>;
+    function DictionaryFields(var aDictionary : TDictionary<string, variant>) : iSimpleRTTI<T>;
+    function ListFields (var List : TList<String>) : iSimpleRTTI<T>;
+    function Update (var aUpdate : String) : iSimpleRTTI<T>;
+    function Where (var aWhere : String) : iSimpleRTTI<T>;
+    function Fields (var aFields : String) : iSimpleRTTI<T>;
+    function FieldsInsert (var aFields : String) : iSimpleRTTI<T>;
+    function Param (var aParam : String) : iSimpleRTTI<T>;
+    function DataSetToEntityList (aDataSet : TDataSet; var aList : TObjectList<T>) : iSimpleRTTI<T>;
+    function DataSetToEntity (aDataSet : TDataSet; var aEntity : T) : iSimpleRTTI<T>;
+    function PrimaryKey(var aPK : String) : iSimpleRTTI<T>;
+    {$IFNDEF CONSOLE}
+    function BindClassToForm (aForm : TForm;  const aEntity : T) : iSimpleRTTI<T>;
+    function BindFormToClass (aForm : TForm; var aEntity : T) : iSimpleRTTI<T>;
+    {$ENDIF}
   end;
 
   iSimpleSQL<T> = interface
     ['{1590A7C6-6E32-4579-9E60-38C966C1EB49}']
-    function Insert(var aSQL: String): iSimpleSQL<T>;
-    function Update(var aSQL: String): iSimpleSQL<T>;
-    function Delete(var aSQL: String): iSimpleSQL<T>;
-    function Select(var aSQL: String): iSimpleSQL<T>;
+    function Insert (var aSQL : String) : iSimpleSQL<T>;
+    function Update (var aSQL : String) : iSimpleSQL<T>;
+    function Delete (var aSQL : String) : iSimpleSQL<T>;
+    function Select (var aSQL : String) : iSimpleSQL<T>;
     function SelectId(var aSQL: String): iSimpleSQL<T>;
-    function Fields(aSQL: String): iSimpleSQL<T>;
-    function Where(aSQL: String): iSimpleSQL<T>;
-    function OrderBy(aSQL: String): iSimpleSQL<T>;
-    function GroupBy(aSQL: String): iSimpleSQL<T>;
-    function Join(aSQL: String): iSimpleSQL<T>;
-    function LastID(var aSQL: String): iSimpleSQL<T>;
-    function LastRecord(var aSQL: String): iSimpleSQL<T>;
+    function Fields (aSQL : String) : iSimpleSQL<T>;
+    function Where (aSQL : String) : iSimpleSQL<T>;
+    function OrderBy (aSQL : String) : iSimpleSQL<T>;
+    function GroupBy (aSQL : String) : iSimpleSQL<T>;
+    function Join (aSQL : String) : iSimpleSQL<T>;
+    function LastID (var aSQL : String) : iSimpleSQL<T>;
+    function LastRecord (var aSQL : String) : iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface
     ['{6DCCA942-736D-4C66-AC9B-94151F14853A}']
-    function SQL: TStrings;
-    function Params: TParams;
-    function ExecSQL: iSimpleQuery;
-    function DataSet: TDataSet;
-    function Open(aSQL: String): iSimpleQuery; overload;
-    function Open: iSimpleQuery; overload;
+    function SQL : TStrings;
+    function Params : TParams;
+    function ExecSQL : iSimpleQuery;
+    function DataSet : TDataSet;
+    function Open(aSQL : String) : iSimpleQuery; overload;
+    function Open : iSimpleQuery; overload;
   end;
 
-  iSimpleCommon = interface
-    function MemoryStreamToOleVariant(Stream: TMemoryStream): OleVariant;
-    function OleVariantToMemoryStream(Ov: OleVariant): TMemoryStream;
-  end;
+
 
 implementation
 

@@ -3,8 +3,7 @@ unit SimpleRTTIHelper;
 interface
 
 uses
-  RTTI,
-  SimpleAttributes;
+  RTTI, SimpleAttributes;
 
 type
   TCustomAttributeClass = class of TCustomAttribute;
@@ -16,7 +15,6 @@ type
     function IsNotNull: Boolean;
     function IsIgnore: Boolean;
     function IsAutoInc: Boolean;
-//    function IsTipo: Boolean;
     function EhCampo: Boolean;
     function EhChavePrimaria: Boolean;
     function EhChaveEstrangeira: Boolean;
@@ -24,7 +22,6 @@ type
     function EhPermitidoNulo: Boolean;
     function DisplayName: string;
     function FieldName: string;
-//    function TypeName: String;
   end;
 
   TRttiTypeHelper = class helper for TRttiType
@@ -56,6 +53,7 @@ uses
   System.SysUtils;
 
 { TRttiPropertyMelhorado }
+
 function TRttiPropertyHelper.GetAttribute<T>: T;
 var
   oAtributo: TCustomAttribute;
@@ -69,6 +67,7 @@ end;
 function TRttiPropertyHelper.DisplayName: string;
 begin
   Result := Name;
+
   if Tem<Display> then
     Result := GetAttribute<Display>.Name
 end;
@@ -92,11 +91,6 @@ function TRttiPropertyHelper.IsNotNull: Boolean;
 begin
   Result := Tem<NotNull>
 end;
-
-//function TRttiPropertyHelper.IsTipo: Boolean;
-//begin
-//  Result := Tem<Tipo>;
-//end;
 
 function TRttiPropertyHelper.IsIgnore: Boolean;
 begin
@@ -130,14 +124,8 @@ begin
   Result := GetAttribute<T> <> nil
 end;
 
-//function TRttiPropertyHelper.TypeName: String;
-//begin
-//  Result := Name;
-//  if isTipo then
-//    Result := GetAttribute<Tipo>.Name;
-//end;
-
 { TRttiTypeMelhorado }
+
 function TRttiTypeHelper.GetAttribute<T>: T;
 var
   oAtributo: TCustomAttribute;
@@ -153,8 +141,8 @@ begin
   Result := GetPropertyFromAttribute<PK>;
 end;
 
-function TRttiTypeHelper.GetPropertyFromAttribute<T>(const aFieldName: string)
-  : TRttiProperty;
+function TRttiTypeHelper.GetPropertyFromAttribute<T>(
+  const aFieldName: string): TRttiProperty;
 var
   RttiProp: TRttiProperty;
 begin
@@ -163,6 +151,7 @@ begin
   begin
     if RttiProp.GetAttribute<T> = nil then
       Continue;
+
     if RttiProp.GetAttribute<Campo>.Name = aFieldName then
       Exit(RttiProp);
   end;
@@ -178,7 +167,7 @@ begin
       Exit(RttiProp);
 end;
 
-function TRttiTypeHelper.IsTabela: Boolean;
+function TRttiTypeHelper.isTabela: Boolean;
 begin
   Result := Tem<Tabela>
 end;
@@ -189,6 +178,7 @@ begin
 end;
 
 { TRttiFieldHelper }
+
 function TRttiFieldHelper.GetAttribute<T>: T;
 var
   oAtributo: TCustomAttribute;
@@ -205,6 +195,7 @@ begin
 end;
 
 { TValueHelper.NumberOnly }
+
 function TValueHelper.AsStringNumberOnly: String;
 var
   sContent: string;
@@ -212,9 +203,11 @@ var
 begin
   Result := '';
   sContent := Trim(AsString);
+
   for nIndex := 1 to Length(sContent) do
-    if CharInSet(sContent[nIndex], ['0' .. '9']) then
+    if CharInSet(sContent[nIndex], ['0'..'9']) then
       Result := Result + sContent[nIndex];
 end;
 
 end.
+

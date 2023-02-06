@@ -128,6 +128,39 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="rtl.dcp"/>
+        <DCCReference Include="vcl.dcp"/>
+        <DCCReference Include="soaprtl.dcp"/>
+        <DCCReference Include="dbrtl.dcp"/>
+        <DCCReference Include="inet.dcp"/>
+        <DCCReference Include="IndySystem.dcp"/>
+        <DCCReference Include="IndyProtocols.dcp"/>
+        <DCCReference Include="IndyCore.dcp"/>
+        <DCCReference Include="FireDAC.dcp"/>
+        <DCCReference Include="FireDACCommonDriver.dcp"/>
+        <DCCReference Include="FireDACCommon.dcp"/>
+        <DCCReference Include="RestDatawareCORE.dcp"/>
+        <DCCReference Include="DbxCommonDriver.dcp"/>
+        <DCCReference Include="bindengine.dcp"/>
+        <DCCReference Include="bindcomp.dcp"/>
+        <DCCReference Include="RESTComponents.dcp"/>
+        <DCCReference Include="dac260.dcp"/>
+        <DCCReference Include="unidac260.dcp"/>
+        <DCCReference Include="SimpleAttributes.pas"/>
+        <DCCReference Include="SimpleDAO.pas"/>
+        <DCCReference Include="SimpleInterface.pas"/>
+        <DCCReference Include="SimpleQueryFiredac.pas"/>
+        <DCCReference Include="SimpleQueryRestDW.pas"/>
+        <DCCReference Include="SimpleRTTI.pas"/>
+        <DCCReference Include="SimpleSQL.pas"/>
+        <DCCReference Include="SimpleDAOSQLAttribute.pas"/>
+        <DCCReference Include="SimpleRTTIHelper.pas"/>
+        <DCCReference Include="SimpleValidator.pas"/>
+        <DCCReference Include="SimpleUtil.pas"/>
+        <DCCReference Include="SimpleEntity.pas"/>
+        <DCCReference Include="SimpleJSONUtil.pas"/>
+        <DCCReference Include="SimpleJSON.pas"/>
+        <DCCReference Include="SimpleQueryUnidac.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
