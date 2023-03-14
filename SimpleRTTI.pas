@@ -620,6 +620,11 @@ begin
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TTime) then
             aDictionary.Add(prpRtti.FieldName, TFieldType.ftTime)
         end;
+        tkVariant:
+          if VarType(prpRtti.GetValue(Pointer(FInstance)).AsVariant) = varinteger then
+            aDictionary.Add(prpRtti.FieldName, TFieldType.ftInteger)
+          else
+            aDictionary.Add(prpRtti.FieldName, TFieldType.ftVariant);
         tkWChar,
         tkLString,
         tkWString,
