@@ -608,6 +608,9 @@ begin
       case prpRtti.PropertyType.TypeKind of
         tkInteger, tkInt64:
           begin
+            if prpRtti.EhChaveEstrangeira then
+              if prpRtti.GetValue(Pointer(FInstance)).AsInteger = 0 then
+                aDictionary.Add(prpRtti.FieldName, TFieldType.ftInteger);
           end;
         tkFloat       :
         begin
