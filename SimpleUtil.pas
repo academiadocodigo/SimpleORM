@@ -6,7 +6,7 @@ uses
   System.Classes, Data.DB, System.Generics.Collections,
   {$IFNDEF CONSOLE}
     {$IFDEF FMX}
-      FMX.Forms, FMX.StdCtrls, FMX.DateTimeCtrls,
+      FMX.Forms, FMX.StdCtrls, FMX.DateTimeCtrls, FMX.Edit, FMX.ListBox,
     {$ELSE}
       Vcl.Forms, Vcl.StdCtrls, Vcl.ComCtrls,
     {$ENDIF}
@@ -171,17 +171,32 @@ class function TSimpleUtil.GetTextFromComponent(aComponent: TComponent): string;
 begin
   if aComponent is TEdit then
   begin
+    {$IFNDEF FMX}
     if (aComponent as TEdit).NumbersOnly and ((aComponent as TEdit).Text = '') then
       Exit('0')
-    else
+    else  {$ENDIF}
       Exit((aComponent as TEdit).Text);
   end;
 
+  {$IFDEF FMX}
+  if aComponent is TComboBox then
+  begin
+    if assigned((aComponent as TComboBox).Selected) then
+      Exit((aComponent as TComboBox).Selected.Text);
+  end;
+
+  if aComponent is  TDateEdit then
+  begin
+     Exit(FloatToStr((aComponent as  TDateEdit).DateTime ));
+  end;
+
+  {$ELSE}
   if aComponent is TComboBox then
     Exit((aComponent as TComboBox).Text);
 
   if aComponent is TDateTimePicker then
     Exit(FloatToStr((aComponent as TDateTimePicker).Date));
+  {$ENDIF}
 end;
 
 class procedure TSimpleUtil.SetFormFromObject(const aForm: TForm;
@@ -194,6 +209,7 @@ var
   prpRtti: TRttiProperty;
   Component: TComponent;
   vFieldName, vFieldNameForm: string;
+  ComboBoxIndex : integer;
 begin
   ctxRttiEntity := TRttiContext.Create;
   typRttiEntity := ctxRttiEntity.GetType(aObject.ClassType);
@@ -218,12 +234,30 @@ begin
       if Component is TEdit then
         (Component as TEdit).Text := prpRtti.GetValue(aObject).ToString;
 
+      {$IFDEF FMX}
+      if Component is TComboBox then
+      begin
+        ComboBoxIndex := (Component as TComboBox).Items.IndexOf(prpRtti.GetValue(aObject).ToString);
+        if ComboBoxIndex  >= 0 then
+          (Component as TComboBox).itemindex := ComboBoxIndex;
+
+      end;
+
+      if Component is  TDateEdit then
+      begin
+        (Component as  TDateEdit).DateTime  := prpRtti.GetValue(aObject).AsType<TDateTime>;
+      end;
+
+
+     {$ELSE}
+
       if Component is TComboBox then
         (Component as TComboBox).Text := prpRtti.GetValue(aObject).ToString;
 
       if Component is TDateTimePicker then
         (Component as TDateTimePicker).Date := prpRtti.GetValue(aObject)
           .AsExtended;
+      {$ENDIF}
     end;
   end;
 end;

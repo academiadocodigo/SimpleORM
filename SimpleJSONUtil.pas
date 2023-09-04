@@ -37,6 +37,13 @@ type
     class function JSONArrayToList<T: class>(poJSONArray: TJSONArray):
       TObjectList<T>; overload;
 
+
+    class procedure JSONArrayStringToList<T: Class>(psJSONArray: String;
+      poList: TObjectList<T>); overload;
+
+    class procedure JSONArrayStringToList<T: class>(poJSONArray: TJSONArray ;
+      poList: TObjectList<T>); overload;
+
     class procedure JSONToDataset(const poDataset: TDataSet; const poJSON: string);
   end;
 
@@ -245,6 +252,49 @@ begin
     Result := oJson.Stringify;
   finally
     FreeAndNil(oJson);
+  end;
+end;
+
+class procedure TSimpleJsonUtil.JSONArrayStringToList<T>(poJSONArray: TJSONArray;
+  poList: TObjectList<T>);
+var
+  i: Integer;
+  rttiContext : TRttiContext;
+  rttiType : TRttiInstanceType;
+  rttiCreate : TRttiMethod;
+  Instance : TValue;
+  obj : T;
+begin
+  rttiContext := TRttiContext.Create;
+  try
+    rttiType := rttiContext.GetType(T).AsInstance;
+    rttiCreate := rttiType.GetMethod('Create');
+
+    poList.Clear;
+    for i := 0 to poJSONArray.Count - 1 do
+    begin
+      Instance :=  rttiCreate.Invoke(rttiType.MetaclassType,[]);
+      JSONStringToObject(poJSONArray.Items[i].ToJSON, Instance.AsObject);
+      obj :=  Instance.AsObject as T;
+      poList.Add(obj);
+    end
+  finally
+    rttiContext.Free;
+  end;
+end;
+
+class procedure TSimpleJsonUtil.JSONArrayStringToList<T>(psJSONArray: String;
+  poList: TObjectList<T>);
+var
+  OJSONArray: TJSONArray;
+begin
+  OJSONArray := TJSONObject.ParseJSONValue(
+                            TEncoding.UTF8.GetBytes(psJSONArray)
+                            ,0) as TJSONArray;
+  try
+    JSONArrayStringToList<T>(OJSONArray,poList);
+  finally
+    FreeAndNil(OJSONArray);
   end;
 end;
 

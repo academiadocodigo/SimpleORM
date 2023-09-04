@@ -198,7 +198,18 @@ function TSimpleRTTI<T>.__BindValueToProperty( aEntity : T; aProperty : TRttiPro
 begin
   case aProperty.PropertyType.TypeKind of
     tkUnknown: ;
-    tkInteger: aProperty.SetValue(Pointer(aEntity), StrToInt(aValue.ToString));
+    tkInteger:
+              begin
+                case aValue.Kind of
+                  tkEnumeration :
+                    begin
+                      if aValue.TypeInfo =  TypeInfo(Boolean) then
+                        aProperty.SetValue(Pointer(aEntity),Integer(aValue.AsBoolean));
+                    end
+                  else
+                    aProperty.SetValue(Pointer(aEntity), StrToInt(aValue.ToString));
+                end;
+              end;
     tkChar: ;
     tkEnumeration: ;
     tkFloat:
@@ -272,7 +283,8 @@ begin
   if aComponent is TCheckBox then
   {$IFDEF VCL}
     Result := TValue.FromVariant((aComponent as TCheckBox).Checked);
-  {$ELSEIF IFDEF FMX}
+  {$ENDIF}
+  {$IFDEF FMX}
       Result := TValue.FromVariant((aComponent as TCheckBox).IsChecked);
   {$ENDIF}
 

@@ -28,7 +28,8 @@ type
 
   TSimpleEntityList<T: TSimpleEntity, constructor> = class(TObjectList<T>)
   public
-    function Parse(const aDataSet: TDataSet): TSimpleEntityList<T>; virtual;
+    function Parse(const aDataSet: TDataSet): TSimpleEntityList<T>; overload; virtual;
+    function Parse(const psJson : string) : TSimpleEntityList<T>; overload; virtual;
     function ToJSON: string;
     function ToJSONRefletion: string;
   end;
@@ -125,6 +126,14 @@ begin
 end;
 
 {$ENDIF}
+
+function TSimpleEntityList<T>.Parse(const psJson: string): TSimpleEntityList<T>;
+var
+  oList : TobjectList<T>;
+begin
+  Result := self;
+  TSimpleJsonUtil.JSONArrayStringToList<T>(psJson, self as TobjectList<T>);
+end;
 
 function TSimpleEntityList<T>.ToJSON: string;
 begin
