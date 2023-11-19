@@ -608,9 +608,6 @@ begin
       case prpRtti.PropertyType.TypeKind of
         tkInteger, tkInt64:
           begin
-            if prpRtti.EhChaveEstrangeira then
-              if prpRtti.GetValue(Pointer(FInstance)).AsInteger = 0 then
-                aDictionary.Add(prpRtti.FieldName, TFieldType.ftInteger);
           end;
         tkFloat       :
         begin
@@ -734,6 +731,12 @@ begin
       if prpRtti.IsAutoInc then
         Continue;
 
+      if prpRtti.IsEnum then
+      begin
+        aParam := aParam + ':' + prpRtti.FieldName + '::' + prpRtti.EnumName + ', ';
+        Continue;
+      end;
+
       aParam  := aParam + ':' + prpRtti.FieldName + ', ';
     end;
   finally
@@ -803,6 +806,12 @@ begin
       if prpRtti.IsAutoInc then
         Continue;
 
+      if prpRtti.IsEnum then
+      begin
+        aUpdate := aUpdate + prpRtti.FieldName + ' = :' + prpRtti.FieldName + '::' + prpRtti.EnumName + ', ';
+        Continue;
+      end;
+
       aUpdate := aUpdate + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ', ';
     end;
   finally
@@ -826,7 +835,10 @@ begin
     for prpRtti in typRtti.GetProperties do
     begin
       if prpRtti.EhChavePrimaria then
-        aWhere := aWhere + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ' AND ';
+        if (prpRtti.IsEnum) then
+          aWhere := aWhere + prpRtti.FieldName + ' = :' + prpRtti.FieldName + '::' + prpRtti.EnumName + ' AND '
+        else
+          aWhere := aWhere + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ' AND ';
     end;
   finally
     aWhere := Copy(aWhere, 0, Length(aWhere) - 4) + ' ';
