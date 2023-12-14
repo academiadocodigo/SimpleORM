@@ -92,7 +92,7 @@ end;
 
 function TSimpleSQL<T>.LastID(var aSQL: String): iSimpleSQL<T>;
 var
-  aClassName, aPK, aFields : String;
+  aClassName, aPK: String;
 begin
   Result := Self;
   TSimpleRTTI<T>.New(FInstance)
@@ -146,7 +146,7 @@ begin
   if Trim(FWhere) <> '' then
     aSQL := aSQL + ' WHERE ' + FWhere;
   if Trim(FGroupBy) <> '' then
-    aSQL := aSQL + ' GROUP BY ' + FGroupBy;  
+    aSQL := aSQL + ' GROUP BY ' + FGroupBy;
   if Trim(FOrderBy) <> '' then
     aSQL := aSQL + ' ORDER BY ' + FOrderBy;
 end;
@@ -188,4 +188,5 @@ begin
   Result := Self;
   FWhere := aSQL;
 end;
+
 end.

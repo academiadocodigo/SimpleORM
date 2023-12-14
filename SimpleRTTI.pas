@@ -223,9 +223,9 @@ begin
     tkClassRef: ;
     tkPointer: ;
     tkProcedure: ;
-    {$IF RTLVERSION > 31.0} 
+    {$IF RTLVERSION > 31.0}
     tkMRecord: ;
-    {$ENDIF} 
+    {$ENDIF}
     else
       aProperty.SetValue(Pointer(aEntity), aValue);
   end;
@@ -404,7 +404,6 @@ function TSimpleRTTI<T>.DataSetToEntity(aDataSet: TDataSet;
   var aEntity: T): iSimpleRTTI<T>;
 var
   Field : TField;
-  teste: string;
   ctxRtti   : TRttiContext;
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
@@ -461,7 +460,6 @@ function TSimpleRTTI<T>.DataSetToEntityList(aDataSet: TDataSet;
   var aList: TObjectList<T>): iSimpleRTTI<T>;
 var
   Field : TField;
-  teste: string;
   ctxRtti   : TRttiContext;
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
@@ -529,7 +527,6 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
-  Aux : String;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
@@ -593,7 +590,6 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
-  Aux : String;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
