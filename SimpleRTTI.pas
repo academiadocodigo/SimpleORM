@@ -247,7 +247,8 @@ begin
   while Pos('.', aValue) > 0 do
     delete(aValue,Pos('.', aValue),1);
 
-  Result := StrToCurr(aValue);
+//  Result := StrToCurr(aValue); (Alteração para campos com várias casas após a vírgula)
+  Result := StrToFloat(aValue);
 end;
 
 {$IFNDEF CONSOLE}
