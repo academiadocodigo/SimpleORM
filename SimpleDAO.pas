@@ -172,15 +172,21 @@ end;
 
 function TSimpleDAO<T>.Find(aId: Integer): T;
 var
-    aSQL: String;
+  aSQL: String;
+  Entity: T;
 begin
-    Result := T.Create;
+  Entity := T.Create;
+  try
+    Result := Entity;
     TSimpleSQL<T>.New(nil).SelectId(aSQL);
     FQuery.SQL.Clear;
     FQuery.SQL.Add(aSQL);
     Self.FillParameter(Result, aId);
     FQuery.Open;
     TSimpleRTTI<T>.New(nil).DataSetToEntity(FQuery.DataSet, Result);
+  finally
+    FreeAndNil(Entity);
+  end;
 end;
 {$IFNDEF CONSOLE}
 
