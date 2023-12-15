@@ -539,7 +539,7 @@ begin
         Continue;
 
       case prpRtti.PropertyType.TypeKind of
-        tkInteger, tkInt64:
+        tkInteger:
           begin
             if prpRtti.EhChaveEstrangeira then
             begin
@@ -551,7 +551,19 @@ begin
             else
               aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
           end;
-        tkFloat       :
+        tkInt64:
+          begin
+            if prpRtti.EhChaveEstrangeira then
+            begin
+              if prpRtti.GetValue(Pointer(FInstance)).AsInt64 = 0 then
+                aDictionary.Add(prpRtti.FieldName, Null)
+              else
+                aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsInt64);
+            end
+            else
+              aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsInt64);
+          end;
+        tkFloat:
         begin
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TDateTime) then
           begin
