@@ -14,6 +14,7 @@ type
     function GetAttribute<T: TCustomAttribute>: T;
     function IsNotNull: Boolean;
     function IsIgnore: Boolean;
+    function IsEnum: Boolean;
     function IsAutoInc: Boolean;
     function EhCampo: Boolean;
     function EhChavePrimaria: Boolean;
@@ -22,6 +23,7 @@ type
     function EhPermitidoNulo: Boolean;
     function DisplayName: string;
     function FieldName: string;
+    function EnumName: string;
   end;
 
   TRttiTypeHelper = class helper for TRttiType
@@ -97,6 +99,11 @@ begin
   Result := Tem<Ignore>
 end;
 
+function TRttiPropertyHelper.IsEnum: Boolean;
+begin
+  Result := Tem<Enumerator>
+end;
+
 function TRttiPropertyHelper.IsAutoInc: Boolean;
 begin
   Result := Tem<AutoInc>
@@ -119,6 +126,12 @@ begin
     Result := GetAttribute<Campo>.Name;
 end;
 
+function TRttiPropertyHelper.EnumName: string;
+begin
+  Result := Name;
+  if IsEnum then
+    Result := GetAttribute<Enumerator>.Tipo;
+end;
 function TRttiPropertyHelper.Tem<T>: Boolean;
 begin
   Result := GetAttribute<T> <> nil

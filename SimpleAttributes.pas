@@ -94,6 +94,14 @@ type
   BelongsToMany = class(Relationship)
   end;
 
+  Enumerator = class(TCustomAttribute)
+  private
+    FTipo: string;
+  public
+    Constructor Create(aTipo: string);
+    property Tipo: string read FTipo;
+  end;
+
 implementation
 
 
@@ -164,6 +172,13 @@ end;
 constructor Relationship.Create(const aEntityName: string);
 begin
   FEntityName := aEntityName;
+end;
+
+{ Enumerator }
+
+constructor Enumerator.Create(aTipo: string);
+begin
+  FTipo := aTipo;
 end;
 
 end.
