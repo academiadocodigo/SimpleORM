@@ -53,14 +53,14 @@ begin
         .Nome(edtNome.Text)
         .Telefone(edtTelefone.Text)
     .Build.Inserir;
-    FController.Endereco
-        .IdCliente(FController.Cliente.Id)
-        .Logradouro(edtLogradouro.Text)
-        .Cep(edtCep.Text)
-        .Bairro(edtBairro.Text)
-        .Cidade(edtCidade.Text)
-        .Estado(edtEstado.Text)
-    .Build.Inserir;
+//    FController.Endereco
+//        .IdCliente(FController.Cliente.Id)
+//        .Logradouro(edtLogradouro.Text)
+//        .Cep(edtCep.Text)
+//        .Bairro(edtBairro.Text)
+//        .Cidade(edtCidade.Text)
+//        .Estado(edtEstado.Text)
+//    .Build.Inserir;
     FillFields;
 end;
 
@@ -93,13 +93,13 @@ begin
     edtid.Text := FController.Cliente.Id.ToString;
     edtNome.Text := FController.Cliente.Nome;
     edtTelefone.Text := FController.Cliente.Telefone;
-    edtLogradouro.Text := FController.Endereco.Logradouro;
-    edtCep.Text := FController.Endereco.Cep;
-    edtBairro.Text := FController.Endereco.Bairro;
-    edtCidade.Text := FController.Endereco.Cidade;
-    edtEstado.Text := FController.Endereco.Estado;
-
-    dsEndereco.DataSet := FController.Endereco.Build.Listar;
+//    edtLogradouro.Text := FController.Endereco.Logradouro;
+//    edtCep.Text := FController.Endereco.Cep;
+//    edtBairro.Text := FController.Endereco.Bairro;
+//    edtCidade.Text := FController.Endereco.Cidade;
+//    edtEstado.Text := FController.Endereco.Estado;
+//
+//    dsEndereco.DataSet := FController.Endereco.Build.Listar;
 end;
 
 procedure TfrmEditar.FormDestroy(Sender: TObject);

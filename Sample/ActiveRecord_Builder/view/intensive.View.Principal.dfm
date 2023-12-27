@@ -26,7 +26,6 @@ object frmListarClientes: TfrmListarClientes
     Padding.Right = 5
     Padding.Bottom = 5
     TabOrder = 0
-    ExplicitHeight = 214
     object grdPessoa: TDBGrid
       Left = 5
       Top = 5
@@ -64,7 +63,6 @@ object frmListarClientes: TfrmListarClientes
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitHeight = 40
     end
   end
   object Panel2: TPanel
@@ -75,7 +73,6 @@ object frmListarClientes: TfrmListarClientes
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 214
     object btnNovo: TButton
       AlignWithMargins = True
       Left = 3

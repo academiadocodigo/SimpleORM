@@ -4,7 +4,7 @@ interface
 
 uses
   intensive.Services.Generic,
-  intensive.Model.Entity.Cliente, intensive.Model.Entity.Endereco;
+  intensive.Model.Entity.Cliente;
 
 type
   iClienteDTO = interface
@@ -14,8 +14,6 @@ type
     function Nome : String; overload;
     function Telefone(Value : String) : iClienteDTO; overload;
     function Telefone : String; overload;
-    function CpfCnpj(Value : String) : iClienteDTO; overload;
-    function CpfCnpj : String; overload;
     function Build : iService<TCliente>;
   end;
 

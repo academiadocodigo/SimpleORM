@@ -41,6 +41,9 @@ begin
 
   for prpRtti in typRttiEntity.GetProperties do
   begin
+    if prpRtti.IsIgnore then
+      Continue;
+
     Value := prpRtti.GetValue(aObject);
     if Value.IsObject then
       Validate(Value.AsObject, aErrors);

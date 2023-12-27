@@ -22,20 +22,17 @@ uses
   FireDAC.Comp.Client,
   intensive.Controller.Interfaces,
   intensive.Model.Entity.Cliente, intensive.Services.Generic,
-  intensive.Controller.DTO.Interfaces, intensive.Controller.DTO.Cliente,
-  intensive.Controller.DTO.Endereco;
+  intensive.Controller.DTO.Interfaces, intensive.Controller.DTO.Cliente;
 
 type
   TController = class(TInterfacedObject, iController)
     private
       FCliente : iClienteDTO;
-      FEndereco : iEnderecoDTO;
     public
       constructor Create;
       destructor Destroy; override;
       class function New : iController;
       function Cliente : iClienteDTO;
-      function Endereco : iEnderecoDTO;
   end;
 
 implementation
@@ -49,13 +46,6 @@ destructor TController.Destroy;
 begin
 
   inherited;
-end;
-
-function TController.Endereco: iEnderecoDTO;
-begin
-  if not Assigned(FEndereco) then
-    FEndereco := TEnderecoDTO.New;
-  Result := FEndereco;
 end;
 
 class function TController.New : iController;

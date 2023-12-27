@@ -12,6 +12,8 @@ uses
   intensive.Controller in 'controller\intensive.Controller.pas',
   intensive.Controller.Interfaces in 'controller\intensive.Controller.Interfaces.pas',
   intensive.Controller.DTO.Interfaces in 'dto\intensive.Controller.DTO.Interfaces.pas';
+//  intensive.Controller.DTO.Endereco in 'dto\intensive.Controller.DTO.Endereco.pas';
+//  intensive.Model.Entity.Endereco in 'model\entity\intensive.Model.Entity.Endereco.pas';
 
 {$R *.res}
 
