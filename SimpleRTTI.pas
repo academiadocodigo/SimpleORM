@@ -634,9 +634,11 @@ var
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
   Aux : String;
+  lStream: TMemoryStream;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
+  lStream := nil;
   ctxRtti := TRttiContext.Create;
   try
     typRtti := ctxRtti.GetType(Info);
@@ -683,7 +685,7 @@ begin
         tkString      : aDictionary.Add(prpRtti.FieldName, TFieldType.ftString);
         tkVariant     : aDictionary.Add(prpRtti.FieldName, TFieldType.ftVariant);
         tkEnumeration : aDictionary.Add(prpRtti.FieldName, TFieldType.ftboolean);
-        tkClass: aDictionary.Add(prpRtti.FieldName, TFieldType.ftStream);
+        tkClass: aDictionary.Add(prpRtti.FieldName, TFieldType.ftBlob);
       else
           aDictionary.Add(prpRtti.FieldName, TFieldType.ftString);
       end;
