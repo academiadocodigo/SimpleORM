@@ -670,6 +670,21 @@ begin
       if prpRtti.IsIgnore then
         Continue;
 
+      if (prpRtti.IsEnum) then
+      begin
+        case prpRtti.PropertyType.TypeKind of
+          tkInteger, tkInt64, tkFloat:
+            if prpRtti.GetValue(Pointer(FInstance)).AsInteger = 0 then
+              Continue;
+          tkWChar,
+          tkLString,
+          tkWString,
+          tkUString,
+          tkString:
+            if prpRtti.GetValue(Pointer(FInstance)).AsString = EmptyStr then
+              Continue;
+        end;
+      end;
       aFields := aFields + prpRtti.FieldName + ', ';
     end;
   finally
@@ -713,10 +728,14 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
+  DictionaryFields: TDictionary<String, Variant>;
+  FieldValue: Variant;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
   ctxRtti := TRttiContext.Create;
+  DictionaryFields := TDictionary<String, Variant>.Create;
+  Self.DictionaryFields(DictionaryFields);
   try
     typRtti := ctxRtti.GetType(Info);
     for prpRtti in typRtti.GetProperties do
@@ -729,6 +748,10 @@ begin
 
       if prpRtti.IsEnum then
       begin
+        DictionaryFields.TryGetValue(prpRtti.FieldName, FieldValue);
+        if FieldValue = EmptyStr then
+          Continue;
+
         aParam := aParam + ':' + prpRtti.FieldName + '::' + prpRtti.EnumName + ', ';
         Continue;
       end;
@@ -738,6 +761,7 @@ begin
   finally
     aParam := Copy(aParam, 0, Length(aParam) - 2) + ' ';
     ctxRtti.Free;
+    DictionaryFields.Free;
   end;
 end;
 
@@ -804,6 +828,19 @@ begin
 
       if prpRtti.IsEnum then
       begin
+        case prpRtti.PropertyType.TypeKind of
+          tkInteger, tkInt64, tkFloat:
+            if prpRtti.GetValue(Pointer(FInstance)).AsInteger = 0 then
+              Continue;
+          tkWChar,
+          tkLString,
+          tkWString,
+          tkUString,
+          tkString:
+            if prpRtti.GetValue(Pointer(FInstance)).AsString = EmptyStr then
+              Continue;
+        end;
+
         aUpdate := aUpdate + prpRtti.FieldName + ' = :' + prpRtti.FieldName + '::' + prpRtti.EnumName + ', ';
         Continue;
       end;
