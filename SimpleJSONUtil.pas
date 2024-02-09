@@ -4,7 +4,8 @@ interface
 
 uses
   Data.DBXJSON, Data.DBXJSONReflect, System.Generics.Collections, System.JSON,
-  REST.JSON, REST.Response.Adapter, Data.DB, System.SysUtils, System.Classes;
+  REST.JSON, REST.Response.Adapter, Data.DB, System.SysUtils, System.Classes,
+  System.TypInfo, System.DateUtils, System.StrUtils, System.NetEncoding;
 
 type
   TJsonFlags = set of (jfFormat);
@@ -37,13 +38,23 @@ type
     class function JSONArrayToList<T: class>(poJSONArray: TJSONArray):
       TObjectList<T>; overload;
 
+
+    class procedure JSONArrayStringToList<T: Class>(psJSONArray: String;
+      poList: TObjectList<T>); overload;
+
+    class procedure JSONArrayStringToList<T: class>(poJSONArray: TJSONArray ;
+      poList: TObjectList<T>); overload;
+
     class procedure JSONToDataset(const poDataset: TDataSet; const poJSON: string);
   end;
+
+  var
+    fmtSimpleJSONUtil : TFormatSettings;
 
 implementation
 
 uses
-  System.Rtti, SimpleJSON, SimpleRTTIHelper;
+  System.Rtti, SimpleJSON, SimpleRTTIHelper, SimpleRTTI;
 
 { TJsonUtil }
 
@@ -161,7 +172,7 @@ begin
       oArrayJson.Add(Self.ObjectToJSONString(poList[i]) + ',');
 
     Result := oArrayJson.Text;
-    Result := '[' + Copy(Result, 1, Length(Result)-3) + ']';
+    Result := '[' + Copy(Result, 1, Length(Result)-2) + ']';
 
     if not (jfFormat in paJsonFlags) then
       Result := StringReplace(Result, sLineBreak, EmptyStr, [rfReplaceAll]);
@@ -191,6 +202,13 @@ var
   oValue: TValue;
   oJson: TSimpleJson;
   sArrayTemp: string;
+  ssString : String;
+  ms : TMemoryStream;
+  ss : TStringStream;
+  function IsBoolean: Boolean;
+  begin
+    Result :=   (oRttiProp.PropertyType.Handle = TypeInfo(Boolean));
+  end;
 begin
   sArrayTemp := '';
   oJson := TSimpleJson.Create;
@@ -200,6 +218,9 @@ begin
     begin
       oValue := oRttiProp.GetValue(poObject);
       if oRttiProp.Name = 'RefCount' then
+        Continue;
+
+      if oRttiProp.IsIgnoreJson then
         Continue;
 
       case oValue.Kind of
@@ -212,6 +233,20 @@ begin
           end;
         tkInteger, tkInt64:
           oJson.Put(oRttiProp.Name, oValue.AsInteger);
+
+        tkEnumeration:
+          if IsBoolean() then
+          begin
+            oJson.Put(oRttiProp.Name, oValue.AsBoolean);
+          end
+          else
+          begin
+//            I := GetEnumValue(oRttiProp.PropertyType.Handle , oJson[oRttiProp.Name].AsString);
+//            bBool  := I >= 0;
+//            if bBool then
+//               oJson.Put(oRttiProp.Name, GetEnumName(oRttiProp.PropertyType.Handle , I));
+          end;
+
         tkFloat:
           begin
             if (oValue.TypeInfo = TypeInfo(Real))
@@ -220,13 +255,13 @@ begin
               oJson.Put(oRttiProp.Name, oValue.AsExtended);
 
             if oValue.TypeInfo = TypeInfo(TDate) then
-              oJson.Put(oRttiProp.Name, FormatDateTime('dd/MM/yyyy', oValue.AsExtended));
+              oJson.Put(oRttiProp.Name, DateToStr( oValue.AsExtended, fmtSimpleJSONUtil));
 
             if oValue.TypeInfo = TypeInfo(TTime) then
-              oJson.Put(oRttiProp.Name, FormatDateTime('tt', oValue.AsExtended));
+              oJson.Put(oRttiProp.Name,TimeToStr(oValue.AsExtended, fmtSimpleJSONUtil));
 
             if oValue.TypeInfo = TypeInfo(TDateTime) then
-              oJson.Put(oRttiProp.Name, FormatDateTime('c', oValue.AsExtended));
+              oJson.Put(oRttiProp.Name,  DateTimeToStr(oValue.AsExtended,fmtSimpleJSONUtil ));
           end;
         tkClass:
           begin
@@ -236,6 +271,26 @@ begin
             begin
               sArrayTemp := ListToJSONArrayString(oValue.AsObject);
               oJson[oRttiProp.Name].AsArray.Parse(sArrayTemp);
+            end
+            else if oValue.AsObject is TStringStream then
+            begin
+              oJson.put(oRttiProp.Name,Trim((oValue.AsObject as TStringStream).DataString));
+            end
+            else if (oValue.AsObject is TMemoryStream) then
+            begin
+              if oRttiProp.IsJSONBase64 = false then
+                continue;
+
+              (oValue.AsObject as TMemoryStream).Position := 0;
+
+
+              ss := TStringStream.Create;
+              try
+                TNetEncoding.Base64.Encode((oValue.AsObject as TMemoryStream), ss);
+                oJson.put(oRttiProp.Name,Trim(ss.DataString));
+              finally
+                FreeAndNil(ss);
+              end;
             end
             else
               oJson[oRttiProp.Name].AsObject.Parse(ObjectToJSONString(oValue.AsObject));
@@ -248,6 +303,49 @@ begin
   end;
 end;
 
+class procedure TSimpleJsonUtil.JSONArrayStringToList<T>(poJSONArray: TJSONArray;
+  poList: TObjectList<T>);
+var
+  i: Integer;
+  rttiContext : TRttiContext;
+  rttiType : TRttiInstanceType;
+  rttiCreate : TRttiMethod;
+  Instance : TValue;
+  obj : T;
+begin
+  rttiContext := TRttiContext.Create;
+  try
+    rttiType := rttiContext.GetType(T).AsInstance;
+    rttiCreate := rttiType.GetMethod('Create');
+
+    poList.Clear;
+    for i := 0 to poJSONArray.Count - 1 do
+    begin
+      Instance :=  rttiCreate.Invoke(rttiType.MetaclassType,[]);
+      JSONStringToObject(poJSONArray.Items[i].ToString, Instance.AsObject);
+      obj :=  Instance.AsObject as T;
+      poList.Add(obj);
+    end
+  finally
+    rttiContext.Free;
+  end;
+end;
+
+class procedure TSimpleJsonUtil.JSONArrayStringToList<T>(psJSONArray: String;
+  poList: TObjectList<T>);
+var
+  OJSONArray: TJSONArray;
+begin
+  OJSONArray := TJSONObject.ParseJSONValue(
+                            TEncoding.UTF8.GetBytes(psJSONArray)
+                            ,0) as TJSONArray;
+  try
+    JSONArrayStringToList<T>(OJSONArray,poList);
+  finally
+    FreeAndNil(OJSONArray);
+  end;
+end;
+
 class procedure TSimpleJsonUtil.JSONStringToObject(const psJSON: string; poObject: TObject);
 var
   oRttiContexto: TRttiContext;
@@ -257,6 +355,13 @@ var
   oJson: TSimpleJson;
   I: Integer;
   sArrayTemp: string;
+  ss : TStringStream;
+
+  bBool :  Boolean;
+  function IsBoolean: Boolean;
+  begin
+    Result :=   (oRttiProp.PropertyType.Handle = TypeInfo(Boolean));
+  end;
 begin
   sArrayTemp := '';
   oJson := TSimpleJson.Create;
@@ -268,10 +373,28 @@ begin
       if oRttiProp.Name = 'RefCount' then
         Continue;
 
+      if oRttiProp.IsIgnoreJson then
+        Continue;
+
       oValue := oRttiProp.GetValue(poObject);
       case oValue.Kind of
         tkUString:
           oValue := oJson[oRttiProp.Name].AsString;
+
+
+        tkEnumeration:
+          if IsBoolean() then
+          begin
+            oValue :=  StrTobool(oJson[oRttiProp.Name].AsString);
+          end
+          else
+          begin
+            I := GetEnumValue(oRttiProp.PropertyType.Handle , oJson[oRttiProp.Name].AsString);
+            bBool  := I >= 0;
+            if bBool then
+              oValue := GetEnumName(oRttiProp.PropertyType.Handle , I);
+          end;
+
         tkInteger:
           oValue := oJson[oRttiProp.Name].AsInteger;
         tkFloat:
@@ -279,24 +402,47 @@ begin
             if (oValue.TypeInfo = TypeInfo(Real)) or (oValue.TypeInfo = TypeInfo(Double)) then
               oValue := oJson[oRttiProp.Name].AsNumber;
 
+
             if oValue.TypeInfo = TypeInfo(TDate) then
-              oValue := StrToDateDef(oJson[oRttiProp.Name].AsString, 0);
+                oValue := StrToDateDef(oJson[oRttiProp.Name].AsString, 0, fmtSimpleJSONUtil);
 
             if oValue.TypeInfo = TypeInfo(TTime) then
-              oValue := StrToTimeDef(oJson[oRttiProp.Name].AsString, 0);
+              oValue := StrToTimeDef(oJson[oRttiProp.Name].AsString, 0, fmtSimpleJSONUtil);
+
 
             if oValue.TypeInfo = TypeInfo(TDateTime) then
-              oValue := StrToDateTimeDef(oJson[oRttiProp.Name].AsString, 0);
+              oValue := StrToDateTimeDef(oJson[oRttiProp.Name].AsString, 0, fmtSimpleJSONUtil);
+
+
           end;
         tkClass:
           begin
-            if not oValue.AsObject.ClassNameIs('TStringList') then
-              Continue;
+            case ansiIndexSTR(oValue.AsObject.ClassName,['TStringList','TMemoryStream','TStringStream']) OF
+              0 :
+                begin
+                  for I := 0 to oJson[oRttiProp.Name].AsArray.Count - 1 do
+                  begin
+                    (oValue.AsObject as TStringList).Add(oJson[oRttiProp.Name].AsArray
+                      [I].Stringify);
+                  end;
+                end;
+              1 :
+                begin
+                  ss := TStringStream.Create(oJson[oRttiProp.Name].AsString);
+                  try
+                    if oRttiProp.IsJSONBase64 = false then
+                      continue;
 
-            for I := 0 to oJson[oRttiProp.Name].AsArray.Count - 1 do
-            begin
-              (oValue.AsObject as TStringList).Add(oJson[oRttiProp.Name].AsArray
-                [I].Stringify);
+                    ss.Position := 0;
+                    TNetEncoding.Base64.decode(SS, (oValue.AsObject as TMemoryStream));
+                  finally
+                    ss.Free;
+                  end;
+                end;
+              2 :
+                begin
+                  (oValue.AsObject as TStringStream).WriteString(oJson[oRttiProp.Name].AsString);
+                end;
             end;
 
             Continue;

@@ -15,11 +15,13 @@ Type
         FWhere: String;
         FOrderBy: String;
         FGroupBy: String;
+        FLimit : String;
         FJoin: String;
     public
         constructor Create(Parent: iSimpleDAO<T>);
         destructor Destroy; override;
         class function New(Parent: iSimpleDAO<T>): iSimpleDAOSQLAttribute<T>;
+        function Limit(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
         function Fields(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
         function Where(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
         function OrderBy(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
@@ -31,6 +33,7 @@ Type
         function Where: String; overload;
         function OrderBy: String; overload;
         function GroupBy: String; overload;
+        function Limit : String; overload;
         function &End: iSimpleDAO<T>;
     end;
 
@@ -60,6 +63,19 @@ begin
     Result := FJoin;
 end;
 
+function TSimpleDAOSQLAttribute<T>.Limit: String;
+begin
+  Result := FLimit;
+end;
+
+function TSimpleDAOSQLAttribute<T>.Limit(
+  aSQL: String): iSimpleDAOSQLAttribute<T>;
+begin
+  Result := Self;
+    if Trim(aSQL) <> '' then
+      FLimit := FLimit + ' ' + aSQL;
+end;
+
 function TSimpleDAOSQLAttribute<T>.Join(aSQL: String)
   : iSimpleDAOSQLAttribute<T>;
 begin
@@ -84,6 +100,7 @@ begin
     FOrderBy := '';
     FGroupBy := '';
     FJoin := '';
+    FLimit := '';
 end;
 
 constructor TSimpleDAOSQLAttribute<T>.Create(Parent: iSimpleDAO<T>);
