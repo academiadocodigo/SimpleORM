@@ -34,6 +34,15 @@ type
   Ignore = class(TCustomAttribute)
   end;
 
+  IgnoreUpdate = class(TCustomAttribute)
+  end;
+
+  IgnoreJSON = class(TCustomAttribute)
+  end;
+
+  JSONBase64 = class(TCustomAttribute)
+  end;
+
   AutoInc = class(TCustomAttribute)
   end;
 

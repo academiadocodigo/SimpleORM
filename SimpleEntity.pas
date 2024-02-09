@@ -108,15 +108,6 @@ begin
   end;
 end;
 
-{ TSimpleEntityList<T> }
-
-function TSimpleEntityList<T>.Parse(const aDataSet: TDataSet): TSimpleEntityList<T>;
-begin
-  Result := Self;
-  Self.Clear;
-  TSimpleUtil.DataSetToObjectList<T>(aDataSet, Self);
-end;
-
 {$IFNDEF CONSOLE}
 
 function TSimpleEntity.Parse(const aForm: TForm): TSimpleEntity;
@@ -126,6 +117,16 @@ begin
 end;
 
 {$ENDIF}
+
+{ TSimpleEntityList<T> }
+
+function TSimpleEntityList<T>.Parse(const aDataSet: TDataSet): TSimpleEntityList<T>;
+begin
+  Result := Self;
+  Self.Clear;
+  TSimpleUtil.DataSetToObjectList<T>(aDataSet, Self);
+end;
+
 
 function TSimpleEntityList<T>.Parse(const psJson: string): TSimpleEntityList<T>;
 var

@@ -11,6 +11,7 @@ Type
       FOrderBy : String;
       FGroupBy : String;
       FJoin : String;
+      FLimit : String;
     public
       constructor Create(aInstance : T);
       destructor Destroy; override;
@@ -24,6 +25,7 @@ Type
       function Where (aSQL : String) : iSimpleSQL<T>;
       function OrderBy (aSQL : String) : iSimpleSQL<T>;
       function GroupBy (aSQL : String) : iSimpleSQL<T>;
+      function Limit (aSQl : STring) : iSimpleSQL<T>;
       function Join (aSQL : String) : iSimpleSQL<T>;
       function LastID (var aSQL : String) : iSimpleSQL<T>;
       function LastRecord (var aSQL : String) : iSimpleSQL<T>;
@@ -92,7 +94,7 @@ end;
 
 function TSimpleSQL<T>.LastID(var aSQL: String): iSimpleSQL<T>;
 var
-  aClassName, aPK: String;
+  aClassName, aPK, aFields : String;
 begin
   Result := Self;
   TSimpleRTTI<T>.New(FInstance)
@@ -115,6 +117,12 @@ begin
   aSQL := aSQL + 'select first(1) '+aFields;
   aSQL := aSQL + ' from '+ aClassName;
   aSQL := aSQL + ' order by ' + aPK + ' desc';
+end;
+
+function TSimpleSQL<T>.Limit(aSQl: STring): iSimpleSQL<T>;
+begin
+  Result := Self;
+  FLimit  := aSQl;
 end;
 
 class function TSimpleSQL<T>.New(aInstance : T): iSimpleSQL<T>;
@@ -149,6 +157,10 @@ begin
     aSQL := aSQL + ' GROUP BY ' + FGroupBy;
   if Trim(FOrderBy) <> '' then
     aSQL := aSQL + ' ORDER BY ' + FOrderBy;
+
+  if Trim(FLimit) <> '' then
+    aSQL := aSQL +  FLimit ;  //set limit no final sem limit pois rows
+
 end;
 
 function TSimpleSQL<T>.SelectId(var aSQL: String): iSimpleSQL<T>;

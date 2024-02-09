@@ -31,6 +31,7 @@ type
     function LastID : iSimpleDAO<T>;
     function LastRecord : iSimpleDAO<T>;
     function Delete(aField : String; aValue : String) : iSimpleDAO<T>; overload;
+    function Delete(aFields: TArray<TPair<string,Variant>>): iSimpleDAO<T> overload;
     function DataSource( aDataSource : TDataSource) : iSimpleDAO<T>;
     function Find(aBindList : Boolean = True) : iSimpleDAO<T>; overload;
     function Find(var aList : TObjectList<T>) : iSimpleDAO<T> ; overload;
@@ -48,12 +49,14 @@ type
     function Where (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
     function OrderBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
     function GroupBy (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
+    function Limit (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
     function Join (aSQL : String) : iSimpleDAOSQLAttribute<T>; overload;
     function Join : String; overload;
     function Fields : String; overload;
     function Where : String; overload;
     function OrderBy : String; overload;
     function GroupBy : String; overload;
+    function Limit : String; overload;
     function Clear : iSimpleDAOSQLAttribute<T>;
     function &End : iSimpleDAO<T>;
   end;
@@ -90,6 +93,7 @@ type
     function Where (aSQL : String) : iSimpleSQL<T>;
     function OrderBy (aSQL : String) : iSimpleSQL<T>;
     function GroupBy (aSQL : String) : iSimpleSQL<T>;
+    function Limit (aSQL : String) : iSimpleSQL<T>;
     function Join (aSQL : String) : iSimpleSQL<T>;
     function LastID (var aSQL : String) : iSimpleSQL<T>;
     function LastRecord (var aSQL : String) : iSimpleSQL<T>;

@@ -11,6 +11,7 @@ uses
       Vcl.Forms, Vcl.StdCtrls, Vcl.ComCtrls,
     {$ENDIF}
   {$ENDIF}
+  Variants,
   SimpleEntity;
 
 type
@@ -25,6 +26,11 @@ type
     class procedure DataSetToObjectList<T: TSimpleEntity, constructor>(const poDataSet:
       TDataSet; const poLista: TSimpleEntityList<T>); overload;
     class procedure GetValuesFromDataset(const poDataset: TDataSet; const poClasse: TObject);
+
+    class function StreamToVariant(const AStream: TStream) : Variant;   overload ;
+    class procedure StreamToVariant(const AStream: TStream; var AVariant: Variant); overload;
+
+    class procedure VariantToStream(const AVariant: Variant; AStream: TStream);
     {$IFNDEF CONSOLE}
     class procedure GetObjectFromForm(const aForm: TForm; const aObject: TObject);
     class procedure SetFormFromObject(const aForm: TForm; const aObject: TObject);
@@ -80,6 +86,7 @@ var
   oPropriedade: TRttiProperty;
   Value: TValue;
 
+  s : String;
   function Campo: TField;
   begin
     Result := poDataset.FindField(oPropriedade.FieldName);
@@ -262,7 +269,71 @@ begin
   end;
 end;
 
+
 {$ENDIF}
+
+class function TSimpleUtil.StreamToVariant(const AStream: TStream): Variant;
+var
+  AVariant: Variant;
+begin
+  StreamToVariant(AStream,AVariant );
+  result := AVariant;
+end;
+
+class procedure TSimpleUtil.StreamToVariant(const AStream: TStream;
+  var AVariant: Variant);
+var
+  StreamSize: Integer;
+  Buffer: Pointer;
+begin
+  if not Assigned(AStream) then
+    raise Exception.Create('Stream is not assigned.');
+
+  StreamSize := AStream.Size;
+
+  if StreamSize = 0 then
+    raise Exception.Create('Stream is empty.');
+
+  GetMem(Buffer, StreamSize);
+
+  try
+    AStream.Position := 0;
+    AStream.Read(Buffer^, StreamSize);
+
+    AVariant := VarArrayCreate([0, StreamSize - 1], varByte);
+    Move(Buffer^, VarArrayLock(AVariant)^, StreamSize);
+    VarArrayUnlock(AVariant);
+  finally
+    FreeMem(Buffer);
+  end;
+
+end;
+
+
+class procedure TSimpleUtil.VariantToStream(const AVariant: Variant;
+  AStream: TStream);
+var
+  VariantData: PByte;
+  VariantSize: Integer;
+begin
+  if VarIsNull(AVariant) or VarIsEmpty(AVariant) then
+    raise Exception.Create('Variant is empty.');
+
+
+  if not Assigned(AStream) then
+    raise Exception.Create('Stream is not assigned.');
+
+
+  VariantData := VarArrayLock(AVariant);
+  try
+
+    VariantSize := VarArrayHighBound(AVariant, 1) - VarArrayLowBound(AVariant, 1) + 1;
+    AStream.position := 0;
+    AStream.WriteBuffer(VariantData^, VariantSize);
+  finally
+    VarArrayUnlock(AVariant);
+  end;
+end;
 
 end.
 

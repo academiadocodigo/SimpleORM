@@ -15,6 +15,9 @@ type
     function IsNotNull: Boolean;
     function IsIgnore: Boolean;
     function IsEnum: Boolean;
+    function IsIgnoreUpdate : Boolean;
+    function IsIgnoreJson : Boolean;
+    function IsJSONBase64 : Boolean;
     function IsAutoInc: Boolean;
     function EhCampo: Boolean;
     function EhChavePrimaria: Boolean;
@@ -102,6 +105,21 @@ end;
 function TRttiPropertyHelper.IsEnum: Boolean;
 begin
   Result := Tem<Enumerator>
+end;
+
+function TRttiPropertyHelper.IsIgnoreJson: Boolean;
+begin
+  Result := Tem<IgnoreJSON>;
+end;
+
+function TRttiPropertyHelper.IsIgnoreUpdate: Boolean;
+begin
+  Result := Tem<IgnoreUpdate>
+end;
+
+function TRttiPropertyHelper.IsJSONBase64: Boolean;
+begin
+  Result := Tem<JSONBase64>
 end;
 
 function TRttiPropertyHelper.IsAutoInc: Boolean;

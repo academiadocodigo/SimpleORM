@@ -40,8 +40,8 @@ Type
         function Insert(aValue: T): iSimpleDAO<T>; overload;
         function Update(aValue: T): iSimpleDAO<T>; overload;
         function Delete(aValue: T): iSimpleDAO<T>; overload;
-        function Delete(aField: String; aValue: String): iSimpleDAO<T>;
-          overload;
+        function Delete(aField: String; aValue: String): iSimpleDAO<T>; overload;
+        function Delete(aFields: TArray<TPair<string,Variant>>): iSimpleDAO<T>; overload;
         function LastID: iSimpleDAO<T>;
         function LastRecord: iSimpleDAO<T>;
 {$IFNDEF CONSOLE}
@@ -67,6 +67,7 @@ uses
     System.TypInfo,
     SimpleRTTI,
     SimpleSQL,
+    SimpleUTil,
     Variants;
 { TGenericDAO }
 {$IFNDEF CONSOLE}
@@ -125,7 +126,51 @@ begin
         FreeAndNil(Entity);
     end;
 end;
+
 {$ENDIF}
+
+
+function TSimpleDAO<T>.Delete(aFields: TArray<TPair<string,Variant>>): iSimpleDAO<T>;
+var
+    aSQL: String;
+    Entity: T;
+    aTableName: string;
+    i : integer;
+    sValue : String;
+begin
+    Result := Self;
+    Entity := T.Create;
+    try
+        TSimpleSQL<T>.New(Entity).Delete(aSQL);
+        TSimpleRTTI<T>.New(Entity).TableName(aTableName);
+        aSQL := 'DELETE FROM ' + aTableName+ ' WHERE ';
+        for I := 0 to pred(length(aFields)) do
+        begin
+          if I > 0 then
+            aSQL := aSQL + ' AND ';
+          case  VarType(aFields[i].Value) of
+             varEmpty :;
+             varNull  : sValue := 'NULL';
+             varSmallint,
+             varInteger ,
+             varSingle  : sValue := IntToStr(aFields[i].Value);
+             varDouble ,
+             varCurrency : sValue := FloatToStr(aFields[i].Value);
+             else  sValue := QuotedSTr(VarAsType(aFields[i].Value,varString));
+          end;
+          aSQL := aSQL + aFields[i].Key +' = '+ sValue;
+        end;
+
+        FQuery.SQL.Clear;
+        FQuery.SQL.Add(aSQL);
+        FQuery.ExecSQL;
+    finally
+        FreeAndNil(Entity);
+    end;
+end;
+
+
+
 
 function TSimpleDAO<T>.Delete(aField, aValue: String): iSimpleDAO<T>;
 var
@@ -161,7 +206,9 @@ begin
     Result := Self;
     TSimpleSQL<T>.New(nil).Fields(FSQLAttribute.Fields).Join(FSQLAttribute.Join)
       .Where(FSQLAttribute.Where).GroupBy(FSQLAttribute.GroupBy)
-      .OrderBy(FSQLAttribute.OrderBy).Select(aSQL);
+      .OrderBy(FSQLAttribute.OrderBy)
+      .Limit(FSQLAttribute.Limit)
+      .Select(aSQL);
     FQuery.DataSet.DisableControls;
     FQuery.Open(aSQL);
     if aBindList then
@@ -230,7 +277,8 @@ begin
     Result := Self;
     TSimpleSQL<T>.New(nil).Fields(FSQLAttribute.Fields).Join(FSQLAttribute.Join)
       .Where(FSQLAttribute.Where).GroupBy(FSQLAttribute.GroupBy)
-      .OrderBy(FSQLAttribute.OrderBy).Select(aSQL);
+      .OrderBy(FSQLAttribute.OrderBy).Limit(FSQLAttribute.Limit)
+      .Select(aSQL);
     FQuery.Open(aSQL);
     TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, aList);
     FSQLAttribute.Clear;
@@ -294,6 +342,8 @@ end;
 function TSimpleDAO<T>.Update(aValue: T): iSimpleDAO<T>;
 var
     aSQL: String;
+    aPK: String;
+    aPkValue: Integer;
 begin
     Result := Self;
     TSimpleSQL<T>.New(aValue).Update(aSQL);
@@ -308,7 +358,11 @@ var
     Key: String;
     DictionaryFields: TDictionary<String, Variant>;
     DictionaryTypeFields: TDictionary<String, TFieldType>;
+    P: TParams;
     FieldType: TFieldType;
+    oS : TMemoryStream;
+    ss : TStringStream;
+    s : string;
 begin
     DictionaryFields := TDictionary<String, Variant>.Create;
     DictionaryTypeFields := TDictionary<String, TFieldType>.Create;
@@ -321,7 +375,36 @@ begin
             begin
                 if DictionaryTypeFields.TryGetValue(Key, FieldType ) then
                   FQuery.Params.ParamByName(Key).DataType := FieldType;
-                FQuery.Params.ParamByName(Key).Value := DictionaryFields.Items[Key];
+
+                if varisNull(DictionaryFields.Items[Key]) then
+                begin
+                  FQuery.Params.ParamByName(Key).Clear;
+                  continue;
+                end;
+
+                case FQuery.Params.ParamByName(Key).DataType of
+
+                  TFieldType.ftDate : FQuery.Params.ParamByName(Key).AsDate :=  DictionaryFields.Items[Key];
+                  TFieldType.fttime : FQuery.Params.ParamByName(Key).AsTime :=  DictionaryFields.Items[Key];
+                  TFieldType.ftDateTime : FQuery.Params.ParamByName(Key).AsDateTime :=  DictionaryFields.Items[Key];
+                  TFieldType.ftBlob:
+                    begin
+                      os := TMemoryStream.Create;
+                      try
+                        Tsimpleutil.VariantToStream(DictionaryFields.Items[Key],oS);
+                        FQuery.Params.ParamByName(Key).LoadFromStream(oS,ftBlob);
+                      finally
+                        FreeAndnil(oS)
+                      end;
+                    end;
+
+                  TFieldType.ftMemo :
+                    begin
+                      FQuery.Params.ParamByName(Key).AsWideString  := DictionaryFields.Items[Key];
+                    end;
+                  else
+                    FQuery.Params.ParamByName(Key).Value := DictionaryFields.Items[Key];
+                end;
             end;
         end;
     finally

@@ -96,7 +96,7 @@ uses
     {$ENDIF}
   {$ENDIF}
   System.Classes,
-  System.SysUtils;
+  System.SysUtils, System.StrUtils;
 
 Type
   ESimpleRTTI = Exception;
@@ -143,6 +143,7 @@ uses
   SimpleAttributes,
   Variants,
   SimpleRTTIHelper,
+  SimpleUtil,
   System.UITypes;
 
 { TSimpleRTTI }
@@ -442,10 +443,34 @@ begin
                 tkInteger, tkInt64:
                   Value := Field.AsInteger;
                 tkChar: ;
-                tkEnumeration: ;
+                tkEnumeration:
+                  if (prpRtti.PropertyType.Handle = TypeInfo(Boolean)) then
+                    Value := Field.AsBoolean;
                 tkFloat: Value := Field.AsFloat;
                 tkSet: ;
-                tkClass: ;
+                tkClass:
+                  begin
+                    case  AnsiIndexStr(GetTypeData(prpRtti
+                            .GetValue(Pointer(aEntity))
+                            .TypeInfo)^
+                              .ClassType
+                              .ClassName,['TMemoryStream','TStringStream']) of
+                      0 :
+                        begin
+                          Value :=  prpRtti.GetValue(Pointer(aEntity)) ;
+                          (Field As TBlobField).SaveToStream((Value.AsObject as TMemoryStream));
+                        end;
+                      1 :
+                        begin
+                          Value :=  prpRtti.GetValue(Pointer(aEntity)) ;
+                          (Value.AsObject as TStringStream).Clear;
+                          case  Field.DataType of
+                            ftWideMemo :    (Value.AsObject as TStringStream).WriteString( (Field as TWideMemoField).Value ) ;
+                            else  (Value.AsObject as TStringStream).WriteString( Field.AsString);
+                          end;
+                        end;
+                    end;
+                  end;
                 tkMethod: ;
                 tkVariant: ;
                 tkArray: ;
@@ -500,11 +525,35 @@ begin
               tkInteger, tkInt64:
                 Value := Field.AsInteger;
               tkChar: ;
-              tkEnumeration: ;
+              tkEnumeration:
+                if (prpRtti.PropertyType.Handle = TypeInfo(Boolean)) then
+                  Value := Field.AsBoolean;
               tkFloat:
                 Value := Field.AsFloat;
               tkSet: ;
-              tkClass: ;
+              tkClass:
+                  begin
+                    case  AnsiIndexStr(GetTypeData(prpRtti
+                            .GetValue(Pointer(aList[Pred(aList.Count)]))
+                            .TypeInfo)^
+                              .ClassType
+                              .ClassName,['TMemoryStream','TStringStream']) of
+                      0 :
+                        begin
+                          Value :=  prpRtti.GetValue(Pointer(aList[Pred(aList.Count)])) ;
+                          (Field As TBlobField).SaveToStream((Value.AsObject as TMemoryStream));
+                        end;
+                      1 :
+                        begin
+                          Value := prpRtti.GetValue(Pointer(aList[Pred(aList.Count)])) ;
+                          TStringStream(Value.AsObject).Clear;
+                          case  Field.DataType of
+                            ftWideMemo :    (Value.AsObject as TStringStream).WriteString( (Field as TWideMemoField).Value ) ;
+                            else  (Value.AsObject as TStringStream).WriteString( Field.AsString);
+                          end;
+                        end;
+                    end;
+                  end;
               tkMethod: ;
               tkVariant: ;
               tkArray: ;
@@ -539,6 +588,7 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
+  Aux : String;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
@@ -581,11 +631,39 @@ begin
           else
             aDictionary.Add(prpRtti.FieldName, __FloatFormat(prpRtti.GetValue(Pointer(FInstance)).ToString));
         end;
+
+        tkClass :
+        begin
+          case  AnsiIndexStr(GetTypeData(prpRtti
+                            .GetValue(Pointer(FInstance))
+                            .TypeInfo)^
+                              .ClassType
+                              .ClassName,[ 'TMemoryStream','TStringStream']) of
+
+             0 : aDictionary.Add(prpRtti.FieldName, Tsimpleutil.StreamTovariant(prpRtti.GetValue(Pointer(FInstance)).AsObject as TStream));
+             1 : aDictionary.Add(prpRtti.FieldName,(prpRtti.GetValue(Pointer(FInstance)).AsObject as TStringStream ).DataString);
+          end;
+        end;
+        tkEnumeration :
+          if (prpRtti.PropertyType.Handle = TypeInfo(Boolean)) then
+            aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsBoolean)
+          else
+            aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsInteger);
         tkWChar,
         tkLString,
         tkWString,
         tkUString,
-        tkString      : aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsString);
+        tkString      :
+          begin
+            if prpRtti.EhChaveEstrangeira then
+            begin
+              if prpRtti.GetValue(Pointer(FInstance)).AsString = string.Empty then
+                aDictionary.Add(prpRtti.FieldName, Null)
+              else
+                aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsString);
+            end
+            else aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsString);
+          end;
         tkVariant     : aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsVariant);
       else
           aDictionary.Add(prpRtti.FieldName, prpRtti.GetValue(Pointer(FInstance)).AsString);
@@ -602,6 +680,7 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
+  Aux : String;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
@@ -616,6 +695,9 @@ begin
       case prpRtti.PropertyType.TypeKind of
         tkInteger, tkInt64:
           begin
+            if prpRtti.EhChaveEstrangeira then
+              if prpRtti.GetValue(Pointer(FInstance)).AsInteger = 0 then
+                aDictionary.Add(prpRtti.FieldName, TFieldType.ftInteger);
           end;
         tkFloat       :
         begin
@@ -628,6 +710,21 @@ begin
           if prpRtti.GetValue(Pointer(FInstance)).TypeInfo = TypeInfo(TTime) then
             aDictionary.Add(prpRtti.FieldName, TFieldType.ftTime)
         end;
+        tkClass   :
+        begin
+          case  AnsiIndexStr(GetTypeData(prpRtti
+                            .GetValue(Pointer(FInstance))
+                            .TypeInfo)^
+                              .ClassType
+                              .ClassName,['TMemoryStream','TStringStream']) of
+
+             0 : aDictionary.Add(prpRtti.Name, TFieldType.ftBlob );
+             1 : aDictionary.Add(prpRtti.Name, TFieldType.ftMemo);
+          end;
+        end;
+        tkEnumeration :
+          if (prpRtti.PropertyType.Handle = TypeInfo(Boolean)) then
+            aDictionary.Add(prpRtti.Name, TFieldType.ftBoolean);
         tkWChar,
         tkLString,
         tkWString,
@@ -765,11 +862,11 @@ begin
   ctxRtti := TRttiContext.Create;
   try
     typRtti := ctxRtti.GetType(Info);
-
+    APK := '';
     for prpRtti in typRtti.GetProperties do
     begin
       if prpRtti.EhChavePrimaria then
-        aPK := prpRtti.FieldName;
+        aPK := aPk + IFTHEN(aPk <> '', ',','') + prpRtti.FieldName;
     end;
   finally
     ctxRtti.Free;
@@ -811,7 +908,10 @@ begin
       if prpRtti.IsIgnore then
         Continue;
 
-      if prpRtti.IsAutoInc then
+      if prpRtti.IsIgnoreUpdate then
+        Continue;
+
+	    if prpRtti.IsAutoInc then
         Continue;
 
       if prpRtti.IsEnum then
