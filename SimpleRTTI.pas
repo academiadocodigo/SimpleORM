@@ -234,9 +234,9 @@ begin
     tkClassRef: ;
     tkPointer: ;
     tkProcedure: ;
-    {$IF RTLVERSION > 31.0} 
+    {$IF RTLVERSION > 31.0}
     tkMRecord: ;
-    {$ENDIF} 
+    {$ENDIF}
     else
       aProperty.SetValue(Pointer(aEntity), aValue);
   end;
@@ -416,7 +416,6 @@ function TSimpleRTTI<T>.DataSetToEntity(aDataSet: TDataSet;
   var aEntity: T): iSimpleRTTI<T>;
 var
   Field : TField;
-  teste: string;
   ctxRtti   : TRttiContext;
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
@@ -473,7 +472,6 @@ function TSimpleRTTI<T>.DataSetToEntityList(aDataSet: TDataSet;
   var aList: TObjectList<T>): iSimpleRTTI<T>;
 var
   Field : TField;
-  teste: string;
   ctxRtti   : TRttiContext;
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
@@ -541,7 +539,6 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
-  Aux : String;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
@@ -605,7 +602,6 @@ var
   typRtti   : TRttiType;
   prpRtti   : TRttiProperty;
   Info     : PTypeInfo;
-  Aux : String;
 begin
   Result := Self;
   Info := System.TypeInfo(T);
@@ -743,6 +739,12 @@ begin
       if prpRtti.IsAutoInc then
         Continue;
 
+      if prpRtti.IsEnum then
+      begin
+        aParam := aParam + ':' + prpRtti.FieldName + '::' + prpRtti.EnumName + ', ';
+        Continue;
+      end;
+
       aParam  := aParam + ':' + prpRtti.FieldName + ', ';
     end;
   finally
@@ -812,6 +814,12 @@ begin
       if prpRtti.IsAutoInc then
         Continue;
 
+      if prpRtti.IsEnum then
+      begin
+        aUpdate := aUpdate + prpRtti.FieldName + ' = :' + prpRtti.FieldName + '::' + prpRtti.EnumName + ', ';
+        Continue;
+      end;
+
       aUpdate := aUpdate + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ', ';
     end;
   finally
@@ -835,7 +843,10 @@ begin
     for prpRtti in typRtti.GetProperties do
     begin
       if prpRtti.EhChavePrimaria then
-        aWhere := aWhere + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ' AND ';
+        if (prpRtti.IsEnum) then
+          aWhere := aWhere + prpRtti.FieldName + ' = :' + prpRtti.FieldName + '::' + prpRtti.EnumName + ' AND '
+        else
+          aWhere := aWhere + prpRtti.FieldName + ' = :' + prpRtti.FieldName + ' AND ';
     end;
   finally
     aWhere := Copy(aWhere, 0, Length(aWhere) - 4) + ' ';

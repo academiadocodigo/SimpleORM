@@ -294,8 +294,6 @@ end;
 function TSimpleDAO<T>.Update(aValue: T): iSimpleDAO<T>;
 var
     aSQL: String;
-    aPK: String;
-    aPkValue: Integer;
 begin
     Result := Self;
     TSimpleSQL<T>.New(aValue).Update(aSQL);
@@ -310,7 +308,6 @@ var
     Key: String;
     DictionaryFields: TDictionary<String, Variant>;
     DictionaryTypeFields: TDictionary<String, TFieldType>;
-    P: TParams;
     FieldType: TFieldType;
 begin
     DictionaryFields := TDictionary<String, Variant>.Create;

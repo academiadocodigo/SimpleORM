@@ -1,3 +1,4 @@
+![Logo da Minha Empresa](./public/logo.png)
 # SimpleORM
 ORM Simples para Aplicações Delphi
 
