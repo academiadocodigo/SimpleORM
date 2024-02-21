@@ -98,9 +98,9 @@ begin
   TSimpleRTTI<T>.New(FInstance)
     .TableName(aClassName)
     .PrimaryKey(aPK);
-  aSQL := aSQL + 'select first(1) ' + aPK;
+  aSQL := aSQL + 'select ' + aPK;
   aSQL := aSQL + ' from '+ aClassName;
-  aSQL := aSQL + ' order by ' + aPK + ' desc';
+  aSQL := aSQL + ' order by ' + aPK + ' desc limit 1';
 end;
 
 function TSimpleSQL<T>.LastRecord(var aSQL: String): iSimpleSQL<T>;
@@ -112,9 +112,9 @@ begin
     .TableName(aClassName)
     .Fields(aFields)
     .PrimaryKey(aPK);
-  aSQL := aSQL + 'select first(1) '+aFields;
+  aSQL := aSQL + 'select '+aFields;
   aSQL := aSQL + ' from '+ aClassName;
-  aSQL := aSQL + ' order by ' + aPK + ' desc';
+  aSQL := aSQL + ' order by ' + aPK + ' desc limit 1';
 end;
 
 class function TSimpleSQL<T>.New(aInstance : T): iSimpleSQL<T>;
