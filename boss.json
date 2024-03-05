@@ -1,9 +1,11 @@
 {
 	"name": "SimpleORM",
 	"description": "",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"homepage": "",
-	"mainsrc": "./",
+	"mainsrc": "./src",
 	"projects": [],
-	"dependencies": {}
+	"dependencies": {
+		"https://github.com/ezequieljuliano/datasetconverter4delphi": ">0.0.0"
+	}
 }

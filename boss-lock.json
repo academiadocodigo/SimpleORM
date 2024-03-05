@@ -1,0 +1,14 @@
+{
+	"hash": "7f77f1b3d48288239873057dc1e13563",
+	"updated": "2024-03-05T14:39:45.926932-03:00",
+	"installedModules": {
+		"https://github.com/ezequieljuliano/datasetconverter4delphi": {
+			"name": "datasetconverter4delphi",
+			"version": "master",
+			"hash": "367be1240c2b49c727db83c85d6482c9",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		}
+	}
+}
