@@ -1,0 +1,87 @@
+package SimpleORM_Package;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+{$I ../src/SimpleORM.inc}
+
+requires
+  rtl,
+  vcl,
+  soaprtl,
+  dbrtl,
+  inet,
+  {$IFDEF SIMPLEORM_FIREDAC}
+  FireDAC,
+  FireDACCommonDriver,
+  FireDACCommon,
+  {$ENDIF}
+  {$IFDEF SIMPLEORM_RESTDW}
+  RestDatawareCORE,
+  {$ENDIF}
+  {$IFDEF SIMPLEORM_UNIDAC}
+  dac260,
+  unidac260,
+  {$ENDIF}
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  DbxCommonDriver,
+  bindengine,
+  bindcomp,
+  RESTComponents;
+
+contains
+  {$IFDEF SIMPLEORM_FIREDAC}
+  SimpleORM.Query.Firedac in '..\src\SimpleORM.Query.Firedac.pas',
+  {$ENDIF}
+  {$IFDEF SIMPLEORM_RESTDW}
+  SimpleORM.Query.RestDW in '..\src\SimpleORM.Query.RestDW.pas',
+  {$ENDIF}
+  {$IFDEF SIMPLEORM_UNIDAC}
+  SimpleORM.Query.Unidac in '..\src\SimpleORM.Query.Unidac.pas',
+  {$ENDIF}
+  {$IFDEF SIMPLEORM_ZEOS}
+  SimpleORM.Query.Zeos in '..\src\SimpleORM.Query.Zeos.pas',
+  {$ENDIF}
+  SimpleORM.Attributes in '..\src\SimpleORM.Attributes.pas',
+  SimpleORM.DAO.DataSetToJSON in '..\src\SimpleORM.DAO.DataSetToJSON.pas',
+  SimpleORM.DAO in '..\src\SimpleORM.DAO.pas',
+  SimpleORM.DAO.SQLAttribute in '..\src\SimpleORM.DAO.SQLAttribute.pas',
+  SimpleORM.Entity in '..\src\SimpleORM.Entity.pas',
+  SimpleORM.Intf in '..\src\SimpleORM.Intf.pas',
+  SimpleORM.JSON in '..\src\SimpleORM.JSON.pas',
+  SimpleORM.JSONUtil in '..\src\SimpleORM.JSONUtil.pas',
+  SimpleORM in '..\src\SimpleORM.pas',
+  SimpleORM.RTTI.Helper in '..\src\SimpleORM.RTTI.Helper.pas',
+  SimpleORM.RTTI in '..\src\SimpleORM.RTTI.pas',
+  SimpleORM.SQL in '..\src\SimpleORM.SQL.pas',
+  SimpleORM.Types in '..\src\SimpleORM.Types.pas',
+  SimpleORM.Util in '..\src\SimpleORM.Util.pas',
+  SimpleORM.Validator in '..\src\SimpleORM.Validator.pas';
+
+end.
+

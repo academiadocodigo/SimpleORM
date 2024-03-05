@@ -1,0 +1,72 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{AF438914-C65C-47AA-A894-FC952BEDF3B6}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="projects\Firedac\SimpleORMFiredac.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="projects\horse\SimpleORMHorse.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="projects\Validation\SimpleORMValidation.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="projects\Unidac\SimpleORMUnidac.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="SimpleORMFiredac">
+        <MSBuild Projects="projects\Firedac\SimpleORMFiredac.dproj"/>
+    </Target>
+    <Target Name="SimpleORMFiredac:Clean">
+        <MSBuild Projects="projects\Firedac\SimpleORMFiredac.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMFiredac:Make">
+        <MSBuild Projects="projects\Firedac\SimpleORMFiredac.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SimpleORMHorse">
+        <MSBuild Projects="projects\horse\SimpleORMHorse.dproj"/>
+    </Target>
+    <Target Name="SimpleORMHorse:Clean">
+        <MSBuild Projects="projects\horse\SimpleORMHorse.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMHorse:Make">
+        <MSBuild Projects="projects\horse\SimpleORMHorse.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SimpleORMValidation">
+        <MSBuild Projects="projects\Validation\SimpleORMValidation.dproj"/>
+    </Target>
+    <Target Name="SimpleORMValidation:Clean">
+        <MSBuild Projects="projects\Validation\SimpleORMValidation.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMValidation:Make">
+        <MSBuild Projects="projects\Validation\SimpleORMValidation.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SimpleORMUnidac">
+        <MSBuild Projects="projects\Unidac\SimpleORMUnidac.dproj"/>
+    </Target>
+    <Target Name="SimpleORMUnidac:Clean">
+        <MSBuild Projects="projects\Unidac\SimpleORMUnidac.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SimpleORMUnidac:Make">
+        <MSBuild Projects="projects\Unidac\SimpleORMUnidac.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="SimpleORMFiredac;SimpleORMHorse;SimpleORMValidation;SimpleORMUnidac"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="SimpleORMFiredac:Clean;SimpleORMHorse:Clean;SimpleORMValidation:Clean;SimpleORMUnidac:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="SimpleORMFiredac:Make;SimpleORMHorse:Make;SimpleORMValidation:Make;SimpleORMUnidac:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
