@@ -55,6 +55,7 @@ Type
     function Find(var obj: T; Key: String; Value: Variant)
       : iSimpleDAO<T>; overload;
     function SQL: iSimpleDAOSQLAttribute<T>;
+    function Count : iSimpleDAO<T>;
 {$IFNDEF CONSOLE}
     function BindForm(aForm: TForm): iSimpleDAO<T>;
 {$ENDIF}
@@ -77,6 +78,15 @@ begin
 end;
 
 {$ENDIF}
+
+function TSimpleDAO<T>.Count: iSimpleDAO<T>;
+var
+  aSQL: String;
+begin
+  Result := Self;
+  TSimpleSQL<T>.New(nil).Count(aSQL);
+  FQuery.Open(aSQL);
+end;
 
 constructor TSimpleDAO<T>.Create(aQuery: iSimpleQuery);
 begin
@@ -157,9 +167,15 @@ var
   aSQL: String;
 begin
   Result := Self;
-  TSimpleSQL<T>.New(nil).Fields(FSQLAttribute.Fields).Join(FSQLAttribute.Join)
-    .Where(FSQLAttribute.Where).GroupBy(FSQLAttribute.GroupBy)
-    .OrderBy(FSQLAttribute.OrderBy).Select(aSQL);
+  TSimpleSQL<T>.New(nil)
+    .Fields(FSQLAttribute.Fields)
+    .Join(FSQLAttribute.Join)
+    .Where(FSQLAttribute.Where)
+    .GroupBy(FSQLAttribute.GroupBy)
+    .OrderBy(FSQLAttribute.OrderBy)
+    .Limit(FSQLAttribute.Limit)
+    .OffSet(FSQLAttribute.Offset)
+    .Select(aSQL);
   FQuery.DataSet.DisableControls;
   FQuery.Open(aSQL);
   if aBindList then
@@ -232,6 +248,8 @@ begin
     .Where(FSQLAttribute.Where)
     .GroupBy(FSQLAttribute.GroupBy)
     .OrderBy(FSQLAttribute.OrderBy)
+    .Limit(FSQLAttribute.Limit)
+    .OffSet(FSQLAttribute.Offset)
     .Select(aSQL);
   FQuery.Open(aSQL);
   TSimpleRTTI<T>.New(nil).DataSetToEntityList(FQuery.DataSet, aList);

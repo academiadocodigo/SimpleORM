@@ -16,6 +16,8 @@ Type
         FOrderBy: String;
         FGroupBy: String;
         FJoin: String;
+        FLimit : String;
+        FOffSet: String;
     public
         constructor Create(Parent: iSimpleDAO<T>);
         destructor Destroy; override;
@@ -25,12 +27,16 @@ Type
         function OrderBy(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
         function GroupBy(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
         function Join(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
+        function Limit(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
+        function Offset(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
         function Join: String; overload;
         function Clear: iSimpleDAOSQLAttribute<T>;
         function Fields: String; overload;
         function Where: String; overload;
         function OrderBy: String; overload;
         function GroupBy: String; overload;
+        function Limit : String; overload;
+        function Offset : String; overload;
         function &End: iSimpleDAO<T>;
     end;
 
@@ -60,6 +66,20 @@ begin
     Result := FJoin;
 end;
 
+function TSimpleDAOSQLAttribute<T>.Limit(
+  aSQL: String): iSimpleDAOSQLAttribute<T>;
+begin
+  Result := Self;
+   if Trim(aSQL) <> '' then
+        FLimit := FLimit + ' ' + aSQL;
+
+end;
+
+function TSimpleDAOSQLAttribute<T>.Limit: String;
+begin
+  Result := FLimit;
+end;
+
 function TSimpleDAOSQLAttribute<T>.Join(aSQL: String)
   : iSimpleDAOSQLAttribute<T>;
 begin
@@ -84,6 +104,8 @@ begin
     FOrderBy := '';
     FGroupBy := '';
     FJoin := '';
+    FLimit := '';
+    FOffSet := '';
 end;
 
 constructor TSimpleDAOSQLAttribute<T>.Create(Parent: iSimpleDAO<T>);
@@ -108,6 +130,19 @@ class function TSimpleDAOSQLAttribute<T>.New(Parent: iSimpleDAO<T>)
   : iSimpleDAOSQLAttribute<T>;
 begin
     Result := Self.Create(Parent);
+end;
+
+function TSimpleDAOSQLAttribute<T>.Offset(
+  aSQL: String): iSimpleDAOSQLAttribute<T>;
+begin
+    Result := Self;
+    if Trim(aSQL) <> '' then
+        FOffSet := FOffSet + ' ' + aSQL;
+end;
+
+function TSimpleDAOSQLAttribute<T>.Offset: String;
+begin
+  Result := FOffSet;
 end;
 
 function TSimpleDAOSQLAttribute<T>.OrderBy: String;

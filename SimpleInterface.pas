@@ -40,6 +40,7 @@ type
     function Find(var obj: T; Key: String; Value: Variant)
       : iSimpleDAO<T>; overload;
     function SQL: iSimpleDAOSQLAttribute<T>;
+    function Count : iSimpleDAO<T>;
 {$IFNDEF CONSOLE}
     function BindForm(aForm: TForm): iSimpleDAO<T>;
 {$ENDIF}
@@ -52,12 +53,18 @@ type
     function OrderBy(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
     function GroupBy(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
     function Join(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
+    function Limit(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
+    function Offset(aSQL: String): iSimpleDAOSQLAttribute<T>; overload;
     function Join: String; overload;
     function Fields: String; overload;
     function Where: String; overload;
     function OrderBy: String; overload;
     function GroupBy: String; overload;
+    function Limit : String; overload;
+    function Offset : String; overload;
     function Clear: iSimpleDAOSQLAttribute<T>;
+
+
     function &End: iSimpleDAO<T>;
   end;
 
@@ -99,6 +106,9 @@ type
     function Join(aSQL: String): iSimpleSQL<T>;
     function LastID(var aSQL: String): iSimpleSQL<T>;
     function LastRecord(var aSQL: String): iSimpleSQL<T>;
+    function Limit(aSQL: String): iSimpleSQL<T>;
+    function OffSet(aSQL: String): iSimpleSQL<T>;
+    function Count(var aSQL: String): iSimpleSQL<T>;
   end;
 
   iSimpleQuery = interface

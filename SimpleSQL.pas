@@ -11,6 +11,8 @@ Type
       FOrderBy : String;
       FGroupBy : String;
       FJoin : String;
+      FLimit : String;
+      FOffSet : String;
     public
       constructor Create(aInstance : T);
       destructor Destroy; override;
@@ -27,12 +29,37 @@ Type
       function Join (aSQL : String) : iSimpleSQL<T>;
       function LastID (var aSQL : String) : iSimpleSQL<T>;
       function LastRecord (var aSQL : String) : iSimpleSQL<T>;
+      function Limit(aSQL: String): iSimpleSQL<T>;
+      function OffSet(aSQL: String): iSimpleSQL<T>;
+      function Count(var aSQL: String): iSimpleSQL<T>;
   end;
 implementation
 
 uses
   SimpleRTTI, System.Generics.Collections, System.SysUtils;
 { TSimpleSQL<T> }
+
+function TSimpleSQL<T>.Count(var aSQL: String): iSimpleSQL<T>;
+var
+  aClassName, aWhere, aFields : String;
+begin
+ Result := Self;
+// TSimpleRTTI<T>.New(FInstance)
+//    .TableName(aClassName)
+//    .Where(aWhere);
+// aSQL := aSQL + 'Select COUNT(*) FROM ' + aClassName;
+//  aSQL := aSQL + ' WHERE ' + aWhere;
+  TSimpleRTTI<T>.New(nil)
+    .Fields(aFields)
+    .TableName(aClassName);
+   aSQL := aSQL + 'Select COUNT(*) FROM ' + aClassName;
+  //aSQL := aSQL + ' FROM ' + aClassName;
+  if Trim(FJoin) <> '' then
+    aSQL := aSQL + ' ' + FJoin + ' ';
+  if Trim(FWhere) <> '' then
+    aSQL := aSQL + ' WHERE ' + FWhere;
+
+end;
 
 constructor TSimpleSQL<T>.Create(aInstance : T);
 begin
@@ -117,9 +144,23 @@ begin
   aSQL := aSQL + ' order by ' + aPK + ' desc';
 end;
 
+function TSimpleSQL<T>.Limit(aSQL: String): iSimpleSQL<T>;
+begin
+ Result := Self;
+  if Trim(aSQL) <> '' then
+    FLimit := aSQL;
+end;
+
 class function TSimpleSQL<T>.New(aInstance : T): iSimpleSQL<T>;
 begin
   Result := Self.Create(aInstance);
+end;
+
+function TSimpleSQL<T>.OffSet(aSQL: String): iSimpleSQL<T>;
+begin
+ Result := Self;
+  if Trim(aSQL) <> '' then
+    FOffSet := aSQL;
 end;
 
 function TSimpleSQL<T>.OrderBy(aSQL: String): iSimpleSQL<T>;
@@ -149,6 +190,10 @@ begin
     aSQL := aSQL + ' GROUP BY ' + FGroupBy;  
   if Trim(FOrderBy) <> '' then
     aSQL := aSQL + ' ORDER BY ' + FOrderBy;
+  if Trim(FLimit) <> '' then
+    aSQL := aSQL + ' LIMIT ' + FLimit;
+  if Trim(FOffSet) <> '' then
+    aSQL := aSQL + ' OFFSET ' + FOffSet;
 end;
 
 function TSimpleSQL<T>.SelectId(var aSQL: String): iSimpleSQL<T>;
