@@ -686,6 +686,18 @@ LDAO := TSimpleDAO&lt;T&gt;.New(TSimpleQueryUnidac.New(UniConnection1));
 LDAO := TSimpleDAO&lt;T&gt;.New(TSimpleQueryHorse.New('http://server:9000'));
 
 // O codigo do DAO e IDENTICO para todos os drivers</code></pre>
+
+<h3>Drivers com dependencia externa (compilacao condicional)</h3>
+<p class="note">Os drivers <code>SimpleQueryRestDW</code>, <code>SimpleQueryUnidac</code> e <code>SimpleQueryZeos</code> dependem de bibliotecas externas (RestDataware, UniDAC/Devart e Zeos). Para que o package <code>SimpleORM.dpk</code> compile mesmo sem essas bibliotecas instaladas, o corpo de cada driver e protegido por um simbolo condicional. Sem o simbolo, o unit compila vazio e nao referencia a biblioteca externa.</p>
+
+<table>
+  <tr><th>Driver</th><th>Simbolo a definir</th><th>Biblioteca necessaria</th></tr>
+  <tr><td><code>SimpleQueryRestDW</code></td><td><code>USE_RESTDW</code></td><td>RestDataware</td></tr>
+  <tr><td><code>SimpleQueryUnidac</code></td><td><code>USE_UNIDAC</code></td><td>UniDAC (Devart)</td></tr>
+  <tr><td><code>SimpleQueryZeos</code></td><td><code>USE_ZEOS</code></td><td>Zeos</td></tr>
+</table>
+
+<p>Para habilitar um driver, defina o simbolo em <em>Project &gt; Options &gt; Delphi Compiler &gt; Conditional defines</em> (ou <code>{$DEFINE USE_RESTDW}</code>). Os drivers FireDAC e Horse nao precisam de simbolo — nao tem dependencia externa opcional.</p>
 </section>
 
 <!-- ============================================ -->

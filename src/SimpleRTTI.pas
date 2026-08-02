@@ -448,16 +448,17 @@ begin
           begin
             if LowerCase(prpRtti.FieldName) = LowerCase(Field.DisplayName) then
             begin
+              if Field.IsNull then
+                Continue;
               case prpRtti.PropertyType.TypeKind of
                 tkUnknown, tkString, tkWChar, tkLString, tkWString, tkUString:
                   Value := Field.AsString;
-                tkInteger, tkInt64:
+                tkInteger:
                   Value := Field.AsInteger;
-                tkChar: ;
+                tkInt64:
+                  Value := Field.AsLargeInt;
                 tkEnumeration:
                 begin
-                  if Field.IsNull then
-                    Continue;
                   if prpRtti.PropertyType.Handle = TypeInfo(Boolean) then
                     Value := TValue.FromOrdinal(prpRtti.PropertyType.Handle, Field.AsInteger)
                   else
@@ -468,18 +469,19 @@ begin
                       Continue;
                   end;
                 end;
-                tkFloat: Value := Field.AsFloat;
-                tkSet: ;
-                tkClass: ;
-                tkMethod: ;
-                tkVariant: ;
-                tkArray: ;
-                tkRecord: ;
-                tkInterface: ;
-                tkDynArray: ;
-                tkClassRef: ;
-                tkPointer: ;
-                tkProcedure: ;
+                tkFloat:
+                begin
+                  if prpRtti.PropertyType.Handle = TypeInfo(TDate) then
+                    Value := TValue.From<TDate>(Field.AsDateTime)
+                  else if prpRtti.PropertyType.Handle = TypeInfo(TTime) then
+                    Value := TValue.From<TTime>(Field.AsDateTime)
+                  else if prpRtti.PropertyType.Handle = TypeInfo(TDateTime) then
+                    Value := TValue.From<TDateTime>(Field.AsDateTime)
+                  else
+                    Value := Field.AsFloat;
+                end;
+              else
+                Continue;
               end;
               prpRtti.SetValue(Pointer(aEntity), Value);
             end;
@@ -520,16 +522,17 @@ begin
           if LowerCase(prpRtti.FieldName) = LowerCase(Field.FieldName) then
           begin
             Field.DisplayLabel := prpRtti.DisplayName;
+            if Field.IsNull then
+              Continue;
             case prpRtti.PropertyType.TypeKind of
               tkUnknown, tkString, tkWChar, tkLString, tkWString, tkUString:
                 Value := Field.AsString;
-              tkInteger, tkInt64:
+              tkInteger:
                 Value := Field.AsInteger;
-              tkChar: ;
+              tkInt64:
+                Value := Field.AsLargeInt;
               tkEnumeration:
               begin
-                if Field.IsNull then
-                  Continue;
                 if prpRtti.PropertyType.Handle = TypeInfo(Boolean) then
                   Value := TValue.FromOrdinal(prpRtti.PropertyType.Handle, Field.AsInteger)
                 else
@@ -541,18 +544,18 @@ begin
                 end;
               end;
               tkFloat:
-                Value := Field.AsFloat;
-              tkSet: ;
-              tkClass: ;
-              tkMethod: ;
-              tkVariant: ;
-              tkArray: ;
-              tkRecord: ;
-              tkInterface: ;
-              tkDynArray: ;
-              tkClassRef: ;
-              tkPointer: ;
-              tkProcedure: ;
+              begin
+                if prpRtti.PropertyType.Handle = TypeInfo(TDate) then
+                  Value := TValue.From<TDate>(Field.AsDateTime)
+                else if prpRtti.PropertyType.Handle = TypeInfo(TTime) then
+                  Value := TValue.From<TTime>(Field.AsDateTime)
+                else if prpRtti.PropertyType.Handle = TypeInfo(TDateTime) then
+                  Value := TValue.From<TDateTime>(Field.AsDateTime)
+                else
+                  Value := Field.AsFloat;
+              end;
+            else
+              Continue;
             end;
             prpRtti.SetValue(Pointer(aList[Pred(aList.Count)]), Value);
           end;

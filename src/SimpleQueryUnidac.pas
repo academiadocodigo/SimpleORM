@@ -1,5 +1,16 @@
 unit SimpleQueryUnidac;
 
+// -----------------------------------------------------------------------------
+// Este driver depende da biblioteca externa UniDAC (Devart) — unit Uni. Para
+// evitar que o package SimpleORM.dpk falhe ao compilar em ambientes sem o UniDAC
+// instalado, todo o corpo do unit fica protegido pelo simbolo USE_UNIDAC.
+//
+// Para habilitar o driver, defina USE_UNIDAC nas opcoes do projeto/package
+// (Project > Options > Delphi Compiler > Conditional defines).
+// -----------------------------------------------------------------------------
+
+{$IFDEF USE_UNIDAC}
+
 interface
 
 uses
@@ -170,5 +181,13 @@ function TSimpleQueryUniDac.RowsAffected: Integer;
 begin
   Result := FQuery.RowsAffected;
 end;
+
+{$ELSE}
+
+interface
+
+implementation
+
+{$ENDIF USE_UNIDAC}
 
 end.

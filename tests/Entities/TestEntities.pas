@@ -243,6 +243,35 @@ type
     property VALOR_TOTAL: Double read FVALOR_TOTAL write FVALOR_TOTAL;
   end;
 
+  { Entidade que reproduz a issue #83 (Field Map Error) — mistura de tipos
+    TDate, Boolean, Double e Int64 lidos de um DataSet, incluindo colunas NULL }
+  [Tabela('BYQCONFIG')]
+  TBYQConfigTest = class
+  private
+    FID: Integer;
+    FFACTORYID: String;
+    FTESTDATE: TDate;
+    FPRESSMAX: Double;
+    FPRESSMIN: Double;
+    FISTESTFINISHED: Boolean;
+    FBIGCOUNTER: Int64;
+  published
+    [Campo('ID'), PK, AutoInc]
+    property ID: Integer read FID write FID;
+    [Campo('FACTORYID'), NotNull, Format(60)]
+    property FACTORYID: String read FFACTORYID write FFACTORYID;
+    [Campo('TESTDATE')]
+    property TESTDATE: TDate read FTESTDATE write FTESTDATE;
+    [Campo('PRESSMAX')]
+    property PRESSMAX: Double read FPRESSMAX write FPRESSMAX;
+    [Campo('PRESSMIN')]
+    property PRESSMIN: Double read FPRESSMIN write FPRESSMIN;
+    [Campo('ISTESTFINISHED')]
+    property ISTESTFINISHED: Boolean read FISTESTFINISHED write FISTESTFINISHED;
+    [Campo('BIGCOUNTER')]
+    property BIGCOUNTER: Int64 read FBIGCOUNTER write FBIGCOUNTER;
+  end;
+
 implementation
 
 end.

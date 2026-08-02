@@ -1,5 +1,18 @@
 unit SimpleQueryRestDW;
 
+// -----------------------------------------------------------------------------
+// Este driver depende da biblioteca externa RestDataware (units uDWConstsData e
+// uRESTDWPoolerDB). Para evitar que o package SimpleORM.dpk falhe ao compilar
+// em ambientes sem o RestDataware instalado, todo o corpo do unit fica protegido
+// pelo simbolo condicional USE_RESTDW.
+//
+// Para habilitar o driver, defina USE_RESTDW nas opcoes do projeto/package
+// (Project > Options > Delphi Compiler > Conditional defines) ou adicione
+// {$DEFINE USE_RESTDW} antes de usar este unit.
+// -----------------------------------------------------------------------------
+
+{$IFDEF USE_RESTDW}
+
 interface
 
 uses
@@ -143,5 +156,13 @@ function TSimpleQueryRestDW<T>.RowsAffected: Integer;
 begin
   Result := -1;
 end;
+
+{$ELSE}
+
+interface
+
+implementation
+
+{$ENDIF USE_RESTDW}
 
 end.

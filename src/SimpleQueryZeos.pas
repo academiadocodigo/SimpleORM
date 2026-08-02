@@ -1,5 +1,17 @@
 Unit SimpleQueryZeos;
 
+// -----------------------------------------------------------------------------
+// Este driver depende da biblioteca externa Zeos (ZAbstractConnection,
+// ZConnection, ZDataset, etc.). Para evitar que o package SimpleORM.dpk falhe ao
+// compilar em ambientes sem o Zeos instalado, todo o corpo do unit fica protegido
+// pelo simbolo USE_ZEOS.
+//
+// Para habilitar o driver, defina USE_ZEOS nas opcoes do projeto/package
+// (Project > Options > Delphi Compiler > Conditional defines).
+// -----------------------------------------------------------------------------
+
+{$IFDEF USE_ZEOS}
+
 interface
 
 uses
@@ -167,5 +179,13 @@ function TSimpleQueryZeos.RowsAffected: Integer;
 begin
   Result := FQuery.RowsAffected;
 end;
+
+{$ELSE}
+
+interface
+
+implementation
+
+{$ENDIF USE_ZEOS}
 
 end.

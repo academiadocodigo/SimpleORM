@@ -49,7 +49,8 @@ uses
   SimpleSupabaseRealtime in '..\src\SimpleSupabaseRealtime.pas',
   TestSimpleSupabaseRealtime in 'TestSimpleSupabaseRealtime.pas',
   SimpleDataMigration in '..\src\SimpleDataMigration.pas',
-  TestSimpleDataMigration in 'TestSimpleDataMigration.pas';
+  TestSimpleDataMigration in 'TestSimpleDataMigration.pas',
+  TestSimpleRTTIMapping in 'TestSimpleRTTIMapping.pas';
 
 var
   ExitBehavior: TRunnerExitBehavior;
