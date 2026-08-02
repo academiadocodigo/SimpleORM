@@ -8,7 +8,7 @@ O formato e baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0
 
 ---
 
-## [Unreleased]
+## [3.07.01] - 2026-08-02
 
 ### Changed
 - **Drivers opcionais protegidos por diretiva** - SimpleQueryRestDW, SimpleQueryUnidac e SimpleQueryZeos agora tem todo o corpo envolto em {$IFDEF USE_RESTDW}/{$IFDEF USE_UNIDAC}/{$IFDEF USE_ZEOS}. Sem o simbolo definido, compilam como unit vazio valido, evitando falha do SimpleORM.dpk em ambientes sem RestDataware/UniDAC/Zeos instalados (issue #82) (SimpleQueryRestDW.pas, SimpleQueryUnidac.pas, SimpleQueryZeos.pas)
@@ -16,7 +16,9 @@ O formato e baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0
 ### Fixed
 - **Field Map Error no mapeamento DataSet -> entidade** - DataSetToEntity/DataSetToEntityList agora ignoram colunas NULL antes de converter, usam AsLargeInt para Int64 (evita overflow em BIGINT), mapeiam TDate/TTime/TDateTime via AsDateTime e ignoram tipos nao suportados em vez de gravar TValue vazio. Corrige erro de conversao ao dar Find em entidades com TDate/Boolean/Double no MySQL (issue #83) (SimpleRTTI.pas)
 
+---
 
+## [3.07.00] - 2026-03-16
 
 ### Added
 - **Exists** - Metodo DAO.Exists(campo, valor) para verificar existencia de registro sem carregar entidade (SimpleDAO.pas)
